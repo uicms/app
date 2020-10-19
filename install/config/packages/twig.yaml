@@ -1,0 +1,11 @@
+twig:
+    exception_controller: null
+    default_path: '%kernel.project_dir%/public/themes'
+    debug: '%kernel.debug%'
+    strict_variables: '%kernel.debug%'
+    globals:
+        theme: default
+    auto_reload: true
+    cache: false
+    form_themes: ['bootstrap_4_layout.html.twig']
+    autoescape: html

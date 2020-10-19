@@ -1,0 +1,162 @@
+---
+parameters:
+  ui_config:
+    name: ui5
+    full_name: UI5
+    domain: ui5.fr
+    protocol: http
+    upload_path: '%kernel.project_dir%/public/uploads'
+    upload_folder: uploads
+    thumbnail_default_width: 360
+    thumbnail_default_height: 360
+    thumbnail_prefix: _
+    row_default_name: Nouveau
+    entity:
+      App\Entity\Page:
+        name: App\Entity\Page
+        table_name: page
+        name_field: name
+        order_by: id
+        order_dir: desc
+        is_tree: true
+        form:
+          translations:
+            name:
+              name: Name
+              type: TextType
+              namespace: Symfony\Component\Form\Extension\Core\Type
+              transformer: Uicms\Admin\Form\DataTransformer\DefaultTransformer
+              options:
+                required: true
+            html:
+              name: Html
+              type: TextareaType
+              namespace: Symfony\Component\Form\Extension\Core\Type
+              transformer: ~
+              options:
+                required: false
+                attr:
+                  class: tinymce
+          fields:
+            controller:
+              name: Controller
+              type: TextType
+              namespace: Symfony\Component\Form\Extension\Core\Type
+              transformer: ~
+              options:
+                required: true
+            action:
+              name: Action
+              type: TextType
+              namespace: Symfony\Component\Form\Extension\Core\Type
+              transformer: ~
+              options:
+                required: false
+            template:
+              name: Template
+              type: TextType
+              namespace: Symfony\Component\Form\Extension\Core\Type
+              transformer: ~
+              options:
+                required: false
+            menu:
+              name: Menu
+              type: TextType
+              namespace: Symfony\Component\Form\Extension\Core\Type
+              transformer: ~
+              options:
+                required: false
+            slug:
+              name: Slug
+              type: TextType
+              namespace: Symfony\Component\Form\Extension\Core\Type
+              modifier: Uicms\Admin\Form\DataModifier\SlugModifier
+              transformer: ~
+              options:
+                required: false
+      App\Entity\User:
+        name: App\Entity\User
+        table_name: user
+        name_field: email
+        order_by: id
+        order_dir: desc
+        form:
+          translations: ~
+          fields:
+            name:
+              name: Name
+              type: TextType
+              namespace: Symfony\Component\Form\Extension\Core\Type
+              transformer: ~
+              options:
+                required: true
+            email:
+              name: Email
+              type: EmailType
+              namespace: Symfony\Component\Form\Extension\Core\Type
+              transformer: ~
+              options:
+                required: true
+            plain_password:
+              name: PlainPassword
+              type: RepeatedType
+              dest: Password
+              namespace: Symfony\Component\Form\Extension\Core\Type
+              options:
+                attr:
+                  class: repeatedType
+                required: false
+                type: Symfony\Component\Form\Extension\Core\Type\PasswordType
+                translation_domain: admin
+                label: fld_user_password
+                first_options:
+                  label: fld_user_new_password
+                second_options:
+                  label: fld_user_repeat_password
+            roles:
+              name: Roles
+              type: CollectionType
+              namespace: Symfony\Component\Form\Extension\Core\Type
+              transformer: ~
+              options:
+                attr:
+                  class: collectionType
+                required: true
+                allow_add: true
+                allow_delete: true
+    admin:
+      vars:
+        limit: 50
+        offset: 0
+        order_by: id
+        order_dir: desc
+        linked_to: ~
+        linked_to_id: []
+        linked_to_slug: ~
+        display: list
+        parent: ~
+        dir: 0
+        select_action: ~
+      pages:
+        pages:
+          controller: Uicms\Admin\Controller\Editor
+          action: index
+          slug: pages
+          arguments:
+            entity_name: App\Entity\Page
+          params: ~
+        users:
+          controller: Uicms\Admin\Controller\Editor
+          action: index
+          slug: users
+          is_tree: false
+          arguments:
+            entity_name: App\Entity\User
+          params: ~
+        action:
+          controller: Uicms\Admin\Controller\Action
+          action: index
+          slug: action
+          display: false
+          params: ~
+...
