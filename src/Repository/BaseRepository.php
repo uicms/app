@@ -748,7 +748,7 @@ class BaseRepository extends ServiceEntityRepository
             
             # Define params
             $total = $this->count($params);
-            $paginator = new Uicms\App\Service\Paginator($params['offset'], $params['limit'], $total);
+            $paginator = new \Uicms\App\Service\Paginator($params['offset'], $params['limit'], $total);
             $params['current_row'] = $this->getRow(array_merge($params, array('offset'=>$params['offset']+$paginator->total_current-1)));
             $params['get_next'] = true;
             
