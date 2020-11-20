@@ -493,7 +493,7 @@ if($action == 'add' || $action=='edit') {
     				$field_transformer = trim(readline("Transformer? [$default_transformer]:"));
     				if(!$field_transformer) $field_transformer = $default_transformer;
                     $add_transformer = false;
-                    $form_config['type'] = $field_form_type;
+                    $form_config['transformer'] = $field_transformer;
                 }
 
                 # Class
