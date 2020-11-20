@@ -5,6 +5,9 @@ fi
 if [ ! -d "./public/themes/app" ]; then
     cp -r ./vendor/uicms/app/install/public/themes/app ./public/themes/
 fi
+if [ ! -d "./src/Migrations" ]; then
+    mkdir ./src/Migrations
+fi
 cp ./vendor/uicms/app/install/bin/entity ./bin/
 cp ./vendor/uicms/app/install/bin/migrate ./bin/
 cp -r ./vendor/uicms/app/install/src/EventListener ./src/

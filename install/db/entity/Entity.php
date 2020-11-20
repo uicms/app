@@ -122,6 +122,14 @@ $form_types = array(
 	    'FormType',
 	),
 );
+$types_with_length = array('string', 'text');
+$types_translatables = array('string', 'text');
+
+$types_exclude_form_type = array('EntityType');
+$nullable_exclude_form_type = array('EntityType');
+$translatable_exclude_form_type = array('EntityType');
+$length_exclude_form_type = array('EntityType');
+
 define('PREG_FIELD_PATTERN', '"/[\s\*]+?@ORM([^\{]*?)(private|protected)(.+?)(\$)([a-zA-Z0-9_-]+?)( *\=.+?;|;)"s');
 define('PREG_FIELD_REPLACE', '"/[\s\*]+?@ORM([^\{]*?)(private|protected)(.+?)(\$)(%s)( *\=.+?;|;)"s');
 
@@ -159,8 +167,6 @@ while($setting_table_name==true) {
     }
 }
 
-#$entity_name = str_replace('_', '', ucwords($table_name, '_'));
-#$full_entity_name = "App\Entity\\$entity_name";
 $entity_file = 'src/Entity/' . $entity_name . '.php';
 $translation_file = 'src/Entity/' . $entity_name . 'Translation.php';
 
@@ -182,9 +188,6 @@ if($action == 'delete') {
                         unset($ui_config['admin']['pages'][$i]);
                     }
                 }
-                #if(isset($ui_config['admin']['form']["App\Entity\\$entity_name"])) {
-                #    unset($ui_config['admin']['form']["App\Entity\\$entity_name"]);
-                #}
                 
                 # Delete files
                 if(file_exists($entity_file)) {
@@ -356,12 +359,11 @@ if($action == 'add') {
 }
 
 
-$entity_file_content = file_get_contents($entity_file);
-$translation_file_content = file_exists($translation_file) ? file_get_contents($translation_file) : '';
-
-
 # ADD/EDIT FIELDS
 if($action == 'add' || $action=='edit') {
+    
+    $entity_file_content = file_get_contents($entity_file);
+    $translation_file_content = file_exists($translation_file) ? file_get_contents($translation_file) : '';
     
 	if(!isset($is_table_translatable)) {
 		$is_table_translatable = file_exists('src/Entity/' . $entity_name . 'Translation.php');
@@ -372,6 +374,7 @@ if($action == 'add' || $action=='edit') {
 		$field_name = readline("New field name (<return> to stop adding fields): ");
         
 		if(trim($field_name)) {
+            
 			if(fieldExists($field_name, $entity_file_content) || fieldExists($field_name, $translation_file_content)) {
                	$field_mode = trim(readline("Field [$field_name] exists! Do you want to edit or delete it? ([edit]/delete)"));
                 if($field_mode == 'delete') {
@@ -389,31 +392,35 @@ if($action == 'add' || $action=='edit') {
             }
 			
             if($field_mode == 'edit' || $field_mode == 'add') {
+                
                 # Default
                 $default_transformer = '';
-                #$default_transformer = 'DefaultTransformer';
-                $default_type = 'string';
                 $default_form_type = 'TextType';
+                $default_entity_namespace = 'Symfony\Component\Form\Extension\Core\Type';
+                $default_type = 'string';
                 $default_length = 255;
-            
-    			# Type
-    			$add_type = true;
-    			while($add_type == true) {
-    				$field_type = trim(readline("Field type (enter ? to see all types) [$default_type]:"));
-    				if($field_type=='?') {
-    					print_r($db_types);
-    				} else {
-    					if(!$field_type) $field_type = $default_type;
-    					if(inArray($field_type, $db_types)) {
-    						$add_type = false;
-    					}
-    				}
-    			}
-		
-    			# Form object
+                
+                # Set field form config
+                $form_config = array(
+                    'name' => str_replace('_', '', ucwords($field_name, '_')),
+                    'type' => $default_form_type,
+                    'namespace' => $default_entity_namespace,
+                    'transformer' => '',
+                    'options' => array(
+                        'help' => '',
+                        'label' => '',
+                        'attr' => array(
+                            'class'=>'',
+                        ),
+                    	'required' => false,
+                    ),
+                );
+
+
+    			# Form type (object)
     			$add_form = true;
     			while($add_form == true) {
-    				$field_form_type = trim(readline("Form type (enter ? to see all types) [$default_form_type]:"));
+    				$field_form_type = trim(readline("Form object (enter ? to see all object) [$default_form_type]:"));
     				if($field_form_type=='?') {
     					print_r($form_types);
     				} else {
@@ -421,13 +428,31 @@ if($action == 'add' || $action=='edit') {
                         if(strpos($field_form_type, 'Type') === false) $field_form_type .= 'Type';
     					if(inArray($field_form_type, $form_types)) {
     						$add_form = false;
+                            $form_config['type'] = $field_form_type;
     					}
     				}
     			}
-		
+
+                # Type
+                if(!in_array($field_form_type, $types_exclude_form_type)) {
+        			$add_type = true;
+        			while($add_type == true) {
+        				$field_type = trim(readline("Field type (enter ? to see all types) [$default_type]:"));
+        				if($field_type=='?') {
+        					print_r($db_types);
+        				} else {
+        					if(!$field_type) $field_type = $default_type;
+        					if(inArray($field_type, $db_types)) {
+        						$add_type = false;
+        					}
+        				}
+        			}
+                }
+    			
+
     			# Translatable
-    			$field_translatable = false;
-                if($is_table_translatable) {
+                $field_translatable = false;
+                if($is_table_translatable && isset($field_type) && in_array($field_type, $types_translatables) && !in_array($field_form_type, $translatable_exclude_form_type)) {
         			$add_translatable = true;
         			while($add_translatable == true) {
         				$field_translatable = trim(readline("Is translatable? ([y]/n):"));
@@ -435,50 +460,51 @@ if($action == 'add' || $action=='edit') {
     					$add_translatable = false;
         			}
                 }
-		
+
     			# Length
-    			$add_length = true;
-    			while($add_length==true) {
-    				$field_length = (int)trim(readline("Field length [$default_length]:"));
-    				if(!$field_length) $field_length = $default_length;
-    				$add_length = false;
-    			}
-		
-    			# Nullable
-    			$add_nullable = true;
-    			while($add_nullable == true) {
-    				$field_nullable = trim(readline("Can this field be null in the database (nullable) (y/[n]):"));
-    				if(!$field_nullable) $field_nullable = 'y';
-    				if($field_nullable == 'y' || $field_nullable == 'n') {
-                        $field_nullable = $field_nullable == 'y' ? 'true' : 'false';
-    					$add_nullable = false;
-    				}
-    			}
-            
+                if(isset($field_type) && in_array($field_type, $types_with_length) && !in_array($field_form_type, $length_exclude_form_type)) {
+        			$add_length = true;
+        			while($add_length==true) {
+        				$field_length = (int)trim(readline("Field length [$default_length]:"));
+        				if(!$field_length) $field_length = $default_length;
+        				$add_length = false;
+        			}
+                }
+
+                # Nullable
+                if(!in_array($field_form_type, $types_exclude_form_type)) {
+                    $add_nullable = true;
+                    while($add_nullable == true) {
+                        $field_nullable = trim(readline("Can this field be null in the database (nullable) (y/[n]):"));
+                        if(!$field_nullable) $field_nullable = 'y';
+                        if($field_nullable == 'y' || $field_nullable == 'n') {
+                            $field_nullable = $field_nullable == 'y' ? 'true' : 'false';
+                            $add_nullable = false;
+                        }
+                    }
+                }
+                
+
+
     			# Transformer
     			$add_transformer = true;
-                if($field_form_type == 'UIFileType') $default_transformer = 'FileTransformer';
+                if($field_form_type == 'UIFileType') $default_transformer = 'Uicms\Admin\Form\DataTransformer\FileTransformer';
     			while($add_transformer == true) {
     				$field_transformer = trim(readline("Transformer? [$default_transformer]:"));
     				if(!$field_transformer) $field_transformer = $default_transformer;
                     $add_transformer = false;
-    			}
-            
-    			# Class
-    			$add_class = true;
-    			while($add_class == true) {
-    				$field_class = trim(readline("Class? []:"));
-                    $add_class = false;
-    			}
-            
-    			# Template
-                #if(!isset($default_template)) $default_template = '';
-    			#$add_template = true;
-    			#while($add_template == true) {
-    			#	$field_template = trim(readline("Template ? [$default_template]:"));
-                #    $add_template = false;
-    			#}
-        
+                    $form_config['type'] = $field_form_type;
+                }
+
+                # Class
+                $add_attr_class = true;
+                while($add_attr_class == true) {
+                    $field_attr_class = trim(readline("Class attribute? []:"));
+                    $add_attr_class = false;
+                }
+
+
+
                 # Add in CMS forms config
                 if(!isset($ui_config['entity'][$full_entity_name]['form'])) {
                     $ui_config['entity'][$full_entity_name]['form'] = array(
@@ -488,36 +514,73 @@ if($action == 'add' || $action=='edit') {
                     );
                 }
                 
-                # Set field form config
-                $form_config = array(
-                    'name' => str_replace('_', '', ucwords($field_name, '_')),
-                    'type' => $field_form_type,
-                    'namespace' => 'Symfony\Component\Form\Extension\Core\Type',
-                    'transformer' => $field_transformer,
-                    'options' => array(
-                        'help' => '',
-                        'label' => '',
-                        'attr' => array(
-                            'class' => $field_class,
-                        ),
-                    	'required' => $field_nullable == 'true' ? false : true,
-                    ),
-                );
-            
+                # 'Collection type' expects file template and different namespace
+                if($field_form_type == 'CollectionType') {
+                    $form_config['options']['allow_add'] = true;
+                    $form_config['options']['allow_delete'] = true;
+                    $form_config['options']['attr']['class'] = 'collectionType';
+                }
+                
+                # 'Entity type' specific options
+                if($field_form_type == 'EntityType') {
+        			# Target entity class
+        			$add_class = true;
+        			while($add_class == true) {
+                        if($target_entity_class = trim(readline("Target entity class? :"))) {
+                            $add_class = false;
+                        }
+        			}
+                    
+        			# Choice label
+        			$add_choice_label = true;
+        			while($add_choice_label == true) {
+                        $choice_label = trim(readline("Choice label? [translations[fr].name]:"));
+                        if(!$choice_label) $choice_label = 'translations[fr].name';
+                        $add_choice_label = false;
+        			}
+                    
+                    $form_config['options']['choice_label'] = $choice_label;
+                    $form_config['options']['class'] = $target_entity_class;
+                    $form_config['namespace'] = 'Symfony\Bridge\Doctrine\Form\Type';
+                }
+                
                 # 'UI File type' expects file template and different namespace
                 if($field_form_type == 'UIFileType') {
                     $form_config['options']['template'] = 'file';
-                    $form_config['namespace'] = 'App\Form\Type';
+                    $form_config['namespace'] = 'Uicms\Admin\Form\Type';
                 }
-                
+
+
+
                 # Save config
                 $form_section = $field_translatable ? 'translations' : 'fields';
                 $ui_config['entity'][$full_entity_name]['form'][$form_section][$field_name] = $form_config;
+                
+                # Entity file pattern
                 $field_pattern = "    /**
-                * @ORM\Column(type=\"" . $field_type ."\", nullable=" . $field_nullable .", length=" . $field_length .")
+                * @ORM\Column(%s)
                 */
                 private \$" . $field_name .";";
+                $attributes = array();
+                $attributes[] = "type=\"" . $field_type ."\"";
+                if(!in_array($field_form_type, $nullable_exclude_form_type)) {
+                    $attributes[] = "nullable=" . $field_nullable;
+                }
+                if(in_array($field_form_type, $types_with_length)) {
+                    $attributes[] = "length=" . $field_length;
+                }
+                $field_pattern = sprintf($field_pattern, implode(',', $attributes));
                 
+                # Different field pattern if EntityType
+                if($field_form_type == 'EntityType') {
+                    $field_pattern = "/**
+                * @ORM\ManyToOne(targetEntity=\"" . $target_entity_class . "\")
+                * @ORM\JoinColumn(name=\"" . $field_name . "_id\", referencedColumnName=\"id\")
+                */
+                private \$" . $field_name . ";";
+                }
+                
+                # Commit
                 switch($form_section) {
                     
                     case 'translations':
