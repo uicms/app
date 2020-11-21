@@ -501,6 +501,7 @@ if($action == 'add' || $action=='edit') {
                 while($add_attr_class == true) {
                     $field_attr_class = trim(readline("Class attribute? []:"));
                     $add_attr_class = false;
+                    $form_config['options']['attr']['class'] = $field_attr_class;
                 }
 
 
@@ -623,7 +624,6 @@ print "\nSaving...\n";
 
 # Save UI config
 $config['parameters']['ui_config'] = $ui_config;
-copy($config_file, $config_file.'.bak');
 yaml_emit_file($config_file, $config);
 
 
