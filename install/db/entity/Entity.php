@@ -462,6 +462,7 @@ if($action == 'add' || $action=='edit') {
                 }
 
     			# Length
+                if($field_type == 'text') $default_length = 65535;
                 if(isset($field_type) && in_array($field_type, $types_with_length) && !in_array($field_form_type, $length_exclude_form_type)) {
         			$add_length = true;
         			while($add_length==true) {
@@ -619,13 +620,14 @@ if($action == 'add' || $action=='edit') {
         }
     }
 }
-print "\nSaving...\n";
+
+# Add a confirm before saving?
 
 
 # Save UI config
 $config['parameters']['ui_config'] = $ui_config;
 yaml_emit_file($config_file, $config);
-
+print "\nSaved!\n";
 
 /* Functions */
 function getFieldReplacePattern($field_name, $entity_file_content) 
