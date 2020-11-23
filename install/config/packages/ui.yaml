@@ -3,7 +3,6 @@ parameters:
   ui_config:
     name: ui5
     full_name: UI5
-    domain: ui5.fr
     protocol: http
     upload_path: '%kernel.project_dir%/public/uploads'
     upload_folder: uploads
@@ -124,6 +123,113 @@ parameters:
                 required: true
                 allow_add: true
                 allow_delete: true
+      App\Entity\Media:
+        table_name: media
+        name: App\Entity\Media
+        name_field: name
+        is_tree: "1"
+        order_by: id
+        order_dir: desc
+        form:
+          class: App\Entity\Media
+          translations:
+            name:
+              name: Name
+              type: TextType
+              namespace: Symfony\Component\Form\Extension\Core\Type
+              transformer: ""
+              options:
+                help: ""
+                label: ""
+                attr:
+                  class: ""
+                required: false
+            description:
+              name: Description
+              type: TextareaType
+              namespace: Symfony\Component\Form\Extension\Core\Type
+              transformer: ""
+              options:
+                help: ""
+                label: ""
+                attr:
+                  class: tinymce
+                required: false
+          fields:
+            file:
+              name: File
+              type: UIFileType
+              namespace: Uicms\Admin\Form\Type
+              transformer: Uicms\Admin\Form\DataTransformer\FileTransformer
+              options:
+                help: ""
+                label: ""
+                attr:
+                  class: ""
+                required: false
+                template: file
+      App\Entity\Block:
+        table_name: block
+        name: App\Entity\Block
+        name_field: name
+        is_tree: "1"
+        order_by: id
+        order_dir: desc
+        form:
+          class: App\Entity\Block
+          translations:
+            name:
+              name: Name
+              type: TextType
+              namespace: Symfony\Component\Form\Extension\Core\Type
+              transformer: ""
+              options:
+                help: ""
+                label: ""
+                attr:
+                  class: ""
+                required: false
+            text:
+              name: Text
+              type: TextareaType
+              namespace: Symfony\Component\Form\Extension\Core\Type
+              transformer: ""
+              options:
+                help: ""
+                label: ""
+                attr:
+                  class: tinymce
+                required: false
+          fields:
+            type:
+              name: Type
+              type: TextType
+              namespace: Symfony\Component\Form\Extension\Core\Type
+              transformer: ""
+              options:
+                help: ""
+                label: ""
+                attr:
+                  class: ""
+                required: false
+      App\Entity\LinkPageBlock:
+        table_name: link_page_block
+        name: App\Entity\Block
+        name_field: id
+        order_by: id
+        order_dir: id
+        link:
+        - App\Entity\Page
+        - App\Entity\Block
+      App\Entity\LinkBlockMedia:
+        table_name: link_block_media
+        name: App\Entity\Media
+        name_field: id
+        order_by: id
+        order_dir: id
+        link:
+        - App\Entity\Block
+        - App\Entity\Media
     admin:
       vars:
         limit: 50
@@ -159,4 +265,18 @@ parameters:
           slug: action
           display: false
           params: ~
+        medias:
+          controller: Uicms\Admin\Controller\Editor
+          action: index
+          slug: medias
+          arguments:
+            entity_name: App\Entity\Media
+          params: []
+        blocks:
+          controller: Uicms\Admin\Controller\Editor
+          action: index
+          slug: blocks
+          arguments:
+            entity_name: App\Entity\Block
+          params: []
 ...
