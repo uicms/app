@@ -37,9 +37,9 @@ class Page implements TranslatableInterface
     private $parent=NULL;
 
 	public function __call($method, $args)
-  	{
-  	    return $this->proxyCurrentLocaleTranslation($method, $args);
-  	}
+                 	{
+                 	    return $this->proxyCurrentLocaleTranslation($method, $args);
+                 	}
 
 	
     /**
@@ -101,6 +101,18 @@ class Page implements TranslatableInterface
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $slug = '';
+
+/**
+	 * @ORM\OneToMany(targetEntity="App\Entity\LinkPageBlock", mappedBy="page")
+	 */
+	private $link_page_block;
+
+    public function __construct()
+    {
+        $this->link_page_block = new ArrayCollection();
+    }
+
+
 
     public function getId(): ?int
     {
@@ -271,6 +283,36 @@ class Page implements TranslatableInterface
     public function setParent(?self $parent): self
     {
         $this->parent = $parent;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|LinkPageBlock[]
+     */
+    public function getLinkPageBlock(): Collection
+    {
+        return $this->link_page_block;
+    }
+
+    public function addLinkPageBlock(LinkPageBlock $linkPageBlock): self
+    {
+        if (!$this->link_page_block->contains($linkPageBlock)) {
+            $this->link_page_block[] = $linkPageBlock;
+            $linkPageBlock->setPage($this);
+        }
+
+        return $this;
+    }
+
+    public function removeLinkPageBlock(LinkPageBlock $linkPageBlock): self
+    {
+        if ($this->link_page_block->removeElement($linkPageBlock)) {
+            // set the owning side to null (unless already changed)
+            if ($linkPageBlock->getPage() === $this) {
+                $linkPageBlock->setPage(null);
+            }
+        }
 
         return $this;
     }

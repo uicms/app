@@ -28,7 +28,7 @@ class PageTranslation implements TranslationInterface
     private $name = '';
 	
     /**
-     * @ORM\Column(type="text", length=65535, nullable=true)
+     * @ORM\Column(type="text", length=32000, nullable=true)
      */
     private $html;
 
