@@ -1,0 +1,32 @@
+<article class="block block_image {{ block.class }}">
+    
+    <div class="wrapper clearfix">
+        <h2>{{ block.name|raw }}</h2>
+        {% if block.text %}<div class="text">{{ block.text|raw }}</div>{% endif %}
+        {% if block.medias %}
+        <ul class="images">
+        {% for media in block.medias %}
+            <li>
+                <div class="wrapper">
+                    <div class="thumbnail">
+                        <div class="ratio">
+                            <div class="wrapper">
+                                <img src="/uploads/{{ media.file }}" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="details">
+                        <div class="ratio">
+                            <div class="wrapper">
+                                <h3>{{ media.name }}</h3>
+                                {% if media.description %}<div class="description">{{ media.description|raw }}</div>{% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </li>
+        {% endfor %}
+        </ul>
+        {% endif %}
+    </div>
+</article>

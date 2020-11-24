@@ -34,6 +34,7 @@ CREATE TABLE `block` (
   `is_dir` tinyint(1) NOT NULL,
   `position` int(11) NOT NULL,
   `type` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `class` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `IDX_831B9722A76ED395` (`user_id`),
   KEY `IDX_831B9722727ACA70` (`parent_id`),
@@ -272,7 +273,7 @@ CREATE TABLE `migration_versions` (
 
 LOCK TABLES `migration_versions` WRITE;
 /*!40000 ALTER TABLE `migration_versions` DISABLE KEYS */;
-INSERT INTO `migration_versions` VALUES ('DoctrineMigrations\\Version20201122235258','2020-11-23 00:52:59',3451),('DoctrineMigrations\\Version20201122235755','2020-11-23 00:57:56',3459),('DoctrineMigrations\\Version20201123000124','2020-11-23 01:01:25',5721),('DoctrineMigrations\\Version20201123000150','2020-11-23 01:01:51',5548);
+INSERT INTO `migration_versions` VALUES ('DoctrineMigrations\\Version20201122235258','2020-11-23 00:52:59',3451),('DoctrineMigrations\\Version20201122235755','2020-11-23 00:57:56',3459),('DoctrineMigrations\\Version20201123000124','2020-11-23 01:01:25',5721),('DoctrineMigrations\\Version20201123000150','2020-11-23 01:01:51',5548),('DoctrineMigrations\\Version20201124094518','2020-11-24 10:45:20',807);
 /*!40000 ALTER TABLE `migration_versions` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -397,4 +398,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2020-11-23  1:06:42
+-- Dump completed on 2020-11-24 12:48:28

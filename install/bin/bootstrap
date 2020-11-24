@@ -1,0 +1,33 @@
+#!/bin/bash
+sudo mysqldump -u bootstrap -p bootstrap > data/bootstrap.sql
+db_bootstrap_path="/home/ui_app/install/db/bootstrap/mysql/bootstrap.sql"
+sudo cp /home/bootstrap/data/bootstrap.sql $db_bootstrap_path
+sudo chown ui_app $db_bootstrap_path
+sudo chgrp ui_app $db_bootstrap_path
+
+entity_path="/home/ui_app/install/src/Entity"
+sudo rsync -avz /home/bootstrap/src/Entity/ $entity_path/
+sudo chown ui_app $entity_path/*
+sudo chgrp ui_app $entity_path/*
+sudo chmod 0755 $entity_path/*
+
+config_path="/home/ui_app/install/config/packages/ui.yaml"
+sudo cp /home/bootstrap/config/packages/ui.yaml $config_path
+sudo chown ui_app $config_path
+sudo chgrp ui_app $config_path
+
+for i in /home/bootstrap/src/Repository
+do
+    file=`basename $i`
+    path="/home/ui_app/install/src/Repository/$file"
+    if [ ! -f $dir_data ]
+        then
+            echo "Copy $i -> $path"
+            sudo cp $i $path
+            sudo chown ui_app $path
+            sudo chgrp ui_app $path
+            sudo chmod 0755 $path
+    fi
+done
+
+echo "Bootstrap generated && uicms/app package updated!"

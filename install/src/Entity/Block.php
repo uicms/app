@@ -15,9 +15,9 @@ class Block implements TranslatableInterface
     use TranslatableTrait;
     
 	public function __call($method, $args)
-                                                                                        	{
-                                                                                             return $this->proxyCurrentLocaleTranslation($method, $args);
-                                                                                        	}
+                                                                                              	{
+                                                                                                   return $this->proxyCurrentLocaleTranslation($method, $args);
+                                                                                              	}
     
     /**
      * @ORM\Id()
@@ -79,19 +79,26 @@ class Block implements TranslatableInterface
     private $position=0;
 
     /**
-                * @ORM\Column(type="string",nullable=false)
-                */
-                private $type;
+    * @ORM\Column(type="string",nullable=false)
+    */
+    private $type='default';
 
-/**
+    /**
 	 * @ORM\OneToMany(targetEntity="App\Entity\LinkPageBlock", mappedBy="block")
 	 */
 	private $link_page_block;
 
-/**
+    /**
 	 * @ORM\OneToMany(targetEntity="App\Entity\LinkBlockMedia", mappedBy="block")
 	 */
 	private $link_block_media;
+
+    /**
+    * @ORM\Column(type="string",nullable=true)
+    */
+    private $class;
+
+
 
 
 
@@ -279,6 +286,18 @@ class Block implements TranslatableInterface
                             $linkBlockMedium->setBlock(null);
                         }
                     }
+
+                    return $this;
+                }
+
+                public function getClass(): ?string
+                {
+                    return $this->class;
+                }
+
+                public function setClass(?string $class): self
+                {
+                    $this->class = $class;
 
                     return $this;
                 }

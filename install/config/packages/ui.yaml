@@ -3,6 +3,7 @@ parameters:
   ui_config:
     name: ui5
     full_name: UI5
+    domain: ui5.fr
     protocol: http
     upload_path: '%kernel.project_dir%/public/uploads'
     upload_folder: uploads
@@ -203,6 +204,17 @@ parameters:
           fields:
             type:
               name: Type
+              type: TextType
+              namespace: Symfony\Component\Form\Extension\Core\Type
+              transformer: ""
+              options:
+                help: ""
+                label: ""
+                attr:
+                  class: ""
+                required: false
+            class:
+              name: Class
               type: TextType
               namespace: Symfony\Component\Form\Extension\Core\Type
               transformer: ""
