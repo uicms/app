@@ -28,7 +28,7 @@ class BaseRepository extends ServiceEntityRepository
 		$this->name = $entity_name;
 		$this->security = $security;
     $this->passwd_encoder = $passwd_encoder;
-		#$this->parameters = $parameters;
+		#$this->parameters = $parameter
 		
 		$this->ui_config = $parameters->get('ui_config');
 		$this->locale = $parameters->get('locale');

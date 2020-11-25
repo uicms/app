@@ -80,7 +80,7 @@ class Page implements TranslatableInterface
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $controller = 'html';
+    private $controller = 'default';
 
     /**
      * @ORM\Column(type="string", length=255)
@@ -244,7 +244,7 @@ class Page implements TranslatableInterface
         return $this->menu;
     }
 
-    public function setMenu(string $menu): self
+    public function setMenu(?string $menu): self
     {
         $this->menu = $menu;
 
