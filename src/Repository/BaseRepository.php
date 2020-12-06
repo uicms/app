@@ -23,7 +23,10 @@ class BaseRepository extends ServiceEntityRepository
     protected $global_config = array();
     protected $security;
     public $config = null;
-
+    protected $meta_fields = array('id', 'created', 'modified', 'published', 'is_concealed', 'is_locked', 'position', 'is_dir', 'locale');
+    protected $row_default_name = 'Untitled';
+    protected $duplicate_prefix = 'Copy of';
+    
     public function __construct(Security $security, ManagerRegistry $registry, UserPasswordEncoderInterface $passwd_encoder, ParameterBagInterface $parameters, $entity_name)
     {
         $this->name = $entity_name;
@@ -208,10 +211,12 @@ class BaseRepository extends ServiceEntityRepository
             }
         }
         
-        # Findby LIKE
-        if(isset($params['findby_like']) && $params['findby_like'] && is_array($params['findby_like'])) {
-            foreach($params['findby_like'] as $field_name=>$value) {
-                $query->andWhere('t.' . $field_name . ' LIKE :findby_like')->setParameter('findby_like', "%$value%");
+        # Search
+        if(isset($params['search']) && $params['search'] && is_array($params['search'])) {
+            $string = array_key_first($params['search']);
+            $fields = is_array($params['search'][$string]) ? $params['search'][$string] : array($params['search'][$string]);
+            foreach($fields as $field_name=>$value) {
+                $query->andWhere('t.' . $field_name . ' LIKE :search')->setParameter('search', "%$string%");
             }
         }
 
@@ -250,7 +255,7 @@ class BaseRepository extends ServiceEntityRepository
     {
         if(null !== $row) {
             # Meta
-            $row->_name = $this->global_config['row_default_name'];
+            $row->_name = isset($this->global_config['row_default_name']) ? $this->global_config['row_default_name'] : $this->row_default_name;
             $row->_file = null;
             $row->_thumbnail = null;
             $row->_text = null;
@@ -399,7 +404,6 @@ class BaseRepository extends ServiceEntityRepository
     
     public function getFields($params=array())
     {
-        $meta_fields = $this->global_config['meta_fields'];
         $all_fields = array();
 
         # Regular
@@ -407,7 +411,7 @@ class BaseRepository extends ServiceEntityRepository
         foreach($result as $i=>$field_name) {
             $data = array('name'=>$field_name);
             foreach($this->global_config['entity'][$this->name]['form']['fields'] as $form_field_name=>$form_field) {
-                $data['is_meta'] = in_array($field_name, $meta_fields) ? true : false;
+                $data['is_meta'] = in_array($field_name, $this->meta_fields) ? true : false;
                 if($field_name == $form_field_name) {
                     $data['form'] = $form_field;
                 }
@@ -425,7 +429,7 @@ class BaseRepository extends ServiceEntityRepository
                 
                 $data = array('name'=>$field_name);
                 foreach($this->global_config['entity'][$this->name]['form']['translations'] as $form_field_name=>$form_field) {
-                    $data['is_meta'] = in_array($field_name, $meta_fields) ? true : false;
+                    $data['is_meta'] = in_array($field_name, $this->meta_fields) ? true : false;
                     if($field_name == $form_field_name) {
                         $data['form'] = $form_field;
                     }
@@ -735,21 +739,20 @@ class BaseRepository extends ServiceEntityRepository
     {
         if($this->security->isGranted('ROLE_PERSIST')) {
             $em = $this->getEntityManager();
+            $prefix = isset($this->global_config['duplicate_prefix']) ? $this->global_config['duplicate_prefix'] : $this->duplicate_prefix;
             foreach($selection as $id) {
                 $row = $this->find($id);
                 $copy = $this->new($row->getUser());
                 $fields = $this->getFields();
-
                 foreach($fields as $i=>$field) {
                     if(!isset($field['is_meta']) || !$field['is_meta']) {
                         $get_method = $this->method($field['name']);
                         $set_method = $this->method($field['name'], 'set');
                         $value = $row->$get_method();
-                        if($field['name'] == $this->config['name_field']) $value = $this->global_config['duplicate_prefix'] . ' ' .$value;
+                        if($field['name'] == $this->config['name_field']) $value = $prefix . ' ' .$value;
                         $copy->$set_method($value);
                     }
                 }
-                
                 if($this->isTranslatable()) {
                     $copy->mergeNewTranslations();
                 }

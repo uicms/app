@@ -10,18 +10,6 @@ parameters:
     thumbnail_default_width: 360
     thumbnail_default_height: 360
     thumbnail_prefix: _
-    row_default_name: Nouveau
-    duplicate_prefix: Copie de 
-    meta_fields:
-      - id
-      - created
-      - modified
-      - published
-      - is_concealed
-      - is_locked
-      - position
-      - is_dir
-      - locale
     entity:
       App\Entity\Page:
         name: App\Entity\Page
@@ -293,7 +281,7 @@ parameters:
           slug: pages
           arguments:
             entity_name: App\Entity\Page
-          params: ~
+          params: []
         users:
           controller: Uicms\Admin\Controller\Editor
           action: index
@@ -314,7 +302,8 @@ parameters:
           slug: medias
           arguments:
             entity_name: App\Entity\Media
-          params: []
+          params:
+            display: thumbnails
         blocks:
           controller: Uicms\Admin\Controller\Editor
           action: index
