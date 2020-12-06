@@ -410,8 +410,9 @@ class BaseRepository extends ServiceEntityRepository
         $result = $this->meta()->getFieldNames();
         foreach($result as $i=>$field_name) {
             $data = array('name'=>$field_name);
+            $data['is_meta'] = in_array($field_name, $this->meta_fields) ? true : false;
+            
             foreach($this->global_config['entity'][$this->name]['form']['fields'] as $form_field_name=>$form_field) {
-                $data['is_meta'] = in_array($field_name, $this->meta_fields) ? true : false;
                 if($field_name == $form_field_name) {
                     $data['form'] = $form_field;
                 }
@@ -426,10 +427,10 @@ class BaseRepository extends ServiceEntityRepository
             if($result[0] == 'id') unset($result[0]);
 
             foreach($result as $i=>$field_name) {
-                
                 $data = array('name'=>$field_name);
+                $data['is_meta'] = in_array($field_name, $this->meta_fields) ? true : false;
+                
                 foreach($this->global_config['entity'][$this->name]['form']['translations'] as $form_field_name=>$form_field) {
-                    $data['is_meta'] = in_array($field_name, $this->meta_fields) ? true : false;
                     if($field_name == $form_field_name) {
                         $data['form'] = $form_field;
                     }
