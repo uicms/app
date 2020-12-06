@@ -215,7 +215,7 @@ class BaseRepository extends ServiceEntityRepository
         if(isset($params['search']) && $params['search'] && is_array($params['search'])) {
             $string = array_key_first($params['search']);
             $fields = is_array($params['search'][$string]) ? $params['search'][$string] : array($params['search'][$string]);
-            foreach($fields as $field_name=>$value) {
+            foreach($fields as $field_name) {
                 $query->andWhere('t.' . $field_name . ' LIKE :search')->setParameter('search', "%$string%");
             }
         }
