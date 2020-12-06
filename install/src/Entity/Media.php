@@ -15,9 +15,9 @@ class Media implements TranslatableInterface
     use TranslatableTrait;
     
 	public function __call($method, $args)
-                                                                            	{
-                                                                                 return $this->proxyCurrentLocaleTranslation($method, $args);
-                                                                            	}
+                                                                                        	{
+                                                                                             return $this->proxyCurrentLocaleTranslation($method, $args);
+                                                                                        	}
     
     /**
      * @ORM\Id()
@@ -88,9 +88,17 @@ class Media implements TranslatableInterface
 	 */
 	private $link_block_media;
 
+/**
+	 * @ORM\OneToMany(targetEntity="App\Entity\LinkPageMedia", mappedBy="media")
+	 */
+	private $link_page_media;
+
+
+
     public function __construct()
     {
         $this->link_block_media = new ArrayCollection();
+        $this->link_page_media = new ArrayCollection();
     }
 
 
@@ -239,6 +247,36 @@ class Media implements TranslatableInterface
                         // set the owning side to null (unless already changed)
                         if ($linkBlockMedium->getMedia() === $this) {
                             $linkBlockMedium->setMedia(null);
+                        }
+                    }
+
+                    return $this;
+                }
+
+                /**
+                 * @return Collection|LinkPageMedia[]
+                 */
+                public function getLinkPageMedia(): Collection
+                {
+                    return $this->link_page_media;
+                }
+
+                public function addLinkPageMedium(LinkPageMedia $linkPageMedium): self
+                {
+                    if (!$this->link_page_media->contains($linkPageMedium)) {
+                        $this->link_page_media[] = $linkPageMedium;
+                        $linkPageMedium->setMedia($this);
+                    }
+
+                    return $this;
+                }
+
+                public function removeLinkPageMedium(LinkPageMedia $linkPageMedium): self
+                {
+                    if ($this->link_page_media->removeElement($linkPageMedium)) {
+                        // set the owning side to null (unless already changed)
+                        if ($linkPageMedium->getMedia() === $this) {
+                            $linkPageMedium->setMedia(null);
                         }
                     }
 

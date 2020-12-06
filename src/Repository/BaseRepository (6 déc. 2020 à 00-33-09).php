@@ -737,22 +737,28 @@ class BaseRepository extends ServiceEntityRepository
             $em = $this->getEntityManager();
             foreach($selection as $id) {
                 $row = $this->find($id);
-                $copy = $this->new($row->getUser());
+                $user = $row->getUser();
+                $copy = $this->new($user);
                 $fields = $this->getFields();
 
                 foreach($fields as $i=>$field) {
                     if(!isset($field['is_meta']) || !$field['is_meta']) {
                         $get_method = $this->method($field['name']);
                         $set_method = $this->method($field['name'], 'set');
-                        $value = $row->$get_method();
-                        if($field['name'] == $this->config['name_field']) $value = $this->global_config['duplicate_prefix'] . ' ' .$value;
-                        $copy->$set_method($value);
+                        $copy->$set_method($row->$get_method());
                     }
                 }
                 
-                if($this->isTranslatable()) {
-                    $copy->mergeNewTranslations();
-                }
+                dd($copy);
+                
+                $copy = clone $row;
+                $get_method = $this->method($this->config['name_field']);
+                $set_method = $this->method($this->config['name_field'], 'set');
+                $new_name = $copy->$get_method() . ' copy';
+                $copy->$set_method($new_name);
+                
+                $em->detach($copy);
+                //dd($copy);
                 $em->persist($copy);
                 $em->flush();
             }

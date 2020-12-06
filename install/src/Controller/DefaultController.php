@@ -4,12 +4,12 @@ namespace App\Controller;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
-class HtmlController extends AbstractController
+class DefaultController extends AbstractController
 {
     public function index($page)
     {
 		return $this->render(
-		            'app/tpl/html/index.html.twig',
+		            'app/tpl/default/index.html.twig',
 		            ['page'=>$page]
 		        );
     }

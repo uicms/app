@@ -37,9 +37,9 @@ class Page implements TranslatableInterface
     private $parent=NULL;
 
 	public function __call($method, $args)
-                 	{
-                 	    return $this->proxyCurrentLocaleTranslation($method, $args);
-                 	}
+                                   	{
+                                   	    return $this->proxyCurrentLocaleTranslation($method, $args);
+                                   	}
 
 	
     /**
@@ -107,9 +107,24 @@ class Page implements TranslatableInterface
 	 */
 	private $link_page_block;
 
+    /**
+                * @ORM\Column(type="string",nullable=true)
+                */
+                private $helper;
+
+/**
+	 * @ORM\OneToMany(targetEntity="App\Entity\LinkPageMedia", mappedBy="page")
+	 */
+	private $link_page_media;
+
+
+
+
+
     public function __construct()
     {
         $this->link_page_block = new ArrayCollection();
+        $this->link_page_media = new ArrayCollection();
     }
 
 
@@ -244,7 +259,7 @@ class Page implements TranslatableInterface
         return $this->menu;
     }
 
-    public function setMenu(?string $menu): self
+    public function setMenu(string $menu): self
     {
         $this->menu = $menu;
 
@@ -311,6 +326,48 @@ class Page implements TranslatableInterface
             // set the owning side to null (unless already changed)
             if ($linkPageBlock->getPage() === $this) {
                 $linkPageBlock->setPage(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getHelper(): ?string
+    {
+        return $this->helper;
+    }
+
+    public function setHelper(?string $helper): self
+    {
+        $this->helper = $helper;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|LinkPageMedia[]
+     */
+    public function getLinkPageMedia(): Collection
+    {
+        return $this->link_page_media;
+    }
+
+    public function addLinkPageMedium(LinkPageMedia $linkPageMedium): self
+    {
+        if (!$this->link_page_media->contains($linkPageMedium)) {
+            $this->link_page_media[] = $linkPageMedium;
+            $linkPageMedium->setPage($this);
+        }
+
+        return $this;
+    }
+
+    public function removeLinkPageMedium(LinkPageMedia $linkPageMedium): self
+    {
+        if ($this->link_page_media->removeElement($linkPageMedium)) {
+            // set the owning side to null (unless already changed)
+            if ($linkPageMedium->getPage() === $this) {
+                $linkPageMedium->setPage(null);
             }
         }
 

@@ -38,6 +38,10 @@ app_page_action:
     path: /{locale}/{slug}/{action}
     defaults: { _controller: 'App\Controller\IndexController::index'}
 
+app_page_id_key:
+    path: /{locale}/{slug}/{id}/{key}
+    defaults: { _controller: 'App\Controller\IndexController::index', action: 'index'}
+
 app_page_action_id_key:
     path: /{locale}/{slug}/{action}/{id}/{key}
     defaults: { _controller: 'App\Controller\IndexController::index'}

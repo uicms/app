@@ -43,7 +43,7 @@ class IndexController extends AbstractController
 		}
 		
 		# Menu
-		$menu = $repo->getAll(array('dir'=>0));
+		$menu = $repo->getAll(array('dir'=>0, 'findby'=>array('menu'=>'menu')));
         foreach($menu as $i=>$menu_page) {
             if($menu_page->getIsdir()) {
                 $menu_page->children = $repo->getAll(array('dir'=>$menu_page->getId()));

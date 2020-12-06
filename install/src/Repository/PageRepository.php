@@ -27,6 +27,11 @@ class PageRepository extends BaseRepository
 	public function setRowData($row, $params=array())
 	{
 		$row = parent::setRowData($row, $params);
+        
+        if($this->mode == 'front') {
+            $row->medias = $this->model('Media')->getAll(array('linked_to'=>'Page', 'linked_to_id'=>$row->getId()));
+        }
+        
 		return $row;
 	}
 }

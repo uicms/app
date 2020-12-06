@@ -16,11 +16,12 @@ sudo cp /home/bootstrap/config/packages/ui.yaml $config_path
 sudo chown ui_app $config_path
 sudo chgrp ui_app $config_path
 
-for i in /home/bootstrap/src/Repository
+for i in /home/bootstrap/src/Repository/*
 do
     file=`basename $i`
     path="/home/ui_app/install/src/Repository/$file"
-    if [ ! -f $dir_data ]
+    
+    if [ ! -f $path ]
         then
             echo "Copy $i -> $path"
             sudo cp $i $path

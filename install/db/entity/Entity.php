@@ -462,7 +462,7 @@ if($action == 'add' || $action=='edit') {
                 }
 
     			# Length
-                if($field_type == 'text') $default_length = 65535;
+                if(isset($field_type) && $field_type == 'text') $default_length = 65535;
                 if(isset($field_type) && in_array($field_type, $types_with_length) && !in_array($field_form_type, $length_exclude_form_type)) {
         			$add_length = true;
         			while($add_length==true) {
@@ -564,7 +564,7 @@ if($action == 'add' || $action=='edit') {
                 */
                 private \$" . $field_name .";";
                 $attributes = array();
-                $attributes[] = "type=\"" . $field_type ."\"";
+                if(isset($field_type)) $attributes[] = "type=\"" . $field_type ."\"";
                 if(!in_array($field_form_type, $nullable_exclude_form_type)) {
                     $attributes[] = "nullable=" . $field_nullable;
                 }

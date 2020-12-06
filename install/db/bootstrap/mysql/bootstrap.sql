@@ -188,6 +188,47 @@ LOCK TABLES `link_page_block` WRITE;
 UNLOCK TABLES;
 
 --
+-- Table structure for table `link_page_media`
+--
+
+DROP TABLE IF EXISTS `link_page_media`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `link_page_media` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `user_id` int(11) DEFAULT NULL,
+  `parent_id` int(11) DEFAULT NULL,
+  `page_id` int(11) DEFAULT NULL,
+  `media_id` int(11) DEFAULT NULL,
+  `created` datetime DEFAULT NULL,
+  `modified` datetime DEFAULT NULL,
+  `published` datetime DEFAULT NULL,
+  `is_concealed` tinyint(1) NOT NULL,
+  `is_locked` tinyint(1) NOT NULL,
+  `is_dir` tinyint(1) NOT NULL,
+  `position` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `IDX_5B279E2FA76ED395` (`user_id`),
+  KEY `IDX_5B279E2F727ACA70` (`parent_id`),
+  KEY `IDX_5B279E2FC4663E4` (`page_id`),
+  KEY `IDX_5B279E2FEA9FDD75` (`media_id`),
+  CONSTRAINT `FK_5B279E2F727ACA70` FOREIGN KEY (`parent_id`) REFERENCES `link_page_media` (`id`),
+  CONSTRAINT `FK_5B279E2FA76ED395` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`),
+  CONSTRAINT `FK_5B279E2FC4663E4` FOREIGN KEY (`page_id`) REFERENCES `page` (`id`),
+  CONSTRAINT `FK_5B279E2FEA9FDD75` FOREIGN KEY (`media_id`) REFERENCES `media` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `link_page_media`
+--
+
+LOCK TABLES `link_page_media` WRITE;
+/*!40000 ALTER TABLE `link_page_media` DISABLE KEYS */;
+/*!40000 ALTER TABLE `link_page_media` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `media`
 --
 
@@ -299,6 +340,7 @@ CREATE TABLE `page` (
   `published` datetime DEFAULT NULL,
   `is_concealed` tinyint(1) NOT NULL,
   `is_locked` tinyint(1) NOT NULL,
+  `helper` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `IDX_140AB620A76ED395` (`user_id`),
   KEY `IDX_140AB620727ACA70` (`parent_id`),
@@ -313,7 +355,7 @@ CREATE TABLE `page` (
 
 LOCK TABLES `page` WRITE;
 /*!40000 ALTER TABLE `page` DISABLE KEYS */;
-INSERT INTO `page` VALUES (1,'default','index',NULL,'accueil',0,'menu','0',1,NULL,'2020-11-23 00:50:16','2020-11-24 22:45:53','2020-11-23 00:50:16',0,0);
+INSERT INTO `page` VALUES (1,'default','index',NULL,'accueil',0,'menu','0',1,NULL,'2020-11-23 00:50:16','2020-11-24 22:45:53','2020-11-23 00:50:16',0,0,NULL);
 /*!40000 ALTER TABLE `page` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -397,4 +439,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2020-11-24 22:49:28
+-- Dump completed on 2020-12-03 23:00:17

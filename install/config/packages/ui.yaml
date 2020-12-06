@@ -11,6 +11,17 @@ parameters:
     thumbnail_default_height: 360
     thumbnail_prefix: _
     row_default_name: Nouveau
+    duplicate_prefix: Copie de 
+    meta_fields:
+      - id
+      - created
+      - modified
+      - published
+      - is_concealed
+      - is_locked
+      - position
+      - is_dir
+      - locale
     entity:
       App\Entity\Page:
         name: App\Entity\Page
@@ -73,6 +84,17 @@ parameters:
               modifier: Uicms\Admin\Form\DataModifier\SlugModifier
               transformer: ~
               options:
+                required: false
+            helper:
+              name: Helper
+              type: TextType
+              namespace: Symfony\Component\Form\Extension\Core\Type
+              transformer: ""
+              options:
+                help: ""
+                label: ""
+                attr:
+                  class: ""
                 required: false
       App\Entity\User:
         name: App\Entity\User
@@ -241,6 +263,15 @@ parameters:
         order_dir: id
         link:
         - App\Entity\Block
+        - App\Entity\Media
+      App\Entity\LinkPageMedia:
+        table_name: link_page_media
+        name: App\Entity\Media
+        name_field: id
+        order_by: id
+        order_dir: id
+        link:
+        - App\Entity\Page
         - App\Entity\Media
     admin:
       vars:
