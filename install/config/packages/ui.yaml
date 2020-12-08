@@ -3,13 +3,8 @@ parameters:
   ui_config:
     name: ui5
     full_name: UI5
-    domain: ui5.fr
     protocol: http
     upload_path: '%kernel.project_dir%/public/uploads'
-    upload_folder: uploads
-    thumbnail_default_width: 360
-    thumbnail_default_height: 360
-    thumbnail_prefix: _
     entity:
       App\Entity\Page:
         name: App\Entity\Page

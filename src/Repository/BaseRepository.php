@@ -20,12 +20,26 @@ class BaseRepository extends ServiceEntityRepository
     protected $locale = '';
     protected $default_locale = '';
     protected $mode = 'front';
-    protected $global_config = array();
     protected $security;
-    public $config = null;
-    protected $meta_fields = array('id', 'created', 'modified', 'published', 'is_concealed', 'is_locked', 'position', 'is_dir', 'locale');
+    protected $meta_fields = array( 'id', 
+                                    'created', 
+                                    'modified', 
+                                    'published', 
+                                    'is_concealed', 
+                                    'is_locked', 
+                                    'position', 
+                                    'is_dir', 
+                                    'locale');
+    
+    
+    # Global config
+    protected $global_config = array();
     protected $row_default_name = 'Untitled';
     protected $duplicate_prefix = 'Copy of';
+    
+    # Public
+    public $config = null;
+    
     
     public function __construct(Security $security, ManagerRegistry $registry, UserPasswordEncoderInterface $passwd_encoder, ParameterBagInterface $parameters, $entity_name)
     {
@@ -34,7 +48,7 @@ class BaseRepository extends ServiceEntityRepository
         $this->passwd_encoder = $passwd_encoder;
         #$this->parameters = $parameter
         
-        $this->global_config = $parameters->get('ui_config');
+        $this->global_config = $ui_config = $parameters->get('ui_config');
         $this->locale = $parameters->get('locale');
         $this->default_locale = $parameters->get('locale');
         foreach($this->global_config['entity'] as $entity_name=>$entity) {
@@ -43,6 +57,9 @@ class BaseRepository extends ServiceEntityRepository
                 break;
             }
         }
+        
+        if(isset($ui_config['row_default_name'])) $this->row_default_name = $ui_config['row_default_name'];
+        if(isset($ui_config['duplicate_prefix'])) $this->duplicate_prefix = $ui_config['duplicate_prefix'];
         
         parent::__construct($registry, $this->name);
     }
@@ -255,7 +272,7 @@ class BaseRepository extends ServiceEntityRepository
     {
         if(null !== $row) {
             # Meta
-            $row->_name = isset($this->global_config['row_default_name']) ? $this->global_config['row_default_name'] : $this->row_default_name;
+            $row->_name = $this->row_default_name;
             $row->_file = null;
             $row->_thumbnail = null;
             $row->_text = null;
