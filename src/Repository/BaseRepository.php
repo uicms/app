@@ -12,8 +12,6 @@ use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\Mime\MimeTypes;
 
-use DeepCopy\DeepCopy;
-
 class BaseRepository extends ServiceEntityRepository
 {
     protected $name = '';
@@ -36,6 +34,8 @@ class BaseRepository extends ServiceEntityRepository
     protected $global_config = array();
     protected $row_default_name = 'Untitled';
     protected $duplicate_prefix = 'Copy of';
+    protected $upload_path = 'public/uploads';
+    protected $preview_prefix = '_';
     
     # Public
     public $config = null;
@@ -46,8 +46,7 @@ class BaseRepository extends ServiceEntityRepository
         $this->name = $entity_name;
         $this->security = $security;
         $this->passwd_encoder = $passwd_encoder;
-        #$this->parameters = $parameter
-        
+        $this->parameters = $parameters;
         $this->global_config = $ui_config = $parameters->get('ui_config');
         $this->locale = $parameters->get('locale');
         $this->default_locale = $parameters->get('locale');
@@ -58,6 +57,8 @@ class BaseRepository extends ServiceEntityRepository
             }
         }
         
+        if(isset($ui_config['preview_prefix'])) $this->preview_prefix = $ui_config['preview_prefix'];
+        if(isset($ui_config['upload_path'])) $this->upload_path = $ui_config['upload_path'];
         if(isset($ui_config['row_default_name'])) $this->row_default_name = $ui_config['row_default_name'];
         if(isset($ui_config['duplicate_prefix'])) $this->duplicate_prefix = $ui_config['duplicate_prefix'];
         
@@ -338,12 +339,6 @@ class BaseRepository extends ServiceEntityRepository
         $this->locale = $locale;
         return $this;
     }
-    
-    /*public function data($get_data)
-    {
-        $this->get_data = $get_data;
-        return $this;
-    }*/
     
     public function meta($entity_name='')
     {
@@ -683,20 +678,33 @@ class BaseRepository extends ServiceEntityRepository
         if($this->security->isGranted('ROLE_PERSIST')) {
             
             if($current) {
-                foreach($this->global_config['entity'][$this->name]['form']['fields'] as $j=>$form_field) {        
-                    $get_method = 'get' . $form_field['name'];
-                    $set_method = 'set' . $form_field['name'];
-                    
-                    # Password Type
-                    if($form_field['type'] == 'RepeatedType') {
-                        $dest_set_method = 'set' . $form_field['dest'];
-                        $password = $this->passwd_encoder->encodePassword($data, $data->$get_method());
-                        $data->$dest_set_method($password);
-                    }
-                    
-                    # File Type
-                    if($form_field['type'] == 'UIFileType' && !$data->$get_method() && $current->$get_method()) {
-                        $data->$set_method($current->$get_method());
+                $fields = $this->getFields();
+                foreach($fields as $i=>$field) {
+                    if(!isset($field['is_meta']) || !$field['is_meta']) {
+                        $get_method = 'get' . $field['name'];
+                        $set_method = 'set' . $field['name'];
+                        
+                        # Password Type
+                        if($field['form']['type'] == 'RepeatedType') {
+                            $dest_set_method = 'set' . $field['form']['dest'];
+                            $password = $this->passwd_encoder->encodePassword($data, $data->$get_method());
+                            $data->$dest_set_method($password);
+                        }
+                        
+                        # File Type
+                        if($field['form']['type'] == 'UIFileType' && !$data->$get_method() && $current->$get_method()) {
+                            $data->$set_method($current->$get_method());
+                        }
+                        if($field['form']['type'] == 'UIFileType' && $data->$get_method() && $current->$get_method()) {
+                            $path = $this->upload_path . '/' . $current->$get_method();
+                            $path_thumbnail = $this->upload_path . '/' . $this->preview_prefix . $current->$get_method();
+                            if(file_exists($path)) {
+                                unlink($path);
+                            }
+                            if(file_exists($path_thumbnail)) {
+                                unlink($path_thumbnail);
+                            }
+                        }
                     }
                 }
             }
@@ -720,7 +728,7 @@ class BaseRepository extends ServiceEntityRepository
         }
         
     }
-    
+
     public function publish($selection)
     {
         if($this->security->isGranted('ROLE_PERSIST')) {
@@ -757,7 +765,7 @@ class BaseRepository extends ServiceEntityRepository
     {
         if($this->security->isGranted('ROLE_PERSIST')) {
             $em = $this->getEntityManager();
-            $prefix = isset($this->global_config['duplicate_prefix']) ? $this->global_config['duplicate_prefix'] : $this->duplicate_prefix;
+            
             foreach($selection as $id) {
                 $row = $this->find($id);
                 $copy = $this->new($row->getUser());
@@ -767,7 +775,24 @@ class BaseRepository extends ServiceEntityRepository
                         $get_method = $this->method($field['name']);
                         $set_method = $this->method($field['name'], 'set');
                         $value = $row->$get_method();
-                        if($field['name'] == $this->config['name_field']) $value = $prefix . ' ' .$value;
+                        
+                        # Name field modified with prefix
+                        if($field['name'] == $this->config['name_field']) {
+                            $value = $this->duplicate_prefix . ' ' . $value;
+                        }
+                        
+                        # Duplicate file
+                        if($field['form']['type'] == 'UIFileType' && $value) {
+                            $info = pathinfo($value);
+                            $length = strlen($info['filename']) - 14;
+                            $original_file_name = substr($info['filename'], 0, $length);
+                            $old_value = $value;
+                            $value =  $original_file_name . '-' . uniqid() . '.' . $info['extension'];
+                            copy($this->upload_path . '/' . $old_value, $this->upload_path . '/' . $value);
+                            copy($this->upload_path . '/' . $this->preview_prefix . $old_value, $this->upload_path . '/' . $this->preview_prefix . $value);
+                        }
+                        
+                        # Set value in copy
                         $copy->$set_method($value);
                     }
                 }
@@ -789,6 +814,25 @@ class BaseRepository extends ServiceEntityRepository
             $em = $this->getEntityManager();
             foreach($selection as $id) {
                 $row = $this->find($id);
+                
+                # Delete files
+                $fields = $this->getFields();
+                foreach($fields as $i=>$field) {
+                    if(!isset($field['is_meta']) || !$field['is_meta']) {
+                        $get_method = 'get' . $field['name'];
+                        if($field['form']['type'] == 'UIFileType') {
+                            $path = $this->upload_path . '/' . $row->$get_method();
+                            $path_thumbnail = $this->upload_path . '/' . $this->preview_prefix . $row->$get_method();
+                            if(file_exists($path)) {
+                                unlink($path);
+                            }
+                            if(file_exists($path_thumbnail)) {
+                                unlink($path_thumbnail);
+                            }
+                        }
+                    }
+                }
+                
                 $em->remove($row);
                 $em->flush();
             }
