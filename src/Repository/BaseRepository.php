@@ -695,7 +695,7 @@ class BaseRepository extends ServiceEntityRepository
                         if($field['form']['type'] == 'UIFileType' && !$data->$get_method() && $current->$get_method()) {
                             $data->$set_method($current->$get_method());
                         }
-                        if($field['form']['type'] == 'UIFileType' && $data->$get_method() && $current->$get_method()) {
+                        if($field['form']['type'] == 'UIFileType' && $data->$get_method() && $current->$get_method() && $data->$get_method() != $current->$get_method()) {
                             $path = $this->upload_path . '/' . $current->$get_method();
                             $path_thumbnail = $this->upload_path . '/' . $this->preview_prefix . $current->$get_method();
                             if(file_exists($path)) {
