@@ -15,6 +15,7 @@ use Symfony\Component\Mime\MimeTypes;
 class BaseRepository extends ServiceEntityRepository
 {
     protected $name = '';
+    #protected $basename = '';
     protected $locale = '';
     protected $default_locale = '';
     protected $mode = 'front';
@@ -44,6 +45,8 @@ class BaseRepository extends ServiceEntityRepository
     public function __construct(Security $security, ManagerRegistry $registry, UserPasswordEncoderInterface $passwd_encoder, ParameterBagInterface $parameters, $entity_name)
     {
         $this->name = $entity_name;
+        $name_splitted = explode('\\', $entity_name);
+        $this->basename = end($name_splitted);
         $this->security = $security;
         $this->passwd_encoder = $passwd_encoder;
         $this->parameters = $parameters;
@@ -93,6 +96,7 @@ class BaseRepository extends ServiceEntityRepository
             break;
             
             case "delete":
+                $query->delete();
             break;
             
             case "select":
@@ -102,6 +106,10 @@ class BaseRepository extends ServiceEntityRepository
                 if($this->isTranslatable()) {
                     $query->join('t.translations', 'i');
                     $query->andWhere("i.locale = '".$this->locale."' OR i.locale='" . $this->default_locale . "'");
+                }
+                # Is concealed
+                if($this->mode == 'front') {
+                    $query->andWhere('t.is_concealed=:concealed')->setParameter('concealed', 0);
                 }
                 $query->orderBy("$position_table_alias.position", 'asc');
                 $query->addOrderBy($order_table_alias . '.' . $order_by, $order_dir);
@@ -252,11 +260,6 @@ class BaseRepository extends ServiceEntityRepository
             }
         }
         
-        # Is concealed
-        if($this->mode == 'front') {
-            $query->andWhere('t.is_concealed=:concealed')->setParameter('concealed', 0);
-        }
-
         # Offset and limit
         if(isset($params['offset'])) {
             $query->setFirstResult((int)$params['offset']);
@@ -292,7 +295,7 @@ class BaseRepository extends ServiceEntityRepository
             if(is_object($row->_name) && isset($this->global_config['entity'][$this->name]['form']['fields'][$this->config['name_field']]['options']['class'])) {
                 $foreign_entity_name = $this->global_config['entity'][$this->name]['form']['fields'][$this->config['name_field']]['options']['class'];
                 $foreign_model = $this->model($foreign_entity_name);
-                $method = $this->method($foreign_model->getTableConfigParam('name_field'));
+                $method = $this->method($foreign_model->getConfig('name_field'));
                 $row->_name = $row->_name->$method();
             }
             
@@ -301,15 +304,15 @@ class BaseRepository extends ServiceEntityRepository
                 $method = 'get'.$file_field['form']['name'];
                 if($row->_file = $row->$method()) {
                     $file_path = getcwd() . '/uploads/' . $row->_file;
-                    if(file_exists($file_path)) {
+                    if(file_exists($file_path) && !is_dir($file_path)) {
                         $mime_types = new MimeTypes();
                         $mime_type = $mime_types->guessMimeType($file_path);
                     
-                        if(strpos($mime_type, 'image') === 0 && file_exists($file_path)) {
+                        if(strpos($mime_type, 'image') === 0) {
                             $row->_thumbnail = '_' . $row->_file;
                         }
                     
-                        if(strpos($mime_type, 'video') === 0 && file_exists($file_path)) {
+                        if(strpos($mime_type, 'video') === 0) {
                             $path_parts = pathinfo($file_path);
                             $row->_thumbnail = '_' . $path_parts['filename'] . ".jpg";
                         }
@@ -371,6 +374,11 @@ class BaseRepository extends ServiceEntityRepository
         return $this->meta()->name;
     }
     
+    /*public function getBasename()
+    {
+        return $this->basename;
+    }*/
+    
     public function getSlug()
     {
         foreach($this->global_config['admin']['pages'] as $page) {
@@ -381,14 +389,11 @@ class BaseRepository extends ServiceEntityRepository
         return null;
     }
     
-    public function getTableConfig()
+    public function getConfig($param=null)
     {
-        return $this->config;
-    }
-    
-    public function getTableConfigParam($param)
-    {
-        if(isset($this->config[$param])) {
+        if($param === null) {
+            return $this->config;
+        } else if(isset($this->config[$param])) {
             return $this->config[$param];
         } else {
             throw new \Exception('Param ' . $param . ' doesnt exist!');
@@ -698,10 +703,10 @@ class BaseRepository extends ServiceEntityRepository
                         if($field['form']['type'] == 'UIFileType' && $data->$get_method() && $current->$get_method() && $data->$get_method() != $current->$get_method()) {
                             $path = $this->upload_path . '/' . $current->$get_method();
                             $path_thumbnail = $this->upload_path . '/' . $this->preview_prefix . $current->$get_method();
-                            if(file_exists($path)) {
+                            if(file_exists($path) && !is_dir($path)) {
                                 unlink($path);
                             }
-                            if(file_exists($path_thumbnail)) {
+                            if(file_exists($path_thumbnail) && !is_dir($path_thumbnail)) {
                                 unlink($path_thumbnail);
                             }
                         }
@@ -815,6 +820,17 @@ class BaseRepository extends ServiceEntityRepository
             foreach($selection as $id) {
                 $row = $this->find($id);
                 
+                # Detele links
+                $linkables_entities = $this->getLinkablesEntities();
+                foreach($linkables_entities as $i=>$linkable_entity) {
+                    $link_table = $this->getLinkEntity(array($linkable_entity->name, $this->name));
+                    $em = $this->getEntityManager();
+                    $query = $em->createQueryBuilder()->from($link_table->name, 't')->delete();
+                    $query->where("t." . $this->config['table_name'] . " = :id")->setParameter('id', $row->getId());
+                    $query->getQuery()->execute();
+                }
+                
+                
                 # Delete files
                 $fields = $this->getFields();
                 foreach($fields as $i=>$field) {
@@ -823,10 +839,10 @@ class BaseRepository extends ServiceEntityRepository
                         if($field['form']['type'] == 'UIFileType') {
                             $path = $this->upload_path . '/' . $row->$get_method();
                             $path_thumbnail = $this->upload_path . '/' . $this->preview_prefix . $row->$get_method();
-                            if(file_exists($path)) {
+                            if(file_exists($path) && !is_dir($path)) {
                                 unlink($path);
                             }
-                            if(file_exists($path_thumbnail)) {
+                            if(file_exists($path_thumbnail) && !is_dir($path_thumbnail)) {
                                 unlink($path_thumbnail);
                             }
                         }
