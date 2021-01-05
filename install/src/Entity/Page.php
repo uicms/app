@@ -259,7 +259,7 @@ class Page implements TranslatableInterface
         return $this->menu;
     }
 
-    public function setMenu(string $menu): self
+    public function setMenu(?string $menu): self
     {
         $this->menu = $menu;
 
