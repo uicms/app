@@ -77,7 +77,7 @@ class BaseRepository extends ServiceEntityRepository
         # Table for positions
         isset($params['linked_to']) && $params['linked_to'] ? $position_table_alias = 'l' : $position_table_alias = 't';
         
-        # Sorting
+        # Ordering
         $order_by = isset($params['order_by']) ? $params['order_by'] : $this->config['order_by'];
         $order_dir = isset($params['order_dir']) ? $params['order_dir'] : $this->config['order_dir'];
         $order_table_alias = $this->isFieldTranslatable($order_by) && $order_by!='id' ? 'i' : 't';
@@ -311,10 +311,10 @@ class BaseRepository extends ServiceEntityRepository
                         if(strpos($mime_type, 'image') === 0) {
                             $row->_thumbnail = '_' . $row->_file;
                         }
-                    
-                        if(strpos($mime_type, 'video') === 0) {
+                        $video_thumbnail = '_' . $path_parts['filename'] . ".jpg";
+                        if(file_exists(getcwd() . '/uploads/' .$video_thumbnail) && strpos($mime_type, 'video') === 0) {
                             $path_parts = pathinfo($file_path);
-                            $row->_thumbnail = '_' . $path_parts['filename'] . ".jpg";
+                            $row->_thumbnail = $video_thumbnail;
                         }
                     }
                 }
