@@ -28,7 +28,8 @@ class BaseRepository extends ServiceEntityRepository
                                     'is_locked', 
                                     'position', 
                                     'is_dir', 
-                                    'locale');
+                                    'locale',
+                                    'parent');
     
     
     # Global config
@@ -111,7 +112,9 @@ class BaseRepository extends ServiceEntityRepository
                 if($this->mode == 'front') {
                     $query->andWhere('t.is_concealed=:concealed')->setParameter('concealed', 0);
                 }
-                $query->orderBy("$position_table_alias.position", 'asc');
+                if(!isset($params['disable_manual sorting']) || !$params['disable_manual sorting']) {
+                    $query->orderBy("$position_table_alias.position", 'asc');
+                }
                 $query->addOrderBy($order_table_alias . '.' . $order_by, $order_dir);
                 if($order_by != 'id') $query->addOrderBy('t.id', 'asc');
             break;
@@ -307,13 +310,14 @@ class BaseRepository extends ServiceEntityRepository
                     if(file_exists($file_path) && !is_dir($file_path)) {
                         $mime_types = new MimeTypes();
                         $mime_type = $mime_types->guessMimeType($file_path);
-                    
+                        $path_parts = pathinfo($file_path);
+                        
                         if(strpos($mime_type, 'image') === 0) {
                             $row->_thumbnail = '_' . $row->_file;
                         }
+                        
                         $video_thumbnail = '_' . $path_parts['filename'] . ".jpg";
-                        if(file_exists(getcwd() . '/uploads/' .$video_thumbnail) && strpos($mime_type, 'video') === 0) {
-                            $path_parts = pathinfo($file_path);
+                        if(strpos($mime_type, 'video') === 0 && file_exists(getcwd() . '/uploads/' .$video_thumbnail)) {
                             $row->_thumbnail = $video_thumbnail;
                         }
                     }
