@@ -79,8 +79,8 @@ class BaseRepository extends ServiceEntityRepository
         isset($params['linked_to']) && $params['linked_to'] ? $position_table_alias = 'l' : $position_table_alias = 't';
         
         # Ordering
-        $order_by = isset($params['order_by']) ? $params['order_by'] : $this->config['order_by'];
-        $order_dir = isset($params['order_dir']) ? $params['order_dir'] : $this->config['order_dir'];
+        $order_by = (isset($params['order_by']) && $params['order_by']) ? $params['order_by'] : $this->config['order_by'];
+        $order_dir = (isset($params['order_dir']) && $params['order_dir']) ? $params['order_dir'] : $this->config['order_dir'];
         $order_table_alias = $this->isFieldTranslatable($order_by) && $order_by!='id' ? 'i' : 't';
         $order_by_method = 'get' . $order_by;
         
@@ -236,7 +236,11 @@ class BaseRepository extends ServiceEntityRepository
         # Findby
         if(isset($params['findby']) && $params['findby'] && is_array($params['findby'])) {
             foreach($params['findby'] as $field_name=>$value) {
-                $query->andWhere('t.' . $field_name . ' = :findby')->setParameter('findby', $value);
+                if($this->isFieldTranslatable($field_name)) {
+                    $query->andWhere('i.' . $field_name . ' = :findby')->setParameter('findby', $value);
+                } else {
+                    $query->andWhere('t.' . $field_name . ' = :findby')->setParameter('findby', $value);
+                }   
             }
         }
         
