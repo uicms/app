@@ -38,9 +38,7 @@ class BaseRepository extends ServiceEntityRepository
     protected $duplicate_prefix = 'Copy of';
     protected $upload_path = 'public/uploads';
     protected $preview_prefix = '_';
-    
-    # Public
-    public $config = null;
+    protected $config = null;
     
     
     public function __construct(Security $security, ManagerRegistry $registry, UserPasswordEncoderInterface $passwd_encoder, ParameterBagInterface $parameters, $entity_name)
@@ -389,9 +387,11 @@ class BaseRepository extends ServiceEntityRepository
     
     public function getSlug()
     {
-        foreach($this->global_config['admin']['pages'] as $page) {
-            if(isset($page['arguments']['entity_name']) && $page['arguments']['entity_name'] == $this->name) {
-                 return $page['slug'];
+        if(isset($this->global_config['admin']['pages'])) {
+            foreach($this->global_config['admin']['pages'] as $page) {
+                if(isset($page['arguments']['entity_name']) && $page['arguments']['entity_name'] == $this->name) {
+                     return $page['slug'];
+                }
             }
         }
         return null;
