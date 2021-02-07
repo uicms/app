@@ -1,0 +1,309 @@
+---
+parameters:
+  ui_config:
+    name: ui5
+    full_name: UI5
+    protocol: http
+    upload_path: '%kernel.project_dir%/public/uploads'
+    entity:
+      App\Entity\Page:
+        name: App\Entity\Page
+        table_name: page
+        name_field: name
+        order_by: id
+        order_dir: desc
+        is_tree: true
+        form:
+          translations:
+            name:
+              name: Name
+              type: TextType
+              namespace: Symfony\Component\Form\Extension\Core\Type
+              transformer: Uicms\Admin\Form\DataTransformer\DefaultTransformer
+              options:
+                required: true
+            html:
+              name: Html
+              type: TextareaType
+              namespace: Symfony\Component\Form\Extension\Core\Type
+              transformer: ~
+              options:
+                required: false
+                attr:
+                  class: tinymce
+          fields:
+            controller:
+              name: Controller
+              type: TextType
+              namespace: Symfony\Component\Form\Extension\Core\Type
+              transformer: ~
+              options:
+                required: true
+            action:
+              name: Action
+              type: TextType
+              namespace: Symfony\Component\Form\Extension\Core\Type
+              transformer: ~
+              options:
+                required: false
+            template:
+              name: Template
+              type: TextType
+              namespace: Symfony\Component\Form\Extension\Core\Type
+              transformer: ~
+              options:
+                required: false
+            menu:
+              name: Menu
+              type: TextType
+              namespace: Symfony\Component\Form\Extension\Core\Type
+              transformer: ~
+              options:
+                required: false
+            slug:
+              name: Slug
+              type: TextType
+              namespace: Symfony\Component\Form\Extension\Core\Type
+              modifier: Uicms\Admin\Form\DataModifier\SlugModifier
+              transformer: ~
+              options:
+                required: false
+            helper:
+              name: Helper
+              type: TextType
+              namespace: Symfony\Component\Form\Extension\Core\Type
+              transformer: ""
+              options:
+                help: ""
+                label: ""
+                attr:
+                  class: ""
+                required: false
+      App\Entity\User:
+        name: App\Entity\User
+        table_name: user
+        name_field: email
+        order_by: id
+        order_dir: desc
+        form:
+          translations: ~
+          fields:
+            name:
+              name: Name
+              type: TextType
+              namespace: Symfony\Component\Form\Extension\Core\Type
+              transformer: ~
+              options:
+                required: true
+            email:
+              name: Email
+              type: EmailType
+              namespace: Symfony\Component\Form\Extension\Core\Type
+              transformer: ~
+              options:
+                required: true
+            plain_password:
+              name: PlainPassword
+              type: RepeatedType
+              dest: Password
+              namespace: Symfony\Component\Form\Extension\Core\Type
+              options:
+                attr:
+                  class: repeatedType
+                required: false
+                type: Symfony\Component\Form\Extension\Core\Type\PasswordType
+                translation_domain: admin
+                label: fld_user_password
+                first_options:
+                  label: fld_user_new_password
+                second_options:
+                  label: fld_user_repeat_password
+            roles:
+              name: Roles
+              type: CollectionType
+              namespace: Symfony\Component\Form\Extension\Core\Type
+              transformer: ~
+              options:
+                attr:
+                  class: collectionType
+                required: true
+                allow_add: true
+                allow_delete: true
+      App\Entity\Media:
+        table_name: media
+        name: App\Entity\Media
+        name_field: name
+        is_tree: "1"
+        order_by: id
+        order_dir: desc
+        form:
+          class: App\Entity\Media
+          translations:
+            name:
+              name: Name
+              type: TextType
+              namespace: Symfony\Component\Form\Extension\Core\Type
+              transformer: ""
+              options:
+                help: ""
+                label: ""
+                attr:
+                  class: ""
+                required: false
+            description:
+              name: Description
+              type: TextareaType
+              namespace: Symfony\Component\Form\Extension\Core\Type
+              transformer: ""
+              options:
+                help: ""
+                label: ""
+                attr:
+                  class: tinymce
+                required: false
+          fields:
+            file:
+              name: File
+              type: UIFileType
+              namespace: Uicms\Admin\Form\Type
+              transformer: Uicms\Admin\Form\DataTransformer\FileTransformer
+              options:
+                help: ""
+                label: ""
+                attr:
+                  class: ""
+                required: false
+                template: file
+      App\Entity\Block:
+        table_name: block
+        name: App\Entity\Block
+        name_field: name
+        is_tree: "1"
+        order_by: id
+        order_dir: desc
+        form:
+          class: App\Entity\Block
+          translations:
+            name:
+              name: Name
+              type: TextType
+              namespace: Symfony\Component\Form\Extension\Core\Type
+              transformer: ""
+              options:
+                help: ""
+                label: ""
+                attr:
+                  class: ""
+                required: false
+            text:
+              name: Text
+              type: TextareaType
+              namespace: Symfony\Component\Form\Extension\Core\Type
+              transformer: ""
+              options:
+                help: ""
+                label: ""
+                attr:
+                  class: tinymce
+                required: false
+          fields:
+            type:
+              name: Type
+              type: TextType
+              namespace: Symfony\Component\Form\Extension\Core\Type
+              transformer: ""
+              options:
+                help: ""
+                label: ""
+                attr:
+                  class: ""
+                required: false
+            class:
+              name: Class
+              type: TextType
+              namespace: Symfony\Component\Form\Extension\Core\Type
+              transformer: ""
+              options:
+                help: ""
+                label: ""
+                attr:
+                  class: ""
+                required: false
+      App\Entity\LinkPageBlock:
+        table_name: link_page_block
+        name: App\Entity\Block
+        name_field: id
+        order_by: id
+        order_dir: id
+        link:
+        - App\Entity\Page
+        - App\Entity\Block
+      App\Entity\LinkBlockMedia:
+        table_name: link_block_media
+        name: App\Entity\Media
+        name_field: id
+        order_by: id
+        order_dir: id
+        link:
+        - App\Entity\Block
+        - App\Entity\Media
+      App\Entity\LinkPageMedia:
+        table_name: link_page_media
+        name: App\Entity\Media
+        name_field: id
+        order_by: id
+        order_dir: id
+        link:
+        - App\Entity\Page
+        - App\Entity\Media
+    admin:
+      vars:
+        limit: 50
+        offset: 0
+        order_by: id
+        order_dir: desc
+        linked_to: ~
+        linked_to_id: []
+        linked_to_slug: ~
+        display: list
+        parent: ~
+        dir: 0
+        select_action: ~
+      pages:
+        pages:
+          controller: Uicms\Admin\Controller\Editor
+          action: index
+          slug: pages
+          arguments:
+            entity_name: App\Entity\Page
+          params: []
+        users:
+          controller: Uicms\Admin\Controller\Editor
+          action: index
+          slug: users
+          is_tree: false
+          arguments:
+            entity_name: App\Entity\User
+          params: ~
+        action:
+          controller: Uicms\Admin\Controller\Action
+          action: index
+          slug: action
+          display: false
+          params: ~
+        medias:
+          controller: Uicms\Admin\Controller\Editor
+          action: index
+          slug: medias
+          arguments:
+            entity_name: App\Entity\Media
+          params:
+            display: thumbnails
+        blocks:
+          controller: Uicms\Admin\Controller\Editor
+          action: index
+          slug: blocks
+          arguments:
+            entity_name: App\Entity\Block
+          params: []
+...

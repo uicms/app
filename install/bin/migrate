@@ -1,0 +1,15 @@
+#!/bin/bash
+
+if [[ $1 != 'remote' ]]
+then
+    php bin/console make:migration
+fi
+
+php bin/console doctrine:migrations:migrate
+
+if [[ $1 != 'remote' ]]
+then
+    php bin/console make:entity --regenerate App
+fi
+
+bin/console cache:clear

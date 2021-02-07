@@ -1,0 +1,18 @@
+{% extends "app/tpl/layout.html.twig" %}
+
+{% block body %}
+
+<h1>{{ page.name }}</h1>
+<p>{{ page.html|raw }}</p>
+
+{% if page.medias %}
+<ul class="medias">
+    {% for media in page.medias %}
+    <li>
+        <img src="/uploads/_{{ media.file }}" alt="{{ media.name }}" />
+    </li>
+    {% endfor %}
+</ul>
+{% endif %}
+
+{% endblock %}

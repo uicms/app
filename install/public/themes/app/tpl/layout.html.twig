@@ -1,0 +1,61 @@
+{% set path = app.session.get('path') %}
+{% trans_default_domain 'app' %}
+{% set ui = app.session.get('ui_config') %}
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+    	<meta name="robots" content="index, follow, all" />
+    	<meta name="author" content="" />
+    	<meta name="description" content="" />
+    	<link rel="shortcut icon" href="/favicon.ico" />
+        <title>{% block title %}Welcome!{% endblock %}</title>
+        
+        {% block stylesheets %}
+        <link rel="stylesheet" type="text/css" media="screen" href="/themes/app/css/styles.css" />
+        {% endblock %}
+        
+    	<meta name="viewport" content="user-scalable=yes, initial-scale=1.0, minimum-scale=1.0, maximum-scale=3.0, width=device-width" />
+    </head>
+    <body>
+        <div id="container">
+    		<header id="header">
+                <a href="/"><h1 id="logo">My website</h1></a>
+                <div id="menu_button"></div>
+    			<nav id="menu">
+    				<ul>
+    					{% for menu_page in app.session.get('menu') %}
+    					<li>
+                            <a href="{{ path('app_page', {'slug': menu_page.slug, 'locale': app.session.get('locale') }) }}">{{ menu_page.name }}</a>
+                            {% if menu_page.children is defined and menu_page.children %}
+                                <ul class="children">
+                                    {% for child in menu_page.children %}
+                                        <li><a href="{{ path('app_page', {'slug': child.slug, 'locale': app.session.get('locale') }) }}">{{ child.name }}</a></li>
+                                    {% endfor %}
+                                </ul>
+                            {% endif %}
+                        </li>
+    					{% endfor %}
+    				</ul>
+    			</nav>
+    		</header>
+		    
+            <div id="content">
+            {% block body %}{% endblock %}
+            </div>
+            
+            <div id="footer">
+                
+            </div>
+        </div>
+            
+        {% block javascripts %}
+        <script type="text/javascript" src="/themes/app/js/jquery/jquery.1.9.1.min.js"></script>
+        <script type="text/javascript" src="/themes/app/js/jquery/jquery.validate.min.js"></script>
+        <script type="text/javascript" src="/themes/app/js/jquery/jquery.easing.1.3.min.js"></script>
+        <script type="text/javascript" src="/themes/app/js/jquery/jquery.vgrid.min.js"></script>
+        <script type="text/javascript" src="/themes/app/js/jquery/jquery.flexslider-min.js"></script>
+        <script type="text/javascript" src="/themes/app/js/scripts.js"></script>
+        {% endblock %}
+    </body>
+</html>
