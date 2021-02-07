@@ -1,68 +1,26 @@
-/* Global settings */
-/*
-body, img, a, p, span, div, strong, em, ul, ol, li, label, input, textarea, form, fieldset, table, tr, th, td, h1, h2, h3, h4, h5, h6, hr, iframe, embed, object {
-	list-style-type: none;
-	text-decoration: none;
-	outline: none;
-	border: 0;
-	margin: 0;
-	padding: 0;
+/* Vars */
+:root {
+    --default-font-size: 15px;
+    --default-line-height: normal;
+    --default2-font-size: 18px;
+    --default2-line-height: normal;
+    --title-font-size: 20px;
+    --title-line-height: normal;
+    --title2-font-size: 24px;
+    --title2-line-height: normal;
+    --default-spacing: 15px;
+    --negative-default-spacing: -15px;
+    --column-width: 25%;
+    --column-width-alt: 33.33%;
 }
-textarea,
-body {
-	color: #000;
-	font-family: Arial, Verdana, Sans-serif;
-	font-size: 12px;
-	line-height: 17px;
+@media only screen and (min-width: 768px) {
+    :root {
+    }
 }
-table, td, tr, th {
-	border-spacing: 0;
-	vertical-align: middle;
-	border-collapse: collapse;
+@media only screen and (min-width: 1024px) {
+    :root {
+    }
 }
-label {
-	display: block;
-}
-html {
-	overflow-y: scroll;
-}
-.clearfix:after {
-	content: "."; 
-	display: block; 
-	height: 0; 
-	clear: both; 
-	visibility: hidden;
-}
-.clearfix {
-	display: inline-table;
-}
-* html .clearfix {
-	height: 1%;
-}
-.clearfix {
-	display: block;
-
-}
-.noselect {
-    -webkit-touch-callout: none;
-    -webkit-user-select: none;
-    -khtml-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
-}
-.loadable {
-	filter: alpha(opacity=0);
-	-moz-opacity: 0;
-	opacity: 0;
-}
-sup {
-	valign: super;
-	font-size: 70%;
-	line-height: 80%;
-}
-*/
-
 
 /* Layout */
 body {
@@ -73,7 +31,34 @@ body {
 }
 #header {
 }
+#menu_button {
+    position: absolute;
+    z-index: 1000;
+    top: var(--default-spacing);
+    right: var(--default-spacing);
+    cursor: pointer;
+    width: 30px;
+    height: 30px;
+    background: url('../img/menu.svg') no-repeat;
+    background-size: 100%;
+}
 #menu {
+    position: absolute;
+    z-index: 900;
+    top: var(--default-spacing);
+    left: 0;
+    right: 0;
+    transform: translateY(-100%);
+    transition: 0.5s;
+    text-align: center;
+}
+body.menu_expanded #menu {
+    transform: translateY(0);
+    transition: 0.5s;
+}
+body.menu_expanded #menu_button {
+    background: url('../img/close.svg') no-repeat;
+    background-size: 100%;
 }
 #content {
 }
