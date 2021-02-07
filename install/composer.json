@@ -71,9 +71,7 @@
             "@auto-scripts"
         ],
         "post-update-cmd": [
-            "@auto-scripts"
-        ],
-        "post-package-update": [
+            "@auto-scripts",
             "bash vendor/uicms/admin/install/update.sh"
         ]
     },
