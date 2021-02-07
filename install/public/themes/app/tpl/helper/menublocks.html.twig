@@ -1,5 +1,0 @@
-<ul class="children menu_blocks">
-    {% for block in blocks %}
-        <li><a href="/{{ session.get('locale') }}/{{ page.slug }}#{{ block.name|slugger }}">{{ block.name }}</a></li>
-    {% endfor %}
-</ul>

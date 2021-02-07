@@ -1,2 +1,0 @@
-#!/bin/bash
-php vendor/uicms/app/install/db/entity/Entity.php $1
