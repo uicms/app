@@ -1,7 +1,10 @@
-cms_title: UI5
-fld_article_name: Titre de mon article
-hlp_article_name: Choisissez un titre sympa
-fld_article_introductory: Intro
+thumbnails: Vignettes
+list: Liste
+details: Détails
+
+asc: Croissant
+desc: Décroissant
+
 fld_user_password: Mot de passe
 fld_user_new_password: Nouveau mot de passe
 fld_user_repeat_password: Répétez le nouveau mot de passe
