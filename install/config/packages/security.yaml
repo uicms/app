@@ -28,6 +28,8 @@ security:
         main:
             anonymous: true
             provider: database
+            entry_point: Uicms\Admin\Security\AuthenticationEntryPoint
+            access_denied_handler: Uicms\Admin\Security\AccessDeniedHandler
             guard:
                 authenticators:
                     - Uicms\Admin\Security\LoginFormAuthenticator
@@ -39,11 +41,3 @@ security:
                 lifetime: 604800 # 1 week in seconds
                 path:     /
                 #always_remember_me: true
-                            
-            # activate different ways to authenticate
-
-            # http_basic: true
-            # https://symfony.com/doc/current/security.html#a-configuring-how-your-users-will-authenticate
-
-            # form_login: true
-            # https://symfony.com/doc/current/security/form_login_setup.html

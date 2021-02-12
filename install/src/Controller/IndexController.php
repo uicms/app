@@ -1,6 +1,7 @@
 <?php
 namespace App\Controller;
 
+use Symfony\Component\Debug\Exception\FlattenException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
@@ -58,5 +59,13 @@ class IndexController extends AbstractController
         
 		# Forward to the correct controller
         return $this->forward("App\\Controller\\" . ucfirst($page->getController()) . "Controller::" . $action, $attributes);
+	}
+    
+    public function error(FlattenException $exception, Model $model, Request $request, $slug='', $action='', $locale='')
+    {
+        return $this->render(
+            'app/tpl/error/error.html.twig',
+            ['exception'=>$exception]
+        );
 	}
 }
