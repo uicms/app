@@ -463,6 +463,24 @@ class BaseRepository extends ServiceEntityRepository
                 $all_fields[] = $data;
             }
         }
+        
+        # Complete with form fields
+        foreach($this->global_config['entity'][$this->name]['form']['fields'] as $form_field_name=>$form_field) {
+            $exists = false;
+            foreach($all_fields as $i=>$field) {
+                if($field['name'] == $form_field_name) {
+                    $exists = true;
+                    break;
+                }
+            }
+            if(!$exists) {
+                $data = array('name'=>$form_field_name);
+                $data['is_meta'] = in_array($form_field_name, $this->meta_fields) ? true : false;
+                $data['form'] = $form_field;
+                $all_fields[] = $data;
+            }
+        }
+        
         if($params) {
             $fields = array();
             foreach($all_fields as $i=>$field) {
@@ -694,21 +712,21 @@ class BaseRepository extends ServiceEntityRepository
                 $fields = $this->getFields();
                 foreach($fields as $i=>$field) {
                     if(!isset($field['is_meta']) || !$field['is_meta']) {
-                        $get_method = 'get' . $field['name'];
-                        $set_method = 'set' . $field['name'];
-                        
+                        $get_method = $this->method($field['name']);
+                        $set_method = $this->method($field['name'], 'set');
+                       
                         # Password Type
-                        if($field['form']['type'] == 'RepeatedType') {
+                        if(isset($field['form']['type']) && $field['form']['type'] == 'RepeatedType') {
                             $dest_set_method = 'set' . $field['form']['dest'];
                             $password = $this->passwd_encoder->encodePassword($data, $data->$get_method());
                             $data->$dest_set_method($password);
                         }
                         
                         # File Type
-                        if($field['form']['type'] == 'UIFileType' && !$data->$get_method() && $current->$get_method()) {
+                        if(isset($field['form']['type']) && $field['form']['type'] == 'UIFileType' && !$data->$get_method() && $current->$get_method()) {
                             $data->$set_method($current->$get_method());
                         }
-                        if($field['form']['type'] == 'UIFileType' && $data->$get_method() && $current->$get_method() && $data->$get_method() != $current->$get_method()) {
+                        if(isset($field['form']['type']) && $field['form']['type'] == 'UIFileType' && $data->$get_method() && $current->$get_method() && $data->$get_method() != $current->$get_method()) {
                             $path = $this->upload_path . '/' . $current->$get_method();
                             $path_thumbnail = $this->upload_path . '/' . $this->preview_prefix . $current->$get_method();
                             if(file_exists($path) && !is_dir($path)) {
