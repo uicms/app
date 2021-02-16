@@ -67,7 +67,7 @@ class BaseRepository extends ServiceEntityRepository
         parent::__construct($registry, $this->name);
     }
     
-    /* Private */
+    /* Protected functions */
     protected function getQuery($params=array())
     {
         $query = $this->createQueryBuilder('t');
@@ -133,7 +133,7 @@ class BaseRepository extends ServiceEntityRepository
         }
         
         # Dir
-        if(!isset($params['linked_to']) || !$params['linked_to']) {
+        if((!isset($params['linked_to']) || !$params['linked_to']) && (!isset($params['search']) || !$params['search'])) {
             if(isset($params['dir']) && (int)$params['dir']) {
                 $parent_query_string = "t.parent=".(int)$params['dir'];
                 $query->andWhere($parent_query_string);
@@ -243,12 +243,28 @@ class BaseRepository extends ServiceEntityRepository
         }
         
         # Search
-        if(isset($params['search']) && $params['search'] && is_array($params['search'])) {
-            $string = array_key_first($params['search']);
-            $fields = is_array($params['search'][$string]) ? $params['search'][$string] : array($params['search'][$string]);
-            foreach($fields as $field_name) {
-                $query->andWhere('t.' . $field_name . ' LIKE :search')->setParameter('search', "%$string%");
+        if(isset($params['search']) && $params['search']) {
+            if(is_array($params['search'])) {
+                $string = array_key_first($params['search']);
+                $fields = is_array($params['search'][$string]) ? $params['search'][$string] : array($params['search'][$string]);
+            } else {
+                $string = $params['search'];
+                $tmp = $this->getFields();
+                $fields = [];
+                foreach($tmp as $i=>$field) {
+                    $fields[] = $field['name'];
+                }
             }
+            
+            $search_query = [];
+            foreach($fields as $field_name) {
+                if($this->isFieldTranslatable($field_name)) {
+                    $search_query[] = 'i.' . $field_name . ' LIKE :search';
+                } else {
+                     $search_query[] = 't.' . $field_name . ' LIKE :search';
+                }
+            }
+            $query->andWhere(implode(' OR ', $search_query))->setParameter('search', "%$string%");
         }
 
         # Linked to
@@ -273,7 +289,7 @@ class BaseRepository extends ServiceEntityRepository
         if(isset($params['limit'])) {
             $query->setMaxResults((int)$params['limit']);
         }
-        
+        #dd($query->getDql());
         return $query;
     }
     
@@ -379,11 +395,6 @@ class BaseRepository extends ServiceEntityRepository
     {
         return $this->meta()->name;
     }
-    
-    /*public function getBasename()
-    {
-        return $this->basename;
-    }*/
     
     public function getSlug()
     {
@@ -637,7 +648,7 @@ class BaseRepository extends ServiceEntityRepository
     }
     
     
-    /* Get data */
+    /* Data */
     public function count($params=array())
     {
         unset($params['limit']);
