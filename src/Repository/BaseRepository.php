@@ -252,7 +252,9 @@ class BaseRepository extends ServiceEntityRepository
                 $tmp = $this->getFields();
                 $fields = [];
                 foreach($tmp as $i=>$field) {
-                    $fields[] = $field['name'];
+                    if($field['is_db']) {
+                        $fields[] = $field['name'];
+                    }
                 }
             }
             
@@ -447,6 +449,7 @@ class BaseRepository extends ServiceEntityRepository
         foreach($result as $i=>$field_name) {
             $data = array('name'=>$field_name);
             $data['is_meta'] = in_array($field_name, $this->meta_fields) ? true : false;
+            $data['is_db'] = true;
             
             foreach($this->global_config['entity'][$this->name]['form']['fields'] as $form_field_name=>$form_field) {
                 if($field_name == $form_field_name) {
@@ -465,6 +468,7 @@ class BaseRepository extends ServiceEntityRepository
             foreach($result as $i=>$field_name) {
                 $data = array('name'=>$field_name);
                 $data['is_meta'] = in_array($field_name, $this->meta_fields) ? true : false;
+                $data['is_db'] = true;
                 
                 foreach($this->global_config['entity'][$this->name]['form']['translations'] as $form_field_name=>$form_field) {
                     if($field_name == $form_field_name) {
@@ -487,6 +491,7 @@ class BaseRepository extends ServiceEntityRepository
             if(!$exists) {
                 $data = array('name'=>$form_field_name);
                 $data['is_meta'] = in_array($form_field_name, $this->meta_fields) ? true : false;
+                $data['is_db'] = false;
                 $data['form'] = $form_field;
                 $all_fields[] = $data;
             }
