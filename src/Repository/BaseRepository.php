@@ -110,7 +110,7 @@ class BaseRepository extends ServiceEntityRepository
                 if($this->mode == 'front') {
                     $query->andWhere('t.is_concealed=:concealed')->setParameter('concealed', 0);
                 }
-                if(!isset($params['disable_manual sorting']) || !$params['disable_manual sorting']) {
+                if(!isset($params['disable_positions']) || !$params['disable_positions']) {
                     $query->orderBy("$position_table_alias.position", 'asc');
                 }
                 $query->addOrderBy($order_table_alias . '.' . $order_by, $order_dir);
@@ -858,9 +858,17 @@ class BaseRepository extends ServiceEntityRepository
     public function delete($selection)
     {
         if($this->security->isGranted('ROLE_DELETE')) {
+            if(!is_array($selection)) {
+                $selection = [$selection];
+            }
             $em = $this->getEntityManager();
             foreach($selection as $id) {
                 $row = $this->find($id);
+                
+                if($row->getIsDir() && $this->count(['dir'=>$id])) {
+                    $exception = 'dir_not_empty';
+                    break;
+                }
                 
                 # Detele links
                 $linkables_entities = $this->getLinkablesEntities();
@@ -894,6 +902,11 @@ class BaseRepository extends ServiceEntityRepository
                 $em->remove($row);
                 $em->flush();
             }
+            
+            if(isset($exception)) {
+                throw new \Exception($exception);
+            }
+            
             return true;
         } else {
             throw new AccessDeniedException('access_denied');
