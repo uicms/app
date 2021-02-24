@@ -3,6 +3,7 @@ namespace Uicms\App\Service;
 
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Component\String\Slugger\AsciiSlugger;
 
 class Uploader
 {
@@ -17,12 +18,12 @@ class Uploader
     {
         $original_filename = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
        	#$safeFilename = transliterator_transliterate('Any-Latin; Latin-ASCII; [^A-Za-z0-9_] remove; Lower()', $originalFilename);
-        $file_name = $original_filename.'-'.uniqid().'.'.$file->guessExtension();
-
+        $slugger = new AsciiSlugger();
+        $file_name = strtolower($slugger->slug($original_filename)) . '-' . uniqid() . '.' . $file->guessExtension();
         try {
             $file->move($this->getTargetDirectory(), $file_name);
         } catch (FileException $e) {
-            // ... handle exception if something happens during file upload
+            throw new \Exception('upload_error');
         }
 
         return $file_name;
