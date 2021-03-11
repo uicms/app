@@ -722,7 +722,7 @@ class BaseRepository extends ServiceEntityRepository
     
     public function persist($data, $current=null)
     {
-        if($this->security->isGranted('ROLE_PERSIST')) {
+        if($this->security->getUser() === null || $this->security->isGranted('ROLE_PERSIST')) {
             
             if($current) {
                 $fields = $this->getFields();
@@ -778,7 +778,7 @@ class BaseRepository extends ServiceEntityRepository
 
     public function publish($selection)
     {
-        if($this->security->isGranted('ROLE_PERSIST')) {
+        if($this->security->getUser() === null || $this->security->isGranted('ROLE_PERSIST')) {
             $em = $this->getEntityManager();
             foreach($selection as $id) {
                 $row = $this->find($id);
@@ -794,7 +794,7 @@ class BaseRepository extends ServiceEntityRepository
     
     public function conceal($selection)
     {
-        if($this->security->isGranted('ROLE_PERSIST')) {
+        if($this->security->getUser() === null || $this->security->isGranted('ROLE_PERSIST')) {
             $em = $this->getEntityManager();
             foreach($selection as $id) {
                 $row = $this->find($id);
@@ -810,7 +810,7 @@ class BaseRepository extends ServiceEntityRepository
     
     public function duplicate($selection)
     {
-        if($this->security->isGranted('ROLE_PERSIST')) {
+        if($this->security->getUser() === null || $this->security->isGranted('ROLE_PERSIST')) {
             $em = $this->getEntityManager();
             
             foreach($selection as $id) {
@@ -857,7 +857,7 @@ class BaseRepository extends ServiceEntityRepository
     
     public function delete($selection)
     {
-        if($this->security->isGranted('ROLE_DELETE')) {
+        if($this->security->getUser() === null || $this->security->isGranted('ROLE_DELETE')) {
             if(!is_array($selection)) {
                 $selection = [$selection];
             }
@@ -915,7 +915,7 @@ class BaseRepository extends ServiceEntityRepository
     
     public function position($selection, $position, $params=array())
     {
-        if($this->security->isGranted('ROLE_PERSIST')) {
+        if($this->security->getUser() === null || $this->security->isGranted('ROLE_PERSIST')) {
             $em = $this->getEntityManager();
             
             # Define params
@@ -969,7 +969,7 @@ class BaseRepository extends ServiceEntityRepository
     
     public function move($selection, $target)
     {
-        if($this->security->isGranted('ROLE_PERSIST')) {
+        if($this->security->getUser() === null || $this->security->isGranted('ROLE_PERSIST')) {
             $em = $this->getEntityManager();
             foreach($selection as $id) {
                 $row = $this->find($id);

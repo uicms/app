@@ -72,7 +72,8 @@
         ],
         "post-update-cmd": [
             "@auto-scripts",
-            "bash vendor/uicms/admin/install/update.sh"
+            "bash vendor/uicms/admin/install/update.sh",
+            "bash vendor/uicms/app/install/update.sh"
         ]
     },
     "conflict": {

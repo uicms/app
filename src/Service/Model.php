@@ -12,7 +12,9 @@ class Model
 	public function __construct(EntityManager $em, RequestStack $requestStack, ParameterBagInterface $parameters)
     {
 		$request = $requestStack->getCurrentRequest();
-		$this->session = $request->getSession();
+        if($request !== null) {
+            $this->session = $request->getSession();
+        }
 		$this->em = $em;
     }
 	
@@ -22,7 +24,9 @@ class Model
             $entity_name = 'App\Entity\\' . ucfirst($entity_name);
         }
         $model = $this->em->getRepository($entity_name);
-		$model->locale($this->session->get('locale'));
+        if(isset($this->session) && $this->session !== null) {
+            $model->locale($this->session->get('locale'));
+        }
 		return $model;
     }
 }

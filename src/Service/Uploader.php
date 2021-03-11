@@ -14,12 +14,19 @@ class Uploader
         $this->targetDirectory = $targetDirectory;
     }
 
-    public function upload(UploadedFile $file)
+    public function upload(UploadedFile $file, $slug=true, $make_unique=true)
     {
-        $original_filename = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
-       	#$safeFilename = transliterator_transliterate('Any-Latin; Latin-ASCII; [^A-Za-z0-9_] remove; Lower()', $originalFilename);
-        $slugger = new AsciiSlugger();
-        $file_name = strtolower($slugger->slug($original_filename)) . '-' . uniqid() . '.' . $file->guessExtension();
+        $file_name = $file->getClientOriginalName();
+        
+        if($slug) {
+            $slugger = new AsciiSlugger();
+            $file_name = strtolower($slugger->slug($file_name));
+        }
+        
+        if($make_unique) {
+            $file_name = pathinfo($file_name, PATHINFO_FILENAME) . '-' . uniqid() . '.' . $file->guessExtension();
+        }
+        
         try {
             $file->move($this->getTargetDirectory(), $file_name);
         } catch (FileException $e) {

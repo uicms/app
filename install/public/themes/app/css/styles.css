@@ -45,7 +45,7 @@ body {
 #menu {
     position: absolute;
     z-index: 900;
-    top: var(--default-spacing);
+    top: 0;
     left: 0;
     right: 0;
     transform: translateY(-100%);
