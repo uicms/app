@@ -72,6 +72,7 @@ class BaseRepository extends ServiceEntityRepository
     {
         $query = $this->createQueryBuilder('t');
         $statement_argument = isset($params['statement_argument']) ? $statement_argument = $params['statement_argument'] : '';
+        $parameters = array();
         
         # Table for positions
         isset($params['linked_to']) && $params['linked_to'] ? $position_table_alias = 'l' : $position_table_alias = 't';
@@ -108,7 +109,8 @@ class BaseRepository extends ServiceEntityRepository
                 }
                 # Is concealed
                 if($this->mode == 'front') {
-                    $query->andWhere('t.is_concealed=:concealed')->setParameter('concealed', 0);
+                    $query->andWhere('t.is_concealed=:concealed');
+                    $parameters['concealed'] = 0;
                 }
                 if(!isset($params['disable_positions']) || !$params['disable_positions']) {
                     $query->orderBy("$position_table_alias.position", 'asc');
@@ -121,7 +123,8 @@ class BaseRepository extends ServiceEntityRepository
         
         # By id
         if(isset($params['id']) && (int)$params['id']) {
-            $query->andWhere('t.id = ?1')->setParameter(1, (int)$params['id']);
+            $query->andWhere('t.id = :id');
+            $parameters['id'] = (int)$params['id'];
         }
         
         # Set
@@ -158,7 +161,6 @@ class BaseRepository extends ServiceEntityRepository
             } else {
                 $current_position = $params['current_row']->getPosition();
             }
-            $parameters = array();
             $comparator = $order_dir == 'asc' ? '>' : '<';
             $equal_condition = $current_value === null ? 'IS NULL' : '= :current_value';
             
@@ -184,7 +186,6 @@ class BaseRepository extends ServiceEntityRepository
             }
             
             $query->andWhere($next_where);
-            $query->setParameters($parameters);
         }
         
         # Prev
@@ -199,7 +200,6 @@ class BaseRepository extends ServiceEntityRepository
             } else {
                 $current_position = $params['current_row']->getPosition();
             }
-            $parameters = array();
             $comparator = strtolower($order_dir) == 'asc' ? '<' : '>';
             $reverse_dir = strtolower($order_dir) == 'asc' ? 'desc' : 'asc';
             $equal_condition = $current_value === null ? $equal_condition = 'IS NULL' : '= :current_value';
@@ -228,17 +228,17 @@ class BaseRepository extends ServiceEntityRepository
                 $prev_where .= ' OR ' . $query_string;
             }
             $query->andWhere($prev_where);
-            $query->setParameters($parameters);
         }
         
         # Findby
         if(isset($params['findby']) && $params['findby'] && is_array($params['findby'])) {
             foreach($params['findby'] as $field_name=>$value) {
                 if($this->isFieldTranslatable($field_name)) {
-                    $query->andWhere('i.' . $field_name . ' = :findby')->setParameter('findby', $value);
+                    $query->andWhere('i.' . $field_name . ' = :findby');
                 } else {
-                    $query->andWhere('t.' . $field_name . ' = :findby')->setParameter('findby', $value);
-                }   
+                    $query->andWhere('t.' . $field_name . ' = :findby');
+                } 
+                $parameters['findby'] = $value;  
             }
         }
         
@@ -266,7 +266,8 @@ class BaseRepository extends ServiceEntityRepository
                      $search_query[] = 't.' . $field_name . ' LIKE :search';
                 }
             }
-            $query->andWhere(implode(' OR ', $search_query))->setParameter('search', "%$string%");
+            $query->andWhere(implode(' OR ', $search_query));
+            $parameters['search'] = "%$string%";
         }
 
         # Linked to
@@ -279,7 +280,7 @@ class BaseRepository extends ServiceEntityRepository
             
             if(isset($params['linked_to_id']) && $params['linked_to_id']) {
                 $query->innerJoin('l.' . $linked_entity->config['table_name'], 'le', 'WITH', 'le.id=:linked_id');
-                $query->setParameter('linked_id', $params['linked_to_id']);
+                $parameters['linked_id'] = $params['linked_to_id'];
             }
         }
         
@@ -291,6 +292,9 @@ class BaseRepository extends ServiceEntityRepository
         if(isset($params['limit'])) {
             $query->setMaxResults((int)$params['limit']);
         }
+        $query->setParameters($parameters);
+            
+        #if(isset($params['get_next']) && isset($params['linked_to'])) dd($query);
         #dd($query->getDql());
         return $query;
     }
