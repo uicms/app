@@ -17,6 +17,7 @@ class Uploader
     public function upload(UploadedFile $file, $slug=true, $make_unique=true)
     {
         $file_name = $file->getClientOriginalName();
+        $infos = pathinfo($file_name);
         
         if($slug) {
             $slugger = new AsciiSlugger();
@@ -24,7 +25,7 @@ class Uploader
         }
         
         if($make_unique) {
-            $file_name = pathinfo($file_name, PATHINFO_FILENAME) . '-' . uniqid() . '.' . $file->guessExtension();
+            $file_name = $infos['filename'] . '-' . uniqid() . '.' . $infos['extension'];
         }
         
         try {
