@@ -27,7 +27,7 @@ class BlockRepository extends BaseRepository
     function setRowData($row, $params=array()) {
         $row = parent::setRowData($row, $params);
         
-        if($this->mode == 'front') {
+        if($row && $this->mode == 'front') {
             $row->medias = $this->model('Media')->getAll(array('linked_to'=>'Block', 'linked_to_id'=>$row->getId()));
             if($row->getType()=='folder' && $row->getParams()) {
                 $row->pages = $this->model('Page')->getAll(array('dir'=>$row->getParams()));

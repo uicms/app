@@ -28,7 +28,7 @@ class PageRepository extends BaseRepository
 	{
 		$row = parent::setRowData($row, $params);
         
-        if($this->mode == 'front') {
+        if($row && $this->mode == 'front') {
             $row->medias = $this->model('Media')->getAll(array('linked_to'=>'Page', 'linked_to_id'=>$row->getId()));
         }
         
