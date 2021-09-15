@@ -1,5 +1,7 @@
 #!/bin/bash
 
+bin/console cache:clear
+
 if [[ $1 != 'remote' ]]
 then
     php bin/console make:migration
