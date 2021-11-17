@@ -657,6 +657,48 @@ class BaseRepository extends ServiceEntityRepository
     }
     
     
+    /* FK links */
+    public function getForeignKeys()
+    {
+        $fks = [];
+        
+        foreach($this->global_config['entity'] as $entity_name=>$entity) {
+            $fields = [];
+            if(isset($entity['form']['translations'])) {
+                $fields = array_merge($fields, $entity['form']['translations']);
+            }
+            if(isset($entity['form']['fields'])) {
+                $fields = array_merge($fields, $entity['form']['fields']);
+            }
+            foreach($fields as $field) {
+                if($field['type'] == 'EntityType' && $field['options']['class'] == $this->name) {
+                    $field['entity_name'] = $entity_name;
+                    $field['db_name'] = $this->str2SnakeCase($field['name']);
+                    $field['entity'] = $this->getEntityManager()->getRepository($entity_name)->mode('admin')->locale($this->locale);
+                    $fks[] = $field;
+                }
+            }
+        }
+        
+        return $fks;
+    }
+    
+    
+    /* TMP */
+    function str2SnakeCase($str) {
+        $pattern = '!([A-Z][A-Z0-9]*(?=$|[A-Z][a-z0-9])|[A-Za-z][a-z0-9]+)!';
+        preg_match_all($pattern, $str, $matches);
+        $ret = $matches[0];
+        foreach ($ret as &$match) {
+            $match = $match == strtoupper($match) ?
+            strtolower($match) :
+            lcfirst($match);
+          }
+          return implode('_', $ret);
+    }
+    /* TMP */
+
+
     /* Data */
     public function count($params=array())
     {
@@ -1030,6 +1072,25 @@ class BaseRepository extends ServiceEntityRepository
                 $em = $this->getEntityManager();
                 $em->remove($link);
                 $em->flush();               
+            }
+        }
+    }
+    
+    public function linkChildren($selection, $parent_entity_name, $field_name, $parent_selection)
+    {
+        $model_parent = $this->getEntityManager()->getRepository($parent_entity_name)->mode('admin')->locale($this->locale);
+        $set_method = 'set' . preg_replace('/^.+\\\\/', '', $field_name);
+
+        foreach($selection as $i=>$id) {
+            $row = $this->find($id);
+            
+            foreach($parent_selection as $j=>$id_parent) {
+                $row_parent = $model_parent->find($id_parent);
+                $row->$set_method($row_parent);
+                
+                $em = $this->getEntityManager();
+                $em->persist($row);
+                $em->flush();
             }
         }
     }
