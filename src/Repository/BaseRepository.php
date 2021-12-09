@@ -104,8 +104,8 @@ class BaseRepository extends ServiceEntityRepository
                 $query->join('t.user', 'u');
                 $query->leftJoin('t.parent', 'p');
                 if($this->isTranslatable()) {
-                    $query->join('t.translations', 'i');
-                    $query->andWhere("i.locale = '".$this->locale."' OR i.locale='" . $this->default_locale . "'");
+                    $query->leftJoin('t.translations', 'i');
+                    #$query->andWhere("i.locale = '".$this->locale."' OR i.locale='" . $this->default_locale . "'");
                 }
                 # Is concealed
                 if($this->mode == 'front') {
@@ -173,7 +173,7 @@ class BaseRepository extends ServiceEntityRepository
             if($order_by != 'position') {
                 $parameters['current_value'] = $current_value;
                 $query_string = "$position_table_alias.position = :current_position and $order_table_alias.$order_by $comparator :current_value";
-                if($parent_query_string) $query_string .= ' AND ' . $parent_query_string;
+                if(isset($parent_query_string) && $parent_query_string) $query_string .= ' AND ' . $parent_query_string;
                 $next_where .= ' OR ' . $query_string;
             }
  
@@ -181,7 +181,7 @@ class BaseRepository extends ServiceEntityRepository
             if($order_by != 'id' && $order_by != 'position') {
                 $parameters['current_id'] = $current_id;
                 $query_string = "$position_table_alias.position = :current_position and $order_table_alias.$order_by $equal_condition and t.id $comparator :current_id";
-                if($parent_query_string) $query_string .= ' AND ' . $parent_query_string;
+                if(isset($parent_query_string) && $parent_query_string) $query_string .= ' AND ' . $parent_query_string;
                 $next_where .= ' OR ' . $query_string;
             }
             
@@ -215,7 +215,7 @@ class BaseRepository extends ServiceEntityRepository
                 $parameters['current_value'] = $current_value;
                 $query->addOrderBy("$order_table_alias.$order_by", $reverse_dir);
                 $query_string = "$position_table_alias.position = :current_position and $order_table_alias.$order_by $comparator :current_value";
-                if($parent_query_string) $query_string .= ' AND ' . $parent_query_string;
+                if(isset($parent_query_string) && $parent_query_string) $query_string .= ' AND ' . $parent_query_string;
                 $prev_where .= ' OR ' . $query_string;
             }
             # OR
@@ -224,7 +224,7 @@ class BaseRepository extends ServiceEntityRepository
                 $parameters['current_value'] = $current_value;
                 $query->addOrderBy('t.id', $reverse_dir);
                 $query_string = "$position_table_alias.position = :current_position and $order_table_alias.$order_by $equal_condition and t.id $comparator :current_id";
-                if($parent_query_string) $query_string .= ' AND ' . $parent_query_string;
+                if(isset($parent_query_string) && $parent_query_string) $query_string .= ' AND ' . $parent_query_string;
                 $prev_where .= ' OR ' . $query_string;
             }
             $query->andWhere($prev_where);
@@ -232,14 +232,16 @@ class BaseRepository extends ServiceEntityRepository
         
         # Findby
         if(isset($params['findby']) && $params['findby'] && is_array($params['findby'])) {
+            $i = 0;
             foreach($params['findby'] as $field_name=>$value) {
                 if($this->isFieldTranslatable($field_name)) {
-                    $query->andWhere('i.' . $field_name . ' = :findby');
+                    $query->andWhere('i.' . $field_name . ' = :findby'.$i);
                 } else {
-                    $query->andWhere('t.' . $field_name . ' = :findby');
+                    $query->andWhere('t.' . $field_name . ' = :findby'.$i);
                 } 
-                $parameters['findby'] = $value;  
-            }
+                $parameters['findby'.$i] = $value;
+                $i++;
+            }            
         }
         
         # Search
@@ -293,7 +295,9 @@ class BaseRepository extends ServiceEntityRepository
             $query->setMaxResults((int)$params['limit']);
         }
         $query->setParameters($parameters);
-            
+        #if($this->name == 'App\Entity\Resource') {
+        #    dd($query->getDql());
+        #}
         #if(isset($params['get_next']) && isset($params['linked_to'])) dd($query);
         #dd($query->getDql());
         return $query;
@@ -768,23 +772,22 @@ class BaseRepository extends ServiceEntityRepository
     
     public function persist($data, $current=null)
     {
-        
         if($this->security->getUser() === null || $this->security->isGranted('ROLE_PERSIST')) {
             
-            $fields = $this->getFields();
-            foreach($fields as $i=>$field) {
-                if(!isset($field['is_meta']) || !$field['is_meta']) {
-                    $get_method = $this->method($field['name']);
-                    $set_method = $this->method($field['name'], 'set');
-                   
-                    # Password Type
-                    if(isset($field['form']['type']) && $field['form']['type'] == 'RepeatedType') {
-                        $dest_set_method = 'set' . $field['form']['dest'];
-                        $password = $this->passwd_encoder->encodePassword($data, $data->$get_method());
-                        $data->$dest_set_method($password);
-                    }
-                    
-                    if($current) {
+            if($current) {
+                $fields = $this->getFields();
+                foreach($fields as $i=>$field) {
+                    if(!isset($field['is_meta']) || !$field['is_meta']) {
+                        $get_method = $this->method($field['name']);
+                        $set_method = $this->method($field['name'], 'set');
+                       
+                        # Password Type
+                        if(isset($field['form']['type']) && $field['form']['type'] == 'RepeatedType') {
+                            $dest_set_method = 'set' . $field['form']['dest'];
+                            $password = $this->passwd_encoder->encodePassword($data, $data->$get_method());
+                            $data->$dest_set_method($password);
+                        }
+                        
                         # File Type
                         if(isset($field['form']['type']) && $field['form']['type'] == 'UIFileType' && !$data->$get_method() && $current->$get_method()) {
                             $data->$set_method($current->$get_method());
@@ -802,7 +805,6 @@ class BaseRepository extends ServiceEntityRepository
                     }
                 }
             }
-            
             if($this->isTranslatable()) {
                 $data->mergeNewTranslations();
             }
@@ -934,7 +936,7 @@ class BaseRepository extends ServiceEntityRepository
                 foreach($fields as $i=>$field) {
                     if(!isset($field['is_meta']) || !$field['is_meta']) {
                         $get_method = 'get' . $field['name'];
-                        if(isset($field['form']) && $field['form']['type'] == 'UIFileType') {
+                        if($field['form']['type'] == 'UIFileType') {
                             $path = $this->upload_path . '/' . $row->$get_method();
                             $path_thumbnail = $this->upload_path . '/' . $this->preview_prefix . $row->$get_method();
                             if(file_exists($path) && !is_dir($path)) {
