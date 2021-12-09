@@ -3,3 +3,6 @@
 .DS_Store
 .nano
 /.ssh/
+.cache
+.config
+.locale
