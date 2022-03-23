@@ -127,6 +127,11 @@ class BaseRepository extends ServiceEntityRepository
             $parameters['id'] = (int)$params['id'];
         }
         
+        # Not in
+        if(isset($params['not_in']) && $params['not_in'] && isset($params['not_in_array']) && (array)$params['not_in_array']) {
+            $query->andWhere($query->expr()->notIn($params['not_in'], $params['not_in_array']));
+        }
+        
         # Set
         if(isset($params['set']) && $params['set'] && is_array($params['set'])) {
             foreach($params['set'] as $set_field=>$set_value) {
