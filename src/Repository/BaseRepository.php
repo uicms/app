@@ -80,7 +80,13 @@ class BaseRepository extends ServiceEntityRepository
         # Ordering
         $order_by = (isset($params['order_by']) && $params['order_by']) ? $params['order_by'] : $this->config['order_by'];
         $order_dir = (isset($params['order_dir']) && $params['order_dir']) ? $params['order_dir'] : $this->config['order_dir'];
-        $order_table_alias = $this->isFieldTranslatable($order_by) && $order_by!='id' ? 'i' : 't';
+        if(preg_match("'^[a-z_-]+\.'", $order_by)) {
+            $query_order_by = $order_by;
+        } else {
+            $order_table_alias = $this->isFieldTranslatable($order_by) && $order_by!='id' ? 'i' : 't';
+            $query_order_by = $order_table_alias . '.' . $order_by;
+        }
+        
         $order_by_method = 'get' . $order_by;
         
         # Statement
@@ -115,7 +121,7 @@ class BaseRepository extends ServiceEntityRepository
                 if(!isset($params['disable_positions']) || !$params['disable_positions']) {
                     $query->orderBy("$position_table_alias.position", 'asc');
                 }
-                $query->addOrderBy($order_table_alias . '.' . $order_by, $order_dir);
+                $query->addOrderBy($query_order_by, $order_dir);
                 if($order_by != 'id') $query->addOrderBy('t.id', 'asc');
             break;
         }
