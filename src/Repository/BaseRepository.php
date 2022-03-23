@@ -128,8 +128,8 @@ class BaseRepository extends ServiceEntityRepository
         }
         
         # Not in
-        if(isset($params['not_in']) && $params['not_in'] && isset($params['not_in_array']) && (array)$params['not_in_array']) {
-            $query->andWhere($query->expr()->notIn($params['not_in'], $params['not_in_array']));
+        if(isset($params['not_in']) && $params['not_in'] && isset($params['not_in_list']) && (array)$params['not_in_list']) {
+            $query->andWhere($query->expr()->notIn($params['not_in'], $params['not_in_list']));
         }
         
         # Set
