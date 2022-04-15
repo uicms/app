@@ -785,26 +785,27 @@ class BaseRepository extends ServiceEntityRepository
     {
         if($this->security->getUser() === null || $this->security->isGranted('ROLE_PERSIST')) {
             
-            if($current) {
-                $fields = $this->getFields();
-                foreach($fields as $i=>$field) {
-                    if(!isset($field['is_meta']) || !$field['is_meta']) {
-                        $get_method = $this->method($field['name']);
-                        $set_method = $this->method($field['name'], 'set');
-                       
-                        # Password Type
-                        if(isset($field['form']['type']) && $field['form']['type'] == 'RepeatedType') {
-                            $dest_set_method = 'set' . $field['form']['dest'];
-                            $password = $this->passwd_encoder->encodePassword($data, $data->$get_method());
-                            $data->$dest_set_method($password);
-                        }
-                        
+            $fields = $this->getFields();
+            foreach($fields as $i=>$field) {
+                if(!isset($field['is_meta']) || !$field['is_meta']) {
+                    $get_method = $this->method($field['name']);
+                    $set_method = $this->method($field['name'], 'set');
+                   
+                    # Password Type
+                    if(isset($field['form']['type']) && $field['form']['type'] == 'RepeatedType') {
+                        $dest_set_method = 'set' . $field['form']['dest'];
+                        $password = $this->passwd_encoder->encodePassword($data, $data->$get_method());
+                        $data->$dest_set_method($password);
+                    }
+                    
+                    if($current) {
                         # File Type
                         if(isset($field['form']['type']) && $field['form']['type'] == 'UIFileType' && !$data->$get_method() && $current->$get_method()) {
                             $data->$set_method($current->$get_method());
                         }
+                    
                         if(isset($field['form']['type']) && $field['form']['type'] == 'UIFileType' && $data->$get_method() && $current->$get_method() && $data->$get_method() != $current->$get_method()) {
-                            $path = $this->upload_path . '/' . $current->$get_method();
+                        $path = $this->upload_path . '/' . $current->$get_method();
                             $path_thumbnail = $this->upload_path . '/' . $this->preview_prefix . $current->$get_method();
                             if(file_exists($path) && !is_dir($path)) {
                                 unlink($path);
@@ -816,6 +817,7 @@ class BaseRepository extends ServiceEntityRepository
                     }
                 }
             }
+            
             if($this->isTranslatable()) {
                 $data->mergeNewTranslations();
             }
