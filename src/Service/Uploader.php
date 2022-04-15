@@ -25,7 +25,7 @@ class Uploader
         }
         
         if($make_unique) {
-            $file_name = $infos['filename'] . '-' . uniqid() . '.' . $infos['extension'];
+            $file_name = $file_name . '-' . uniqid() . '.' . $infos['extension'];
         }
         
         try {
