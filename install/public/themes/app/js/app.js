@@ -1,13 +1,57 @@
-// External links
-document.querySelectorAll('a.external').forEach(function(link) {
-    link.setAttribute('target', '_blank');
+var loading = false;
+
+$(document).ready(function() {
+    initSlider();
+    initInfiniteScroll();
+    initScrollBars();
+    
+    /* Menu */
+    $('#menu_button').click(function(e) {
+        e.stopPropagation();
+        $('body').toggleClass('menu_expanded');
+    });
+    $('body').click(function(e) {
+         $('body').removeClass('menu_expanded');
+    });
+    $('#menu').click(function(e) {
+        e.stopPropagation();
+    });
+    
+    /* Misc */
+    $('a.external').attr('target', '_blank');
 });
 
-// Menu button
-document.querySelector('#menu_button').addEventListener('click', function(e) {
-    e.stopPropagation();
-    document.querySelector('body').classList.toggle('menu_expanded');
-});
-document.querySelector('body').addEventListener('click', function(e) {
-    this.classList.remove('menu_expanded');
-});
+function initInfiniteScroll() {
+	$('.infiniteScroll').infiniteScroll({
+		before: function() {
+			loading = 1;
+			$('#loading').show();
+		},
+		callback:
+		function(data) {
+			loading = 0;
+			$('#loading').hide();
+		}
+	});
+}
+
+function initSlider() {
+    $(".slider").slick({
+        initialSlide: 0,
+        infinite: true,
+        slidesToShow: 1,
+        slidesToScroll: 1,
+        arrows: true,
+        autoplay: false
+    });
+}
+
+function initScrollBars() {
+    $(".scrollbar").mCustomScrollbar({
+        theme:"dark-thin",
+        callbacks:{
+            onInit:function(){
+            }
+        }
+    });
+}

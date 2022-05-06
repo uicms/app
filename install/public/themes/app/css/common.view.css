@@ -1,0 +1,22 @@
+.view > .wrapper {
+    display: flex;
+    flex-direction: column-reverse;
+}
+
+.view .page_title {
+    margin-bottom: var(--default-spacing);
+}
+
+@media only screen and (min-width: 768px) {
+    .view > .wrapper {
+        flex-direction: row;
+    }
+    .view > .wrapper > .content {
+        width: 50%;
+        box-sizing: border-box;
+        padding-right: var(--default-spacing);
+    }
+    .view > .wrapper > aside {
+        width: 50%;
+    }
+}

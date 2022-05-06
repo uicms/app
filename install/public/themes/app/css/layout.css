@@ -1,0 +1,48 @@
+/* Layout */
+body {
+    
+}
+#container {
+}
+#header {
+    position: relative;
+    z-index: 100;
+    display: flex;
+    background: #fff;
+    padding: var(--default-spacing);
+}
+#logo {
+    flex-grow: 2;
+}
+#menu_button {
+    cursor: pointer;
+    width: 30px;
+    height: 30px;
+    background: url('../img/menu.svg') no-repeat;
+    background-size: 100%;
+}
+#menu {
+    position: absolute;
+    z-index: 90;
+    top: 0;
+    left: var(--default-spacing);
+    right: var(--default-spacing);
+    transform: translateY(-100%);
+    transition: 0.5s;
+    background: #fff;
+    padding-top: 70px;
+    padding-bottom: var(--default-spacing);
+}
+body.menu_expanded #menu {
+    transform: translateY(0);
+    transition: 0.5s;
+}
+body.menu_expanded #menu_button {
+    background: url('../img/close.svg') no-repeat;
+    background-size: 100%;
+}
+#content {
+    padding: var(--default-spacing);
+}
+#footer {
+}

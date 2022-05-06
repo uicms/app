@@ -8,11 +8,16 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Asset\PathPackage;
 use Symfony\Component\Asset\VersionStrategy\StaticVersionStrategy;
 use Uicms\App\Service\Model;
+use App\Service\MenuHelper;
 
 class IndexController extends AbstractController
 {
     public function index(Model $model, Request $request, $slug='', $action='', $locale='')
     {
+        $version = 'v1.0';
+		$this->get('session')->set('theme_path', new PathPackage('themes/app', new StaticVersionStrategy($version)));
+		$this->get('session')->set('js_path', new PathPackage('js', new StaticVersionStrategy($version)));
+        
         # UI Config
 		$ui_config = $this->getParameter('ui_config');
         $this->get('session')->set('ui_config', $ui_config);
@@ -42,10 +47,19 @@ class IndexController extends AbstractController
 		if(!$action) {
 			$action = $page->getAction() ? $page->getAction() : 'index';
 		}
+        $session->set('current_action', $action);
 		
 		# Menu
 		$menu = $repo->getAll(array('dir'=>0, 'findby'=>array('menu'=>'menu')));
         foreach($menu as $i=>$menu_page) {
+            
+            if($menu_page->getHelper()) {
+                $helper = new MenuHelper($menu_page, $model, $session);
+                $menu_page->helper_result = $helper->getResult();
+            } else {
+                $menu_page->helper_result = '';
+            }
+            
             if($menu_page->getIsdir()) {
                 $menu_page->children = $repo->getAll(array('dir'=>$menu_page->getId()));
             } else {

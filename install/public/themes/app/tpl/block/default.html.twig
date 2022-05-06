@@ -1,26 +1,25 @@
-<article class="block block_image {{ block.class }}">
+<article class="block block_{{ block.type }} {{ block.class }}">
     
-    <div class="wrapper clearfix">
-        <h2>{{ block.name|raw }}</h2>
-        {% if block.text %}<div class="text">{{ block.text|raw }}</div>{% endif %}
+    <div class="wrapper">
+        <div class="details">
+            <h2 class="block_name">{{ block.name|raw }}</h2>
+            {% if block.text %}<div class="text">{{ block.text|raw }}</div>{% endif %}
+        </div>
+        
         {% if block.medias %}
-        <ul class="images">
+        <ul class="medias">
         {% for media in block.medias %}
             <li>
                 <div class="wrapper">
                     <div class="thumbnail">
-                        <div class="ratio">
-                            <div class="wrapper">
-                                <img src="/uploads/{{ media.file }}" />
-                            </div>
+                        <div class="wrapper">
+                            <img src="/uploads/{{ media.file }}" alt="{{ media.name }}"/>
                         </div>
                     </div>
                     <div class="details">
-                        <div class="ratio">
-                            <div class="wrapper">
-                                <h3>{{ media.name }}</h3>
-                                {% if media.description %}<div class="description">{{ media.description|raw }}</div>{% endif %}
-                            </div>
+                        <div class="wrapper">
+                            <h3 class="media_name">{{ media.name }}</h3>
+                            {% if media.description %}<div class="description">{{ media.description|raw }}</div>{% endif %}
                         </div>
                     </div>
                 </div>
@@ -29,4 +28,5 @@
         </ul>
         {% endif %}
     </div>
+    
 </article>

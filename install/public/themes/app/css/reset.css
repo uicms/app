@@ -24,6 +24,9 @@ label {
 html {
 	overflow-y: scroll;
 }
+img {
+    width: 100%;
+}
 .clearfix:after {
 	content: "."; 
 	display: block; 
@@ -58,4 +61,7 @@ sup {
 	valign: super;
 	font-size: 70%;
 	line-height: 80%;
+}
+a {
+    color: #000;
 }

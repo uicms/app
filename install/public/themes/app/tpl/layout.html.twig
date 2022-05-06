@@ -1,6 +1,8 @@
 {% set path = app.session.get('path') %}
 {% trans_default_domain 'app' %}
 {% set ui = app.session.get('ui_config') %}
+{% set theme_path = app.session.get('theme_path') %}
+{% set js_path = app.session.get('js_path') %}
 <!DOCTYPE html>
 <html>
     <head>
@@ -9,39 +11,49 @@
     	<meta name="author" content="" />
     	<meta name="description" content="" />
     	<link rel="shortcut icon" href="/favicon.ico" />
-        <title>{% block title %}Website{% endblock %}</title>
+        <title>{{ page.name|raw }} - {% block title %}Website{% endblock %}</title>
         
         {% block stylesheets %}
-        <link rel="stylesheet" type="text/css" media="screen" href="/themes/app/css/reset.css" />
-        <link rel="stylesheet" type="text/css" media="screen" href="/themes/app/css/mce.css" />
-        <link rel="stylesheet" type="text/css" media="screen" href="/themes/app/css/styles.css" />
+        <link rel="stylesheet" type="text/css" media="screen" href="{{ theme_path.getUrl('css/reset.css') }}" />
+        <link rel="stylesheet" type="text/css" media="screen" href="{{ theme_path.getUrl('css/fonts.css') }}" />
+        <link rel="stylesheet" type="text/css" media="screen" href="{{ theme_path.getUrl('css/mce.css') }}" />
+        <link rel="stylesheet" type="text/css" media="screen" href="{{ theme_path.getUrl('css/global.css') }}" />
+        <link rel="stylesheet" type="text/css" media="screen" href="{{ theme_path.getUrl('css/layout.css') }}" />
+        <link rel="stylesheet" type="text/css" media="screen" href="{{ theme_path.getUrl('css/common.blocks.css') }}" />
+        <link rel="stylesheet" type="text/css" media="screen" href="{{ theme_path.getUrl('css/common.view.css') }}" />
+        <link rel="stylesheet" type="text/css" media="screen" href="{{ theme_path.getUrl('css/common.items.css') }}" />
+        <link rel="stylesheet" type="text/css" media="screen" href="{{ theme_path.getUrl('css/common.form.css') }}" />
+        
+        <link rel="stylesheet" type="text/css" media="screen" href="{{ js_path.getUrl('slick-carousel/slick/slick.css') }}" />
+        <link rel="stylesheet" type="text/css" media="screen" href="{{ js_path.getUrl('malihu-custom-scrollbar-plugin/jquery.mCustomScrollbar.css') }}" />
         {% endblock %}
         
     	<meta name="viewport" content="user-scalable=yes, initial-scale=1.0, minimum-scale=1.0, maximum-scale=3.0, width=device-width" />
     </head>
-    <body class="{{ page.controller }} {{ page.action }} page-{{ page.slug }}">
+    <body class="{{ page.controller }} {{ app.session.get('current_action') }} page-{{ page.slug }}">
         <div id="container">
     		<header id="header">
-                <a href="/"><h1 id="logo">Website</h1></a>
+                <h1 id="logo"><a href="/">Website</a></h1>
                 <div id="menu_button"></div>
-    			<nav id="menu">
-    				<ul>
-    					{% for menu_page in app.session.get('menu') %}
-    					<li>
-                            <a href="{{ path('app_page', {'slug': menu_page.slug, 'locale': app.session.get('locale') }) }}">{{ menu_page.name }}</a>
-                            {% if menu_page.children is defined and menu_page.children %}
-                                <ul class="children">
-                                    {% for child in menu_page.children %}
-                                        <li><a href="{{ path('app_page', {'slug': child.slug, 'locale': app.session.get('locale') }) }}">{{ child.name }}</a></li>
-                                    {% endfor %}
-                                </ul>
-                            {% endif %}
-                        </li>
-    					{% endfor %}
-    				</ul>
-    			</nav>
     		</header>
 		    
+			<nav id="menu">
+				<ul>
+					{% for menu_page in app.session.get('menu') %}
+					<li>
+                        <a href="{{ path('app_page', {'slug': menu_page.slug, 'locale': app.session.get('locale') }) }}">{{ menu_page.name }}</a>
+                        {% if menu_page.children is defined and menu_page.children %}
+                            <ul class="children">
+                                {% for child in menu_page.children %}
+                                    <li><a href="{{ path('app_page', {'slug': child.slug, 'locale': app.session.get('locale') }) }}">{{ child.name }}</a></li>
+                                {% endfor %}
+                            </ul>
+                        {% endif %}
+                    </li>
+					{% endfor %}
+				</ul>
+			</nav>
+            
             <div id="content">
             {% block body %}{% endblock %}
             </div>
@@ -50,7 +62,13 @@
         </div>
             
         {% block javascripts %}
-        <script type="text/javascript" src="/themes/app/js/app.js"></script>
+        <script type="text/javascript" src="{{ js_path.getUrl('jquery/dist/jquery.min.js') }}"></script>
+        <script type="text/javascript" src="{{ js_path.getUrl('slick-carousel/slick/slick.min.js') }}"></script>
+        <script type="text/javascript" src="{{ js_path.getUrl('malihu-custom-scrollbar-plugin/jquery.mCustomScrollbar.concat.min.js') }}"></script>
+        <script type="text/javascript" src="{{ theme_path.getUrl('js/jquery.cookies.js') }}"></script>
+        <script type="text/javascript" src="{{ theme_path.getUrl('js/jquery.salvatore.js') }}"></script>
+        <script type="text/javascript" src="{{ theme_path.getUrl('js/infinite_scroll.js') }}"></script>
+        <script type="text/javascript" src="{{ theme_path.getUrl('js/app.js') }}"></script>
         {% endblock %}
     </body>
 </html>
