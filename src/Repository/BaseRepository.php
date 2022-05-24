@@ -80,13 +80,7 @@ class BaseRepository extends ServiceEntityRepository
         # Ordering
         $order_by = (isset($params['order_by']) && $params['order_by']) ? $params['order_by'] : $this->config['order_by'];
         $order_dir = (isset($params['order_dir']) && $params['order_dir']) ? $params['order_dir'] : $this->config['order_dir'];
-        if(preg_match("'^[a-z_-]+\.'", $order_by)) {
-            $query_order_by = $order_by;
-        } else {
-            $order_table_alias = $this->isFieldTranslatable($order_by) && $order_by!='id' ? 'i' : 't';
-            $query_order_by = $order_table_alias . '.' . $order_by;
-        }
-        
+        $order_table_alias = $this->isFieldTranslatable($order_by) && $order_by!='id' ? 'i' : 't';
         $order_by_method = 'get' . $order_by;
         
         # Statement
@@ -121,7 +115,7 @@ class BaseRepository extends ServiceEntityRepository
                 if(!isset($params['disable_positions']) || !$params['disable_positions']) {
                     $query->orderBy("$position_table_alias.position", 'asc');
                 }
-                $query->addOrderBy($query_order_by, $order_dir);
+                $query->addOrderBy($order_table_alias . '.' . $order_by, $order_dir);
                 if($order_by != 'id') $query->addOrderBy('t.id', 'asc');
             break;
         }
@@ -173,30 +167,38 @@ class BaseRepository extends ServiceEntityRepository
                 $current_position = $params['current_row']->getPosition();
             }
             $comparator = $order_dir == 'asc' ? '>' : '<';
+            
+            # Conditions
             $equal_condition = $current_value === null ? 'IS NULL' : '= :current_value';
+            
+            if($current_value === null) {
+                $not_equal_condition = 'IS NOT NULL';
+            } else {
+                $parameters['current_value'] = $current_value;
+                $not_equal_condition = $comparator . ' :current_value';
+            }
             
             # Position order is prioritary
             $parameters['current_position'] = $current_position;
-            
             $next_where = "$position_table_alias.position > :current_position";
             
             # OR
             if($order_by != 'position') {
-                $parameters['current_value'] = $current_value;
-                $query_string = "$position_table_alias.position = :current_position and $order_table_alias.$order_by $comparator :current_value";
+                $query_string = "$position_table_alias.position = :current_position and $order_table_alias.$order_by $not_equal_condition";
                 if(isset($parent_query_string) && $parent_query_string) $query_string .= ' AND ' . $parent_query_string;
-                $next_where .= ' OR ' . $query_string;
+                $next_where .= ' OR (' . $query_string . ')';
             }
  
             # OR
             if($order_by != 'id' && $order_by != 'position') {
                 $parameters['current_id'] = $current_id;
-                $query_string = "$position_table_alias.position = :current_position and $order_table_alias.$order_by $equal_condition and t.id $comparator :current_id";
+                $query_string = "$position_table_alias.position = :current_position and $order_table_alias.$order_by $equal_condition and t.id > :current_id";
                 if(isset($parent_query_string) && $parent_query_string) $query_string .= ' AND ' . $parent_query_string;
-                $next_where .= ' OR ' . $query_string;
+                $next_where .= ' OR (' . $query_string . ')';
             }
             
             $query->andWhere($next_where);
+            #dd($query->getDql());
         }
         
         # Prev
@@ -213,32 +215,47 @@ class BaseRepository extends ServiceEntityRepository
             }
             $comparator = strtolower($order_dir) == 'asc' ? '<' : '>';
             $reverse_dir = strtolower($order_dir) == 'asc' ? 'desc' : 'asc';
-            $equal_condition = $current_value === null ? $equal_condition = 'IS NULL' : '= :current_value';
+
+            # Conditions
+            if($current_value === null) {
+                $equal_condition = 'IS NULL';;
+            } else {
+                $parameters['current_value'] = $current_value;
+                $equal_condition = '= :current_value';
+            }
+            
+            if($current_value === null && $comparator == '>') {
+                $not_equal_condition = "$order_table_alias.$order_by IS NOT NULL";
+            } else if($current_value !== null && $comparator == '>') {
+                $parameters['current_value'] = $current_value;
+                $not_equal_condition = "($order_table_alias.$order_by $comparator :current_value)";
+            } else if($current_value !== null&& $comparator == '<') {
+                $parameters['current_value'] = $current_value;
+                $not_equal_condition = "($order_table_alias.$order_by $comparator :current_value OR $order_table_alias.$order_by IS NULL)";
+            }
             
             # Position order is prioritary
             $query->orderBy("$position_table_alias.position", 'desc');
             $parameters['current_position'] = $current_position;
-            
             $prev_where = "$position_table_alias.position < :current_position";
             
             # OR
-            if($order_by != 'position') {
-                $parameters['current_value'] = $current_value;
+            if($order_by != 'position' && isset($not_equal_condition)) {
                 $query->addOrderBy("$order_table_alias.$order_by", $reverse_dir);
-                $query_string = "$position_table_alias.position = :current_position and $order_table_alias.$order_by $comparator :current_value";
+                $query_string = "$position_table_alias.position = :current_position AND $not_equal_condition";
                 if(isset($parent_query_string) && $parent_query_string) $query_string .= ' AND ' . $parent_query_string;
-                $prev_where .= ' OR ' . $query_string;
+                $prev_where .= ' OR (' . $query_string . ')';
             }
             # OR
             if($order_by != 'id' && $order_by != 'position') {
                 $parameters['current_id'] = $current_id;
-                $parameters['current_value'] = $current_value;
-                $query->addOrderBy('t.id', $reverse_dir);
-                $query_string = "$position_table_alias.position = :current_position and $order_table_alias.$order_by $equal_condition and t.id $comparator :current_id";
+                $query->addOrderBy('t.id', 'desc');
+                $query_string = "$position_table_alias.position = :current_position and $order_table_alias.$order_by $equal_condition and t.id < :current_id";
                 if(isset($parent_query_string) && $parent_query_string) $query_string .= ' AND ' . $parent_query_string;
-                $prev_where .= ' OR ' . $query_string;
+                $prev_where .= ' OR (' . $query_string. ')';
             }
             $query->andWhere($prev_where);
+            #dd($query->getDql());
         }
         
         # Findby
@@ -306,10 +323,7 @@ class BaseRepository extends ServiceEntityRepository
             $query->setMaxResults((int)$params['limit']);
         }
         $query->setParameters($parameters);
-        #if($this->name == 'App\Entity\Resource') {
-        #    dd($query->getDql());
-        #}
-        #if(isset($params['get_next']) && isset($params['linked_to'])) dd($query);
+
         #dd($query->getDql());
         return $query;
     }
@@ -785,27 +799,26 @@ class BaseRepository extends ServiceEntityRepository
     {
         if($this->security->getUser() === null || $this->security->isGranted('ROLE_PERSIST')) {
             
-            $fields = $this->getFields();
-            foreach($fields as $i=>$field) {
-                if(!isset($field['is_meta']) || !$field['is_meta']) {
-                    $get_method = $this->method($field['name']);
-                    $set_method = $this->method($field['name'], 'set');
-                   
-                    # Password Type
-                    if(isset($field['form']['type']) && $field['form']['type'] == 'RepeatedType') {
-                        $dest_set_method = 'set' . $field['form']['dest'];
-                        $password = $this->passwd_encoder->encodePassword($data, $data->$get_method());
-                        $data->$dest_set_method($password);
-                    }
-                    
-                    if($current) {
+            if($current) {
+                $fields = $this->getFields();
+                foreach($fields as $i=>$field) {
+                    if(!isset($field['is_meta']) || !$field['is_meta']) {
+                        $get_method = $this->method($field['name']);
+                        $set_method = $this->method($field['name'], 'set');
+                       
+                        # Password Type
+                        if(isset($field['form']['type']) && $field['form']['type'] == 'RepeatedType') {
+                            $dest_set_method = 'set' . $field['form']['dest'];
+                            $password = $this->passwd_encoder->encodePassword($data, $data->$get_method());
+                            $data->$dest_set_method($password);
+                        }
+                        
                         # File Type
                         if(isset($field['form']['type']) && $field['form']['type'] == 'UIFileType' && !$data->$get_method() && $current->$get_method()) {
                             $data->$set_method($current->$get_method());
                         }
-                    
                         if(isset($field['form']['type']) && $field['form']['type'] == 'UIFileType' && $data->$get_method() && $current->$get_method() && $data->$get_method() != $current->$get_method()) {
-                        $path = $this->upload_path . '/' . $current->$get_method();
+                            $path = $this->upload_path . '/' . $current->$get_method();
                             $path_thumbnail = $this->upload_path . '/' . $this->preview_prefix . $current->$get_method();
                             if(file_exists($path) && !is_dir($path)) {
                                 unlink($path);
@@ -817,7 +830,6 @@ class BaseRepository extends ServiceEntityRepository
                     }
                 }
             }
-            
             if($this->isTranslatable()) {
                 $data->mergeNewTranslations();
             }
