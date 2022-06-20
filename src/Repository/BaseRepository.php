@@ -171,11 +171,14 @@ class BaseRepository extends ServiceEntityRepository
             # Conditions
             $equal_condition = $current_value === null ? 'IS NULL' : '= :current_value';
             
-            if($current_value === null) {
-                $not_equal_condition = 'IS NOT NULL';
+            if($current_value === null && $comparator == '>') {
+                $not_equal_condition = "$order_table_alias.$order_by IS NOT NULL";
+            } else if($current_value !== null && $comparator == '<') {
+                $parameters['current_value'] = $current_value;
+                $not_equal_condition = "($order_table_alias.$order_by $comparator :current_value OR $order_table_alias.$order_by IS NULL)";
             } else {
                 $parameters['current_value'] = $current_value;
-                $not_equal_condition = $comparator . ' :current_value';
+                $not_equal_condition = "$order_table_alias.$order_by $comparator :current_value";
             }
             
             # Position order is prioritary
@@ -184,7 +187,7 @@ class BaseRepository extends ServiceEntityRepository
             
             # OR
             if($order_by != 'position') {
-                $query_string = "$position_table_alias.position = :current_position and $order_table_alias.$order_by $not_equal_condition";
+                $query_string = "$position_table_alias.position = :current_position and $not_equal_condition";
                 if(isset($parent_query_string) && $parent_query_string) $query_string .= ' AND ' . $parent_query_string;
                 $next_where .= ' OR (' . $query_string . ')';
             }
@@ -229,7 +232,7 @@ class BaseRepository extends ServiceEntityRepository
             } else if($current_value !== null && $comparator == '>') {
                 $parameters['current_value'] = $current_value;
                 $not_equal_condition = "($order_table_alias.$order_by $comparator :current_value)";
-            } else if($current_value !== null&& $comparator == '<') {
+            } else if($current_value !== null && $comparator == '<') {
                 $parameters['current_value'] = $current_value;
                 $not_equal_condition = "($order_table_alias.$order_by $comparator :current_value OR $order_table_alias.$order_by IS NULL)";
             }

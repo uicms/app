@@ -14,6 +14,10 @@ class IndexController extends AbstractController
 {
     public function index(Model $model, Request $request, $slug='', $action='', $locale='')
     {
+        if($locale && !preg_match("'^[a-z]{2}$'", $locale)) {
+            throw $this->createNotFoundException('This locale does not exist!');
+        }
+        
         $version = 'v1.0';
 		$this->get('session')->set('theme_path', new PathPackage('themes/app', new StaticVersionStrategy($version)));
 		$this->get('session')->set('js_path', new PathPackage('js', new StaticVersionStrategy($version)));
