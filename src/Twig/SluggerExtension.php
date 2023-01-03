@@ -16,7 +16,10 @@ class SluggerExtension extends AbstractExtension
 
     public function slug($string)
     {
-        $slugger = new AsciiSlugger();
-        return strtolower($slugger->slug($string));
+        if($string) {
+            $slugger = new AsciiSlugger();
+            return strtolower($slugger->slug($string));
+        }
+        return $string;
     }
 }
