@@ -737,7 +737,7 @@ class BaseRepository extends ServiceEntityRepository
         unset($params['limit']);
         unset($params['offset']);
         $query = $this->getQuery($params);
-        return $query->select('COUNT(t)')->getQuery()->getSingleScalarResult();
+        return $query->select('COUNT(DISTINCT(t.id))')->getQuery()->getSingleScalarResult();
     }
     
     public function getOne($params=array())
