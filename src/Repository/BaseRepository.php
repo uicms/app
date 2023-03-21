@@ -785,11 +785,14 @@ class BaseRepository extends ServiceEntityRepository
     
     
     /* Actions */
-    public function new($user)
+    public function new($user=null)
     {
         $new = new $this->name;
         if($this->isTranslatable()) {
             $new->setDefaultLocale($this->default_locale);
+        }
+        if(null === $user) {
+            $user = $this->security->getUser();
         }
         $new->setUser($user);
         $new->setCreated(new \Datetime);
