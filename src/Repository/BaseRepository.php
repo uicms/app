@@ -410,7 +410,7 @@ class BaseRepository extends ServiceEntityRepository
     
     public function model($entity_name) 
     {
-        return $this->getEntityManager()->getRepository($this->normalize($entity_name))->mode('admin')->locale($this->locale);
+        return $this->getEntityManager()->getRepository($this->normalize($entity_name))->locale($this->locale);
     }
     
     public function method($field_name='id', $type='get') 
