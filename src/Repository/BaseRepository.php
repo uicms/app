@@ -1089,7 +1089,7 @@ class BaseRepository extends ServiceEntityRepository
         }
     }
     
-    public function unlink($selection, $linked_entity_name, $linked_selection)
+    public function unlink($selection, $linked_entity_name, $linked_selection=[])
     {
         $model_link = $this->getLinkEntity(array($linked_entity_name, $this->name));
         $model_linked = $this->getEntityManager()->getRepository($linked_entity_name)->locale($this->locale);
@@ -1099,16 +1099,26 @@ class BaseRepository extends ServiceEntityRepository
         $linked_table_name = $model_linked->config['table_name'];
         
         foreach($selection as $i=>$id) {
-            foreach($linked_selection as $j=>$id_linked) {
-                $row = $this->find($id);
-                $row_linked = $model_linked->find($id_linked);
-                
-                $link = $model_link->findOneBy(array($linked_table_name => $row_linked, $table_name => $row));
+            $row = $this->find($id);
 
-                $em = $this->getEntityManager();
-                $em->remove($link);
-                $em->flush();               
+            if($linked_selection) {
+                foreach($linked_selection as $j=>$id_linked) {
+                    $row_linked = $model_linked->find($id_linked);
+                    $link = $model_link->findOneBy(array($linked_table_name => $row_linked, $table_name => $row));
+
+                    $em = $this->getEntityManager();
+                    $em->remove($link);
+                    $em->flush();               
+                }
+            } else {
+                $links_results = $model_link->findBy([$table_name=>$row]);
+                foreach($links_results as $link) {
+                    $em = $this->getEntityManager();
+                    $em->remove($link);
+                    $em->flush();
+                }
             }
+            
         }
     }
     
