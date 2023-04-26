@@ -731,7 +731,7 @@ class BaseRepository extends ServiceEntityRepository
     /* TMP */
 
 
-    /* Data */
+    /* Queries on data */
     public function count($params=array())
     {
         unset($params['limit']);
@@ -805,7 +805,10 @@ class BaseRepository extends ServiceEntityRepository
     {
         if($this->security->getUser() === null || $this->security->isGranted('ROLE_PERSIST')) {
             
-            if($current) {
+                if(!$data->getUser() && $this->security->getUser()) {
+                    $data->setUser($this->security->getUser());
+                }
+                
                 $fields = $this->getFields();
                 foreach($fields as $i=>$field) {
                     if(!isset($field['is_meta']) || !$field['is_meta']) {
@@ -819,23 +822,26 @@ class BaseRepository extends ServiceEntityRepository
                             $data->$dest_set_method($password);
                         }
                         
-                        # File Type
-                        if(isset($field['form']['type']) && $field['form']['type'] == 'UIFileType' && !$data->$get_method() && $current->$get_method()) {
-                            $data->$set_method($current->$get_method());
-                        }
-                        if(isset($field['form']['type']) && $field['form']['type'] == 'UIFileType' && $data->$get_method() && $current->$get_method() && $data->$get_method() != $current->$get_method()) {
-                            $path = $this->upload_path . '/' . $current->$get_method();
-                            $path_thumbnail = $this->upload_path . '/' . $this->preview_prefix . $current->$get_method();
-                            if(file_exists($path) && !is_dir($path)) {
-                                unlink($path);
+                        if($current) {
+                            # File Type
+                            if(isset($field['form']['type']) && $field['form']['type'] == 'UIFileType' && !$data->$get_method() && $current->$get_method()) {
+                                $data->$set_method($current->$get_method());
                             }
-                            if(file_exists($path_thumbnail) && !is_dir($path_thumbnail)) {
-                                unlink($path_thumbnail);
+                            if(isset($field['form']['type']) && $field['form']['type'] == 'UIFileType' && $data->$get_method() && $current->$get_method() && $data->$get_method() != $current->$get_method()) {
+                                $path = $this->upload_path . '/' . $current->$get_method();
+                                $path_thumbnail = $this->upload_path . '/' . $this->preview_prefix . $current->$get_method();
+                                if(file_exists($path) && !is_dir($path)) {
+                                    unlink($path);
+                                }
+                                if(file_exists($path_thumbnail) && !is_dir($path_thumbnail)) {
+                                    unlink($path_thumbnail);
+                                }
                             }
                         }
                     }
                 }
-            }
+
+            
             if($this->isTranslatable()) {
                 $data->mergeNewTranslations();
             }
@@ -847,6 +853,7 @@ class BaseRepository extends ServiceEntityRepository
                 $data->setPublished(new \Datetime);
             }
             $data->setModified(new \Datetime);
+
             $em->persist($data);
             $em->flush();
             
