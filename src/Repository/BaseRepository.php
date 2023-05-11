@@ -805,8 +805,9 @@ class BaseRepository extends ServiceEntityRepository
     {
         if($this->security->getUser() === null || $this->security->isGranted('ROLE_PERSIST')) {
             
-                if(!$data->getUser() && $this->security->getUser()) {
-                    $data->setUser($this->security->getUser());
+                if(!$data->getUser()) {
+                    $repo = $this->getEntityManager()->getRepository('App\Entity\User');
+                    $data->setUser($repo->find(1));
                 }
                 
                 $fields = $this->getFields();
