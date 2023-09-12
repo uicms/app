@@ -1,0 +1,88 @@
+{% trans_default_domain 'app' %}
+{% set current_letter = '' %}
+
+    <div class="filters">
+        {% for filter in filters.filters %}
+        {% if filter.is_hidden is not defined or filter.is_hidden == false %}
+
+        <div class="filter {{ filter.type }}" id="filter_{{ filter.slug }}">
+
+            {% if filter.type == 'boolean' %}
+            <a href="{{ path('app_page', {'slug': page.slug, 'locale': app.session.get('locale') }) }}?{% if filters.mode == 'multiple' %}{{ filters.url }}{% endif %}{{ filter.param_name }}={{ filter.param_value }}">
+            {% endif %}
+
+            <h3 class="filter_name">{{ filter.i18n|trans }}</h3>
+
+            {% if filter.type == 'boolean' %}
+            </a>
+            {% endif %}
+
+            {% if filter.type == 'input' %}
+            <form method="get">
+                <input type="text" placeholder="{{ filter.i18n|trans }}" name="{{ filter.param_name }}" value="{% if filter.param_value is defined %}{{ filter.param_value }}{% endif %}" />
+                <button type="submit">Ok</button>
+            </form>
+            {% endif %}
+            
+            {% if filter.type == 'choice' and filter.options%}
+            <div class="options">
+                <ul class="scrollbar">
+                {% for option in filter.options %}
+                    
+                    {% if filter.first_letter is defined and option.letter|lower != current_letter|lower %}
+                        <span class="letter">{{ option.letter|upper }}</span><br/>
+                        {% set current_letter = option.letter %}
+                    {% endif %}
+                    
+                    <li class="filter_option_name {% if option._active %} active{% endif %}">
+                        {% if option._has_link %}
+                        <a href="{{ path('app_page', {'slug': page.slug, 'locale': app.session.get('locale') }) }}?{% if filters.mode == 'multiple' %}{{ filters.url }}{% endif %}{{ filter.param_name }}[]={% if filter.value_field is defined %}{{ attribute(option, filter.value_field) }}{% else %}{{ option.id }}{% endif %}">
+                        {% endif %}
+
+                            {% if filter.value_field is defined and filter.value_field %}
+                                {% if filter.translate is defined and filter.translate %}
+                                    {{ attribute(option, filter.value_field)|trans }}
+                                {% else %}
+                                    {{ attribute(option, filter.value_field) }}
+                                {% endif %}
+                            {% else %}
+                                {{ option._name|raw }}
+                            {% endif %}
+
+                        {% if option._has_link %}</a>{% endif %}
+                    </li>
+                {% endfor %}
+                </ul>
+            </div>    
+            {% endif %}
+
+        </div>
+
+        {% endif %}
+        {% endfor %}
+    </div>
+    
+    {% if filters.actives %}
+    <div class="active_filters">
+        <div class="wrapper">
+            {% for active_filter in filters.actives %}
+            <a href="{{ path('app_page', {'slug':page.slug, 'locale':app.session.get('locale') })}}?{{ active_filter.url_remove }}" class="filter_active_name">
+                
+                {% if active_filter.config.value_field is defined and active_filter.config.value_field %}
+                    {% if active_filter.config.translate is defined and active_filter.config.translate %}
+                        {{ attribute(active_filter, active_filter.config.value_field)|trans }}
+                    {% else %}
+                        {{ attribute(active_filter, active_filter.config.value_field) }}
+                    {% endif %}
+                {% elseif active_filter.config.type == 'boolean' %}
+                    {{ active_filter.config.i18n|trans }}
+                {% elseif active_filter.config.type == 'input' %}
+                    {{ active_filter.config.param_value }}
+                {% else %}
+                    {{ active_filter._name|raw }}
+                {% endif %}
+            </a>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}

@@ -1,0 +1,10 @@
+/* Map */
+#map_container,
+#map_container #map {
+    width: 100%;
+    height: 100vh;
+    box-sizing: border-box;
+}
+#map_container {
+	margin-top: var(--default-spacing);
+}

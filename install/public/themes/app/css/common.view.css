@@ -1,22 +1,26 @@
-.view > .wrapper {
+section.view > .wrapper {
     display: flex;
     flex-direction: column-reverse;
+    margin-top: calc(var(--default-spacing) / 2);
 }
-
-.view .page_title {
-    margin-bottom: var(--default-spacing);
+section.view .content {
+    margin-top: var(--default-spacing);
 }
 
 @media only screen and (min-width: 768px) {
-    .view > .wrapper {
+    section.view > .wrapper {
         flex-direction: row;
     }
-    .view > .wrapper > .content {
+    section.view .content {
         width: 50%;
         box-sizing: border-box;
         padding-right: var(--default-spacing);
+        margin-top: 0;
     }
-    .view > .wrapper > aside {
+    section.view .content .text {
+        margin-top: calc(var(--default-spacing) / 2);
+    }
+    section.view aside {
         width: 50%;
     }
 }

@@ -1,0 +1,78 @@
+.filters,
+.active_filters {
+    margin-top: var(--default-spacing);
+}
+.filters .filter {
+    padding: calc(var(--default-spacing) / 4) 0;
+    border-top: 1px solid #000;   
+}
+.filters .filter.choice .filter_name {
+    background: url('../img/expand.svg') no-repeat right center;
+    background-size: 10px;
+    padding-right: 20px;
+    cursor: pointer;
+}
+.filters .filter.input .filter_name,
+.filters .filter.input button {
+    display: none;
+}
+.filters .filter .options {
+    margin-top: calc(var(--default-spacing) / 2);
+    display: none;
+}
+.filters .filter .options ul {
+    max-height: 250px;
+    overflow: hidden;
+}
+.filters .filter.expanded .options {
+    display: block;
+}
+.filters .filter.choice.expanded .filter_name {
+    background: url('../img/retract.svg') no-repeat right center;
+    background-size: 10px;
+}
+.filters .filter input[type=text] {
+	height: auto;
+	padding: 5px;
+}
+.active_filters a.filter_active_name {
+    display: inline-block;
+    background: url('../img/close.svg') no-repeat right 5px center;
+    background-size: 15px;
+    padding: 5px;
+    padding-right: 25px;
+    border: 1px solid #000;
+    margin-right: calc(var(--default-spacing) / 4);
+}
+/*.mCSB_draggerRail {
+    background-color: #fff !important;
+}*/
+
+@media only screen and (min-width: 768px) {
+    .filters {
+        display: flex;
+        flex-wrap: wrap;
+    }
+    .filters .filter {
+        padding: 0;
+        border-top: none;
+        margin-right: var(--default-spacing);
+        position: relative;
+        display: flex;
+        align-items: center;
+    }
+    .filters .filter .options {
+        margin-top: 0;
+        width: 200px;
+        position: absolute;
+        z-index: 10;
+        background: #fff;
+        margin-top: calc(var(--default-spacing) * 1.5);
+        align-self: flex-start;
+    }
+    .filters .filter .options ul {
+        padding: 0 0 calc(var(--default-spacing) / 4) calc(var(--default-spacing) / 4);
+        border-right: 1px solid #eaeaea;
+        border-bottom: 1px solid #eaeaea;
+    }
+}

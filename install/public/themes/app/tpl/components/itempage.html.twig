@@ -1,0 +1,18 @@
+<article class="item page">
+
+    <a href="{{ path('app_page', {'slug': item.slug, 'locale': app.session.get('locale') }) }}">
+    
+        <div class="thumbnail">
+            <div class="wrapper">
+                {% if item._thumbnail is defined and item._thumbnail %}
+                <img src="/uploads/{{ item._thumbnail }}" alt="{{ item.name }}" />
+                {% endif %}
+            </div>
+        </div>
+        
+        <div class="details">
+            <h3 class="item_name">{{ item.name|raw }}</h3>
+        </div>
+
+    </a>
+</article>

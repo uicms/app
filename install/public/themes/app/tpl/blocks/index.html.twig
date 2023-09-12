@@ -1,9 +1,8 @@
 {% extends "app/tpl/layout.html.twig" %}
-
 {% block body %}
 <section id="blocks">
 {% for block in blocks %}
-{% include "app/tpl/block/" ~ block.type ~ ".html.twig" %}
+{% include "app/tpl/blocks/" ~ block.template ~ ".html.twig" %}
 {% endfor %}
 </section>
 {% endblock %}

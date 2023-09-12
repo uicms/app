@@ -29,7 +29,9 @@ class PageRepository extends BaseRepository
 		$row = parent::setRowData($row, $params);
         
         if($row && $this->mode == 'front') {
-            $row->medias = $this->model('Media')->getAll(array('linked_to'=>'Page', 'linked_to_id'=>$row->getId()));
+            if($row->medias = $this->model('Media')->getAll(array('linked_to'=>'Page', 'linked_to_id'=>$row->getId()))) {
+            	$row->_thumbnail = $row->medias[0]->getThumbnail();
+            }
         }
         
 		return $row;

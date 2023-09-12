@@ -1,0 +1,26 @@
+{% trans_default_domain 'app' %}
+
+<section id="resource">
+	{% include "app/tpl/components/viewnav.html.twig" %}
+
+    <div class="wrapper">
+        <div class="content">
+        	<header class="page_header">
+		        <h2 class="page_name">{{ resource.name|raw }}</h2>
+		    </header>
+
+            <div class="text">{{ resource.description|raw }}</div>
+        </div>
+
+        <aside>
+        	{% if resource.medias %}
+		    <ul class="medias slider">
+		    {% for media in resource.medias %}
+		        {% include 'app/tpl/components/itemmedia.html.twig' %}
+		    {% endfor %}
+		    </ul>
+		    {% endif %}
+		</aside>
+    </div>
+
+</section>

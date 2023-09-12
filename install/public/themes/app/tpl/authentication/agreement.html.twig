@@ -1,0 +1,27 @@
+{% extends "app/tpl/layout.html.twig" %}
+
+{% block body %}
+<section id="admin" class="agreement view">
+    
+    <header>
+        <h1 class="page_name">Conditions d'utilisation</h1>
+    </header>
+    
+    <div class="wrapper">
+        <div class="content">
+            <div class="text">{{ block.text|raw }}</div>
+
+            <form id="agreement_form" method="GET" action="{{ path('app_page_action', {'locale': app.session.get('locale'), 'slug': page.slug, 'action':'agree'}) }}">
+                <fieldset>
+                    <div class="field">
+                        <input type="checkbox" name="agreement" value="1" id="agreement_checkbox"> <label for="agreement_checkbox">J'accepte les conditions énoncées ci-dessus</label>
+                    </div>
+                </fieldset>
+
+                <button class="submit" disabled="disabled" id="submit_agreement">Continuer</button>
+            </form>
+        </div>
+    </div>
+    
+</section>
+{% endblock %}

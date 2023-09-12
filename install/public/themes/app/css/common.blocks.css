@@ -1,36 +1,106 @@
+/* Common */
 .block {
-    margin-bottom: var(--default-spacing);
-    position: relative;
+    margin-bottom: calc(var(--default-spacing) * 2);
 }
-.block.block_default > .wrapper .details {
-    margin-bottom: var(--default-spacing);
+.block:last-child {
+    margin-bottom: 0;
 }
 .block img {
     width: 100%;
 }
-.block .block_name {
-    margin-bottom: var(--vertical-spacing);
+.block .text {
+    margin-top: calc(var(--default-spacing) / 2);
 }
+.block aside {
+    margin-top: var(--default-spacing);
+}
+
+/* Block default : title */
+.block.block_default.title {
+    height: 50vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.block.block_default.title aside,
+.block.block_default.title .text {
+    display: none;
+}
+.block.block_default.title .block_name {
+    font-size: var(--title-font-size);
+    line-height: var(--title-line-height);
+    text-align: center;
+}
+
+/* Block default : chapo */
+.block.block_default.chapo .block_name {
+    display: none;
+}
+.block.block_default.chapo .text {
+    font-family: var(--strong-font-family);
+    font-size: var(--title2-font-size);
+    line-height: var(--title2-line-height);
+}
+
+/* Block default : text */
+.block.block_default.text .block_name {
+    display: none;
+}
+
+/* Block default : cover */
+.block.block_default.cover main {
+    display: none;
+}
+.block.block_default.cover aside {
+  margin-top: 0;
+}
+.block.block_default.cover aside .medias {
+    position: relative;
+    left: calc(var(--default-spacing) * -1);
+    width: 100vw;
+}
+.block.block_default.cover aside .medias .media {
+    width: 100%;
+    height: 100vh;
+    position: relative;
+    padding: 0;
+}
+.block.block_default.cover aside .medias li .details {
+    padding-left: var(--default-spacing);
+}
+
+
+/* Responsive */
 @media only screen and (min-width: 768px) {
-    .block {
-        margin-bottom: 30px;
+    .block aside {
+        margin-top: 0;
     }
-    
-    /* Block default */
-    .block.block_default > .wrapper {
+
+    /* Block default : medias alignment */
+    .block.block_default.medias_right > .wrapper,
+    .block.block_default.medias_left > .wrapper {
         display: flex;
     }
-    .block.block_default > .wrapper .details,
-    .block.block_default > .wrapper .medias {
+    .block.block_default.medias_right > .wrapper main,
+    .block.block_default.medias_right > .wrapper aside,
+    .block.block_default.medias_left > .wrapper main,
+    .block.block_default.medias_left > .wrapper aside  {
         width: 50%;
         box-sizing: border-box;
     }
-    .block.block_default > .wrapper .details {
+    .block.block_default.medias_right > .wrapper main {
         padding-right: var(--default-spacing);
+    }
+    .block.block_default.medias_left > .wrapper main {
+        padding-left: var(--default-spacing);
+    }
+    .block.block_default.medias_left > .wrapper {
+        flex-direction: row-reverse;
     }
 }
 @media only screen and (min-width: 1024px) {
-    .block {
-        margin-bottom: 50px;
-    }
+
+}
+@media only screen and (min-width: 1280px) {
+
 }

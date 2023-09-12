@@ -1,0 +1,30 @@
+<div id="map_container">
+    <div id="map"></div>
+</div>
+<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAdUVuGNNTP-qvqE4HbSnnxUxcuwHvT4bc&amp;language=fr"></script>
+<script>
+
+        var myLatlng = new google.maps.LatLng(46.3388682, 1.739231);
+        var map = new google.maps.Map(document.getElementById('map'), {
+            zoom: 12,
+            center: myLatlng,
+            scrollwheel: false,
+            //disableDefaultUI: true,
+            //zoomControl: false
+        });
+
+        var icon = {
+            url: '/themes/app/img/marker.svg',
+            scaledSize: new google.maps.Size(35, 35),
+            origin: new google.maps.Point(0,0),
+            anchor: new google.maps.Point(0,0)
+        };
+        
+        var marker = new google.maps.Marker({
+            position: new google.maps.LatLng(46.3388682, 1.739231),
+            map: map,
+            title: "{{ app.session.get('params').site_name }}",
+            icon: icon
+        });
+
+</script>

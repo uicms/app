@@ -1,0 +1,21 @@
+<article class="block block_{{ block.template }} {{ block.style }} {{ block.class }}">
+    
+    <div class="wrapper">
+
+        <header>
+            <h2 class="block_name">{{ block.name|raw }}</h2>
+            {% if block.text %}<div class="text">{{ block.text|raw }}</div>{% endif %}
+        </header>
+        
+        {% if block.items %}
+        <div class="items grid">
+
+        {% for item in block.items %}
+            {% include "app/tpl/components/item" ~ block.blockCollection.entity|lower ~ ".html.twig" %}
+        {% endfor %}
+        
+        </div>
+        {% endif %}
+    </div>
+    
+</article>

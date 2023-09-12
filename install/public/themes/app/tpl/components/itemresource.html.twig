@@ -1,0 +1,24 @@
+{% trans_default_domain 'app' %}
+{% if url is not defined %}
+    {% set url = path('app_page_action_id_key', {'locale': app.session.get('locale'), 'slug': app.session.get('resources_page_slug'), 'action':'view', 'id':item.id, 'key': item.name|slugger}) %}
+{% endif %}
+
+<article class="item resource">
+    <div class="wrapper">
+        <a href="{{ url }}{% if filters is defined %}?{{ filters.url }}{% endif %}" class="ajax" data-url="{{ url }}{% if filters is defined %}?{{ filters.url }}{% endif %}">
+            
+            <div class="thumbnail">
+                <div class="wrapper">
+                    {% if item._thumbnail %}<img src="/uploads/{{ item._thumbnail }}" class="{% if item._thumbnail_class is defined %}{{ item._thumbnail_class }}{% endif %}" />{% endif %}
+                </div>
+            </div>
+            
+            <div class="details">
+                <h2 class="item_name">{{ item.name|raw }}</h2>
+                <div class="description">
+                    {{ item.description|length > 140 ? (item.description|striptags|slice(0, 140) ~ '...')|raw  : item.description|raw  }}
+                </div>
+            </div>
+        </a>
+    </div>
+</article>

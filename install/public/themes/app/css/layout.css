@@ -1,14 +1,29 @@
 /* Layout */
 body {
-    
 }
-#container {
+div#container {
+    padding: 0 var(--default-spacing) var(--default-spacing) var(--default-spacing);
 }
-#header {
+header#header {
     position: relative;
+    left: calc(var(--default-spacing) * -1);
+    width: 100vw;
     z-index: 100;
+    position: relative;
     display: flex;
+    padding: var(--default-spacing);
+    box-sizing: border-box;
+    align-items: center;
     background: #fff;
+}
+main#main {  
+}
+footer#footer {
+}
+
+
+/* Header & menu */
+#header_mask {
     padding: var(--default-spacing);
 }
 #logo {
@@ -25,13 +40,13 @@ body {
     position: absolute;
     z-index: 90;
     top: 0;
-    left: var(--default-spacing);
-    right: var(--default-spacing);
-    transform: translateY(-100%);
+    left: 0;
+    right: 0;
+    transform: translateY(calc(-100%));
     transition: 0.5s;
     background: #fff;
-    padding-top: 70px;
-    padding-bottom: var(--default-spacing);
+    padding: var(--default-spacing);
+    text-align: right;
 }
 body.menu_expanded #menu {
     transform: translateY(0);
@@ -41,8 +56,17 @@ body.menu_expanded #menu_button {
     background: url('../img/close.svg') no-repeat;
     background-size: 100%;
 }
-#content {
-    padding: var(--default-spacing);
-}
-#footer {
+
+/* Message */
+.cpnt_message {
+    position: fixed;
+    z-index: 10000;
+    top: var(--default-spacing);
+    left: 50%;
+    transform: translateX(-50%);
+    background: #deae1e;
+    color: #fff;
+    padding: 20px;
+    width: 220px;
+    text-align: center;
 }

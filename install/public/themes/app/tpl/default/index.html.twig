@@ -3,28 +3,26 @@
 {% block body %}
 <section id="default" class="view">
     
-    <header>
-        <h1 class="page_title">{{ page.name|raw }}</h1>
-    </header>
-    
     <div class="wrapper">
         <div class="content">
+            <header>
+                <h1 class="page_name">{{ page.name|raw }}</h1>
+            </header>
+
             <div class="text">{{ page.html|raw }}</div>
         </div>
         
         <aside>
             {% if page.medias %}
-            <ul class="medias">
+            <ul class="medias slider">
                 {% for media in page.medias %}
-                <li>
-                    <img src="/uploads/_{{ media.file }}" alt="{{ media.name }}" />
-                </li>
+                {% include 'app/tpl/components/itemmedia.html.twig' %}
                 {% endfor %}
             </ul>
             {% endif %}
         </aside>
     </div>
     
-</div>
+</section>
 
 {% endblock %}

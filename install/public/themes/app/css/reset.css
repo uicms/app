@@ -1,4 +1,4 @@
-body, img, a, p, span, div, strong, em, ul, ol, li, label, input, textarea, form, fieldset, table, tr, th, td, h1, h2, h3, h4, h5, h6, hr, iframe, embed, object {
+body, img, a, p, span, div, strong, em, ul, ol, li, label, legend, input, textarea, form, fieldset, table, tr, th, td, h1, h2, h3, h4, h5, h6, hr, iframe, embed, object {
 	list-style-type: none;
 	text-decoration: none;
 	outline: none;
@@ -6,12 +6,8 @@ body, img, a, p, span, div, strong, em, ul, ol, li, label, input, textarea, form
 	margin: 0;
 	padding: 0;
 }
-textarea,
-body {
-	color: #000;
-	font-family: Arial, Verdana, Sans-serif;
-	font-size: 12px;
-	line-height: 17px;
+h1, h2, h3, h4, h5, h6, strong {
+	font-weight: normal;
 }
 table, td, tr, th {
 	border-spacing: 0;

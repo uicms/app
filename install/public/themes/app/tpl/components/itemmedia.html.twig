@@ -1,0 +1,19 @@
+<li>
+  <div class="media">
+      {% set extension = media.file|split('.')|last %}
+      {% if extension == 'mp4' %}
+         <video poster="/uploads/{{ media._thumbnail }}" class="{{ media.class }}" controls>
+             <source src="/uploads/{{ media.file }}" />
+         </video>
+      {% elseif extension == 'mp3' %}
+         <audio src="/uploads/{{ media.file }}" class="{{ media.class }}" controls></audio>
+      {% else %}
+         <img src="/uploads/{{ media.file }}" alt="{{ media.name }}" class="{{ media.class }}" />
+      {% endif %}
+  </div>
+
+  <div class="details">
+      <h3 class="item_name">{{ media.name|raw }}</h3>
+      {% if media.description %}<div class="caption">{{ media.description|raw }}</div>{% endif %}
+  </div>
+</li>

@@ -12,7 +12,7 @@ use App\Service\MenuHelper;
 
 class IndexController extends AbstractController
 {
-    public function index(Model $model, Request $request, $slug='', $action='', $locale='')
+    public function index(Model $model, Request $request, MenuHelper $menu_helper, $slug='', $action='', $locale='')
     {
         if($locale && !preg_match("'^[a-z]{2}$'", $locale)) {
             throw $this->createNotFoundException('This locale does not exist!');
@@ -34,12 +34,12 @@ class IndexController extends AbstractController
 		# Current page
 		$repo = $model->get('App\Entity\Page');
 		if(!$slug) {
-			$page = $repo->getRow(array('dir'=>0));
+			$page = $repo->getRow(['dir'=>0]);
 		} else {
-			$page = $repo->getRow(array('findby'=>array('slug' => $slug)));
+			$page = $repo->getRow(['findby'=>['slug' => $slug]]);
 		}
         while($page->getIsDir()) {
-            if(!$page = $repo->getRow(array('dir'=>$page->getId()))) {
+            if(!$page = $repo->getRow(['dir'=>$page->getId()])) {
                 break;
             }
         }
@@ -54,27 +54,35 @@ class IndexController extends AbstractController
         $session->set('current_action', $action);
 		
 		# Menu
-		$menu = $repo->getAll(array('dir'=>0, 'findby'=>array('menu'=>'menu')));
+		$menu = $repo->getAll(['dir'=>0, 'findby'=>['menu'=>'menu']]);
         foreach($menu as $i=>$menu_page) {
-            
-            if($menu_page->getHelper()) {
-                $helper = new MenuHelper($menu_page, $model, $session);
-                $menu_page->helper_result = $helper->getResult();
-            } else {
-                $menu_page->helper_result = '';
-            }
-            
-            if($menu_page->getIsdir()) {
-                $menu_page->children = $repo->getAll(array('dir'=>$menu_page->getId()));
-            } else {
-                $menu_page->children = array();
-            }
+            $menu_page->helper_html = $menu_helper->get($menu_page);
+            $menu_page->children = $repo->getAll(['dir'=>$menu_page->getId()]);
         }
 	    $session->set('menu', $menu);
         
+        # Pages slugs
+        if($authentication_page = $model->get('Page')->getRow(['findby'=>['controller'=>'authentication']])) {
+            $this->get('session')->set('authentication_page_slug', $authentication_page->getSlug());
+        }
+        if($resources_page = $model->get('Page')->getRow(['findby'=>['controller'=>'resources']])) {
+            $this->get('session')->set('resources_page_slug', $resources_page->getSlug());
+        }
+        if($home_page = $model->get('Page')->getRow(['findby'=>['class'=>'home']])) {
+            $this->get('session')->set('home_page_slug', $home_page->getSlug());
+        }
+
         # Attributes
-        $attributes = array_merge($request->query->all(), $request->request->all(), $request->attributes->all(), array('page' => $page));
+        $attributes = array_merge($request->query->all(), $request->request->all(), $request->attributes->all(), ['page' => $page]);
         
+        # Params
+        $req = $model->get('Param')->getAll();
+        $params = [];
+        foreach($req as $i=>$param) {
+            $params[$param->getName()] = $param->getValue();
+        }
+        $session->set('params', $params);
+
 		# Forward to the correct controller
         return $this->forward("App\\Controller\\" . ucfirst($page->getController()) . "Controller::" . $action, $attributes);
 	}

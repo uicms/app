@@ -1,24 +1,114 @@
 /* Vars */
 :root {
+    --default-font-family: 'Roboto Regular';
+    --strong-font-family: 'Roboto Bold';
+    --light-font-family: 'Roboto Light';
+
     --default-font-size: 15px;
-    --default-line-height: normal;
-    --title-font-size: 20px;
-    --title-line-height: normal;
-    --title2-font-size: 24px;
-    --title2-line-height: normal;
+    --default-line-height: 18px;
+
+    --small-font-size: 12px;
+    --small-line-height: 15px;
+
+    --title-font-size: 24px;
+    --title-line-height: 27px;
     
-    --default-spacing: 15px;
-    --vertical-spacing: 10px;
-    --column-width: 25%;
+    --title2-font-size: 20px;
+    --title2-line-height: 25px;
+
+    --title3-font-size: 18px;
+    --title3-line-height: 22px;
     
-    --grid-hgap: 20px;
-    --grid-vgap: 20px;
+    --title4-font-size: 16px;
+    --title4-line-height: 20px;
+
+    --default-spacing: 10px;
 }
 @media only screen and (min-width: 768px) {
     :root {
+        --default-spacing: 15px;
+
+        --default-font-size: 18px;
+        --default-line-height: 22px;
+
+        --small-font-size: 15px;
+        --small-line-height: 18px;
+
+        --title-font-size: 28px;
+        --title-line-height: 32px;
+        
+        --title2-font-size: 24px;
+        --title2-line-height: 28px;
+
+        --title3-font-size: 20px;
+        --title3-line-height: 24px;
+
+        --title4-font-size: 18px;
+        --title4-line-height: 22px;
     }
 }
 @media only screen and (min-width: 1024px) {
     :root {
+        --default-spacing: 20px;
     }
+}
+legend,
+label,
+textarea,
+body {
+    color: #000;
+    font-family: var(--default-font-family);
+    font-size: var(--default-font-size);
+    line-height: var(--default-line-height);
+}
+.logo {
+    font-family: var(--strong-font-family);
+    font-size: var(--title-font-size);
+    line-height: var(--title-font-size);
+}
+#menu li a {
+    font-size: var(--title2-font-size);
+    line-height: var(--title-line-height);
+}
+.page_name {
+    font-family: var(--strong-font-family);
+    font-size: var(--title2-font-size);
+    line-height: var(--title2-line-height);
+}
+.form_name {
+    font-family: var(--strong-font-family);
+    font-size: var(--title3-font-size);
+    line-height: var(--title3-line-height);
+}
+.block_name {
+    font-family: var(--strong-font-family);
+    font-size: var(--title3-font-size);
+    line-height: var(--title3-line-height);
+}
+.item_name {
+    font-family: var(--strong-font-family);
+    font-size: var(--title4-font-size);
+    line-height: var(--title4-line-height);
+}
+.filter_name {
+    font-family: var(--strong-font-family);
+}
+.filter_name,
+.filter_option_name,
+.filter_active_name {
+    font-size: var(--small-font-size);
+    line-height: var(--small-line-height);
+}
+.button,
+.infos,
+.note,
+.caption {
+    font-size: var(--small-font-size);
+    line-height: var(--small-line-height);
+}
+.button {
+    text-decoration: underline;
+}
+.text {
+    max-width: 700px;
 }

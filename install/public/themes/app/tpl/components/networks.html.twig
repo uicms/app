@@ -1,0 +1,27 @@
+<ul class="networks">
+	
+	{% if app.session.get('params').facebook_url is defined %}
+	<li>
+		<a href="{{ app.session.get('params').facebook_url }}" class="network facebook external">Facebook</a>
+	</li>
+	{% endif %}
+
+	{% if app.session.get('params').youtube_url is defined %}
+	<li>
+		<a href="{{ app.session.get('params').youtube_url }}" class="network youtube external">Youtube</a>
+	</li>
+	{% endif %}
+	
+	{% if app.session.get('params').instagram_url is defined %}
+	<li>
+		<a href="{{ app.session.get('params').instagram_url }}" class="network instagram external">Instagram</a>
+	</li>
+	{% endif %}
+    
+	{% if app.session.get('params').linked_url is defined %}
+	<li>
+		<a href="{{ app.session.get('params').linked_url }}" class="network linkedin external">Linkedin</a>
+	</li>
+	{% endif %}
+
+</ul>

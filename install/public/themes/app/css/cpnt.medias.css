@@ -1,0 +1,27 @@
+.medias li .media {
+    padding-top: 56.25%;
+    position: relative;
+}
+.medias li .details {
+    margin-top: calc(var(--default-spacing) / 2);
+}
+.medias img,
+.medias video,
+.medias audio {
+    position: absolute;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+.medias img.portrait {
+	object-fit: contain;
+	background: #000;
+}
+.medias audio,
+.medias video {
+    object-fit: contain;
+    background: #000;
+}

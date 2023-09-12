@@ -1,0 +1,28 @@
+.networks {
+    margin-top: calc(var(--default-spacing) / 2);
+    display: flex;
+    justify-content: right;
+}
+.network {
+    display: inline-block;
+    width: 30px;
+    height: 30px;
+    font-size: 0 !important;
+    margin-left: 10px;
+}
+.facebook {
+    background: url('../img/facebook.svg') no-repeat;
+    background-size: 100%;
+}
+.instagram {
+    background: url('../img/instagram.svg') no-repeat;
+    background-size: 100%;
+}
+.youtube {
+    background: url('../img/youtube.svg') no-repeat;
+    background-size: 100%;
+}
+.linkedin {
+    background: url('../img/linkedin.svg') no-repeat;
+    background-size: 100%;
+}

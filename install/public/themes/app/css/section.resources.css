@@ -1,0 +1,11 @@
+section#resource > .wrapper {
+    display: flex;
+    flex-direction: column-reverse;
+    margin-top: calc(var(--default-spacing) / 2);
+}
+section#resource .content {
+    margin-top: var(--default-spacing);
+}
+section#resource .content .text {
+    margin-top: calc(var(--default-spacing) / 2);
+}

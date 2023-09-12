@@ -1,1 +1,17 @@
+flr_topic: Thèmes
+flr_keyword: Mots-clés
+flr_search: Recherche
 
+resource_updated: Ressource sauvegardée !
+resource_inserted: Ressource ajoutée !
+
+contributor_updated: Votre profil a bien été sauvegardé !
+contributor_inserted: Votre inscription a bien été entregistrée !
+
+retrieve_passwd_sent: Mot de passe envoyé !
+retrieve_passwd_error: Erreur d'envoi !
+
+login_user_not_allowed: Votre compte n'a pas encore été validé !
+login_incorrect_password: Mauvais mot de passe !
+login_incorrect_email: Email incorrect !
+login_param_missing: Paramètre de connexion manquant !
