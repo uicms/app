@@ -26,8 +26,8 @@ fld_user_password: Mot de passe
 fld_user_new_password: Saisir un mot de passe
 fld_user_repeat_password: Répéter le mot de passe
 
-fld_resources_medias: Médias
-fld_resources_medias_media: Média
+fld_resource_medias: Médias
+fld_resource_medias_media: Média
 fld_resource_topics: Thèmes
 
 fld_media_add: Ajouter un média

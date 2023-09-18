@@ -35,8 +35,7 @@ form button.button2 {
     border: 1px solid #000;
 }
 
-
-/*legend.required::after,*/
+legend.required::after,
 label.required::after {
     content: ' *';
 }
@@ -55,8 +54,11 @@ form .note {
 }
 
 /* Form types */
-.form_field.type_file img {
+.form_type_file img {
     max-width: 80px;
+}
+.form_type_repeated legend {
+    display: none;
 }
 
 

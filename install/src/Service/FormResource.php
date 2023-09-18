@@ -64,7 +64,7 @@ class FormResource
                 'expanded' => true,
                 'multiple' => true,
                 'data'=> $topics,
-                'label' => $this->translator->trans('fld_resources_topics', [], 'admin'),
+                'label' => $this->translator->trans('fld_resource_topics', [], 'admin'),
                 'mapped' => false,
             ],
         ];
@@ -79,7 +79,7 @@ class FormResource
             'options'=>[
                 'entry_type' => UIFormType::class,
                 'entry_options' => [
-                    'label' => $this->translator->trans('fld_resources_medias_media', [], 'admin'), 
+                    'label' => $this->translator->trans('fld_resource_medias_media', [], 'admin'), 
                     'attr'=>['class'=> 'collection_entry', 'required'=>true] , 
                     'translator'=>$this->translator,
                     'ui_config' => $this->ui_config,
@@ -91,7 +91,7 @@ class FormResource
                 'by_reference' => false,
                 'prototype' => false,
                 'data'=> $medias,
-                'label' => $this->translator->trans('fld_resources_medias', [], 'admin'),
+                'label' => $this->translator->trans('fld_resource_medias', [], 'admin'),
                 'mapped'=>false,
                 'attr'=>['prototype'=>$this->form->getPrototype('medias', 'App\Entity\Media'), 'class'=>'collection_type'],
             ],
@@ -132,7 +132,7 @@ class FormResource
                 $this->flash->add('success', $message);
                 return $row;
             } catch (\Throwable $throwable) {
-                #throw new \Exception('Form handling error!');
+                throw new \Exception('Form handling error!');
             }
         } else {
             return false;

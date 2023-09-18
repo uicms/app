@@ -351,11 +351,26 @@ class BaseRepository extends ServiceEntityRepository
             # Main field
             $method = $this->method($this->config['name_field']);
             if($row->$method()) $row->_name = $row->$method();
-            if(is_object($row->_name) && isset($this->global_config['entity'][$this->name]['form']['fields'][$this->config['name_field']]['options']['class'])) {
-                $foreign_entity_name = $this->global_config['entity'][$this->name]['form']['fields'][$this->config['name_field']]['options']['class'];
-                $foreign_model = $this->model($foreign_entity_name);
-                $method = $this->method($foreign_model->getConfig('name_field'));
-                $row->_name = $row->_name->$method();
+
+            # _name is object
+            if(is_object($row->_name)) {
+                $current_entity_name = $this->name;
+
+                while(is_object($row->_name)) {
+                    $name_field = $this->global_config['entity'][$current_entity_name]['name_field'];
+
+                    if(isset($this->global_config['entity'][$current_entity_name]['form']['fields'][$name_field]['options']['class'])) {
+                        
+                        # Set foreign entity
+                        $foreign_entity_name = $this->global_config['entity'][$current_entity_name]['form']['fields'][$name_field]['options']['class'];
+                        $foreign_model = $this->model($foreign_entity_name);
+                        
+                        $method = $this->method($foreign_model->getConfig('name_field'));
+                        $row->_name = $row->_name->$method();
+
+                        $current_entity_name = $foreign_entity_name;
+                    }
+                }
             }
             
             # File

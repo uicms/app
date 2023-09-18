@@ -14,6 +14,7 @@ function initForms() {
             $(collection_element).find(' > .form_field_body').append(html);
 
             initDelete();
+            initTranslationTabs();
         });
 
         initDelete();
@@ -26,7 +27,8 @@ function initForms() {
 	        });
         }
     });
-    
+
+    initTranslationTabs();
 
     /* Agreement form */
     $('#agreement_checkbox').change(function() {
@@ -36,17 +38,24 @@ function initForms() {
             $('#submit_agreement').attr('disabled', 'disabled');
         }
     });
+}
 
-    /* Translations tabs */
-    tabs = document.querySelectorAll('.nav-tabs .nav-item a');
-    tabs.forEach(function(tab) {
-        var pane_id = tab.getAttribute('href');
-        tab.setAttribute('href', 'javascript:;');
-        tab.addEventListener('click', function(e) { 
-            document.querySelector('.nav-item a.active').classList.remove('active');
-            document.querySelector('.tab-content .tab-pane.active').classList.remove('active');
-            document.querySelector(pane_id).classList.add('active');
-            this.classList.add('active');
+function initTranslationTabs(element) {
+    selector = '.a2lix_translations';
+    if(element) {
+        selector = element + ' ' + selector;
+    }
+    $(selector).each(function() {
+        var container = this;
+        $(container).find('.nav-tabs .nav-item a').not('.initialized').each(function() {
+            var pane_id = $(this).attr('href');
+            $(this).addClass('initialized');
+            $(this).attr('href', 'javascript:;');
+            $(this).click(function() {
+                $(container).find('.nav-item a.active, .tab-content .tab-pane.active').removeClass('active');
+                $(container).find(pane_id).addClass('active');
+                $(this).addClass('active');
+            });
         });
     });
 }

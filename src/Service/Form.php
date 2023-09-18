@@ -107,8 +107,8 @@ class Form
         ]);
 
         $prototype_html = str_replace(
-            ['id="ui_form', 'for="ui_form', 'name="ui_form'], 
-            ['id="ui_form_' . $collection_name . '___name__', 'for="ui_form_' . $collection_name . '___name__', 'name="ui_form['. $collection_name . '][__name__]'],
+            ['id="ui_form', 'for="ui_form', 'name="ui_form', 'id="form_field', 'href="#ui_form_'], 
+            ['id="ui_form_' . $collection_name . '___name__', 'for="ui_form_' . $collection_name . '___name__', 'name="ui_form['. $collection_name . '][__name__]', 'id="form_field_' . $collection_name . '___name__', 'href="#ui_form_' . $collection_name . '___name___'],
             $prototype_html
         );
         return $prototype_html;

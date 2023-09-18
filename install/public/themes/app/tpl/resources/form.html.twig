@@ -1,7 +1,7 @@
 {% extends "app/tpl/layout.html.twig" %}
 
 {% block body %}
-<section id="resource_form" class="view">
+<section id="resource_form">
     
     <header>
         <h2 class="page_name"><a href="{{ path('app_page', {'locale': app.session.get('locale'), 'slug': page.slug }) }}">{{ page.name|raw }}</a></h2>

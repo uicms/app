@@ -9,3 +9,5 @@ section#resource .content {
 section#resource .content .text {
     margin-top: calc(var(--default-spacing) / 2);
 }
+section#resource_form .form_fields {
+}
