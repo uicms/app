@@ -32,14 +32,13 @@ class IndexController extends AbstractController
         $request->setLocale($locale);
         
 		# Current page
-		$repo = $model->get('App\Entity\Page');
 		if(!$slug) {
-			$page = $repo->getRow(['dir'=>0]);
+			$page = $model->get('Page')->getRow(['dir'=>0]);
 		} else {
-			$page = $repo->getRow(['findby'=>['slug' => $slug]]);
+			$page = $model->get('Page')->getRow(['findby'=>['slug' => $slug]]);
 		}
         while($page->getIsDir()) {
-            if(!$page = $repo->getRow(['dir'=>$page->getId()])) {
+            if(!$page = $model->get('Page')->getRow(['dir'=>$page->getId()])) {
                 break;
             }
         }
@@ -54,10 +53,10 @@ class IndexController extends AbstractController
         $session->set('current_action', $action);
 		
 		# Menu
-		$menu = $repo->getAll(['dir'=>0, 'findby'=>['menu'=>'menu']]);
+		$menu = $model->get('Page')->getAll(['dir'=>0, 'findby'=>['menu'=>'menu']]);
         foreach($menu as $i=>$menu_page) {
             $menu_page->helper_html = $menu_helper->get($menu_page);
-            $menu_page->children = $repo->getAll(['dir'=>$menu_page->getId()]);
+            $menu_page->children = $model->get('Page')->getAll(['dir'=>$menu_page->getId()]);
         }
 	    $session->set('menu', $menu);
         
@@ -67,6 +66,9 @@ class IndexController extends AbstractController
         }
         if($resources_page = $model->get('Page')->getRow(['findby'=>['controller'=>'resources']])) {
             $this->get('session')->set('resources_page_slug', $resources_page->getSlug());
+        }
+        if($contributions_page = $model->get('Page')->getRow(['findby'=>['controller'=>'contributions']])) {
+            $this->get('session')->set('contributions_page_slug', $contributions_page->getSlug());
         }
         if($home_page = $model->get('Page')->getRow(['findby'=>['class'=>'home']])) {
             $this->get('session')->set('home_page_slug', $home_page->getSlug());
@@ -83,8 +85,17 @@ class IndexController extends AbstractController
         }
         $session->set('params', $params);
 
-		# Forward to the correct controller
-        return $this->forward("App\\Controller\\" . ucfirst($page->getController()) . "Controller::" . $action, $attributes);
+        # Authentication
+        $authenticated_controllers = [
+            'contributions',
+            'resources',
+        ];
+        
+        if(in_array($page->getController(), $authenticated_controllers) && !$this->get('session')->get('contributor')) {
+            return $this->redirectToRoute('app_page_action', array('slug'=>$this->get('session')->get('authentication_page_slug'), 'action'=>'index', 'locale'=>$this->get('session')->get('locale')));
+        } else {
+            return $this->forward("App\\Controller\\" . ucfirst($page->getController()) . "Controller::" . $action, $attributes);
+        }
 	}
     
     public function error(FlattenException $exception, Model $model, Request $request, $slug='', $action='', $locale='')

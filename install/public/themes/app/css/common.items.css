@@ -1,12 +1,12 @@
 /* Items */
 .item {
 }
-.item .thumbnail {
+.item_thumbnail {
     position: relative;
     padding-top: 65%;
     margin-bottom: var(--vertical-spacing);
 }
-.item .thumbnail .wrapper {
+.item_thumbnail .wrapper {
     position: absolute;
     top: 0;
     left: 0;
@@ -14,20 +14,20 @@
     bottom: 0;
     background: #000;
 }
-.item .thumbnail .wrapper img {
+.item_thumbnail .wrapper img {
     position: absolute;
     width: 100%;
     height: 100%;
     object-fit: cover;
 }
-.item .thumbnail .wrapper img.portrait {
+.item_thumbnail .wrapper img.portrait {
     object-fit: contain;
 }
-.item .details {
+.item_details {
     padding-right: var(--default-spacing);
 }
-.item .description,
-.item .item_name {
+.item_description,
+.item_name {
     margin-top: calc(var(--default-spacing) / 2);
 }
 

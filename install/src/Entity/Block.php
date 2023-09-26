@@ -15,9 +15,9 @@ class Block implements TranslatableInterface
     use TranslatableTrait;
     
 	public function __call($method, $args)
-                                                                                              	{
-                                                                                                   return $this->proxyCurrentLocaleTranslation($method, $args);
-                                                                                              	}
+                    	{
+                         return $this->proxyCurrentLocaleTranslation($method, $args);
+                    	}
     
     /**
      * @ORM\Id()
@@ -81,22 +81,44 @@ class Block implements TranslatableInterface
     /**
     * @ORM\Column(type="string",nullable=false)
     */
-    private $type='default';
+    private $template='default';
 
-    /**
-	 * @ORM\OneToMany(targetEntity="App\Entity\LinkPageBlock", mappedBy="block")
-	 */
-	private $link_page_block;
-
-    /**
-	 * @ORM\OneToMany(targetEntity="App\Entity\LinkBlockMedia", mappedBy="block")
-	 */
-	private $link_block_media;
+    
 
     /**
     * @ORM\Column(type="string",nullable=true)
     */
     private $class;
+
+    
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\LinkPageBlock", mappedBy="block")
+     */
+    private $link_page_block;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\LinkBlockMedia", mappedBy="block")
+     */
+    private $link_block_media;
+
+    /**
+    * @ORM\Column(type="string",nullable=true)
+    */
+    private $style;
+
+/**
+                * @ORM\ManyToOne(targetEntity="App\Entity\BlockCollection")
+                * @ORM\JoinColumn(name="block_collection_id", referencedColumnName="id")
+                */
+                private $block_collection;
+
+    /**
+                * @ORM\Column(type="string",nullable=true)
+                */
+                private $slug;
+
+
 
 
 
@@ -194,18 +216,6 @@ class Block implements TranslatableInterface
                     return $this;
                 }
 
-                public function getType(): ?string
-                {
-                    return $this->type;
-                }
-
-                public function setType(string $type): self
-                {
-                    $this->type = $type;
-
-                    return $this;
-                }
-
                 public function getUser(): ?User
                 {
                     return $this->user;
@@ -298,6 +308,66 @@ class Block implements TranslatableInterface
                 public function setClass(?string $class): self
                 {
                     $this->class = $class;
+
+                    return $this;
+                }
+
+                public function getTemplate(): ?string
+                {
+                    return $this->template;
+                }
+
+                public function setTemplate(?string $template): self
+                {
+                    $this->template = $template;
+
+                    return $this;
+                }
+
+                public function getEntity(): ?string
+                {
+                    return $this->entity;
+                }
+
+                public function setEntity(?string $entity): self
+                {
+                    $this->entity = $entity;
+
+                    return $this;
+                }
+
+                public function getStyle(): ?string
+                {
+                    return $this->style;
+                }
+
+                public function setStyle(?string $style): self
+                {
+                    $this->style = $style;
+
+                    return $this;
+                }
+
+                public function getBlockCollection(): ?BlockCollection
+                {
+                    return $this->block_collection;
+                }
+
+                public function setBlockCollection(?BlockCollection $block_collection): self
+                {
+                    $this->block_collection = $block_collection;
+
+                    return $this;
+                }
+
+                public function getSlug(): ?string
+                {
+                    return $this->slug;
+                }
+
+                public function setSlug(?string $slug): self
+                {
+                    $this->slug = $slug;
 
                     return $this;
                 }

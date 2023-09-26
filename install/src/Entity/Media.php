@@ -15,9 +15,9 @@ class Media implements TranslatableInterface
     use TranslatableTrait;
     
 	public function __call($method, $args)
-                                                                                        	{
-                                                                                             return $this->proxyCurrentLocaleTranslation($method, $args);
-                                                                                        	}
+                                                                                                          	{
+                                                                                                               return $this->proxyCurrentLocaleTranslation($method, $args);
+                                                                                                          	}
     
     /**
      * @ORM\Id()
@@ -93,12 +93,27 @@ class Media implements TranslatableInterface
 	 */
 	private $link_page_media;
 
+    /**
+                * @ORM\Column(type="string",nullable=true)
+                */
+                private $class;
+
+/**
+	 * @ORM\OneToMany(targetEntity="App\Entity\LinkResourceMedia", mappedBy="media")
+	 */
+	private $link_resource_media;
+
+
+
+
+
 
 
     public function __construct()
     {
         $this->link_block_media = new ArrayCollection();
         $this->link_page_media = new ArrayCollection();
+        $this->link_resource_media = new ArrayCollection();
     }
 
 
@@ -277,6 +292,48 @@ class Media implements TranslatableInterface
                         // set the owning side to null (unless already changed)
                         if ($linkPageMedium->getMedia() === $this) {
                             $linkPageMedium->setMedia(null);
+                        }
+                    }
+
+                    return $this;
+                }
+
+                public function getClass(): ?string
+                {
+                    return $this->class;
+                }
+
+                public function setClass(?string $class): self
+                {
+                    $this->class = $class;
+
+                    return $this;
+                }
+
+                /**
+                 * @return Collection|LinkResourceMedia[]
+                 */
+                public function getLinkResourceMedia(): Collection
+                {
+                    return $this->link_resource_media;
+                }
+
+                public function addLinkResourceMedium(LinkResourceMedia $linkResourceMedium): self
+                {
+                    if (!$this->link_resource_media->contains($linkResourceMedium)) {
+                        $this->link_resource_media[] = $linkResourceMedium;
+                        $linkResourceMedium->setMedia($this);
+                    }
+
+                    return $this;
+                }
+
+                public function removeLinkResourceMedium(LinkResourceMedia $linkResourceMedium): self
+                {
+                    if ($this->link_resource_media->removeElement($linkResourceMedium)) {
+                        // set the owning side to null (unless already changed)
+                        if ($linkResourceMedium->getMedia() === $this) {
+                            $linkResourceMedium->setMedia(null);
                         }
                     }
 

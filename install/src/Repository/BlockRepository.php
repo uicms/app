@@ -29,14 +29,6 @@ class BlockRepository extends BaseRepository
         
         if($row && $this->mode == 'front') {
             $row->medias = $this->model('Media')->getAll(array('linked_to'=>'Block', 'linked_to_id'=>$row->getId()));
-            if($row->getType()=='folder' && $row->getParams()) {
-                $row->pages = $this->model('Page')->getAll(array('dir'=>$row->getParams()));
-                foreach($row->pages as $i=>$page) {
-                    $page->medias = $this->model('Media')->getAll(array('linked_to'=>'Page', 'linked_to_id'=>$page->getId()));
-                    $page->cover = $page->medias ? $page->medias[0]->getFile() : '';
-                }
-            }
-            $row->cover = $row->medias ? $row->medias[0]->getFile() : '';
         }
         
         return $row;

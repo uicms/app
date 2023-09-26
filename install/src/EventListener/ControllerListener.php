@@ -22,8 +22,5 @@ class ControllerListener
         # Path package
 		$path_package = new PathPackage('themes/app', new StaticVersionStrategy('v1'));
 		$this->session->set('app_path', $path_package);
-        
-		#$path_package = new PathPackage('themes/admin', new StaticVersionStrategy('v2'));
-		#$this->session->set('admin_path', $path_package);
 	}
 }

@@ -17,8 +17,9 @@ class BaseRepository extends ServiceEntityRepository
     protected $name = '';
     #protected $basename = '';
     protected $locale = '';
-    protected $default_locale = '';
+    protected $default_locale = 'fr';
     protected $mode = 'front';
+    protected $flush_mode = 'auto';
     protected $security;
     protected $meta_fields = array( 'id', 
                                     'created', 
@@ -300,7 +301,22 @@ class BaseRepository extends ServiceEntityRepository
                 }
             }
             $query->andWhere(implode(' OR ', $search_query));
-            $parameters['search'] = "%$string%";
+            
+            $search_parameter = "%$string%";
+            
+            if(isset($params['truncation']) && $params['truncation']) {
+                switch ($params['truncation']) {
+                    case 'left':
+                        $search_parameter = "$string%";
+                    break;
+                    
+                    case 'right':
+                        $search_parameter = "%$string";
+                    break;
+                }
+            }
+            
+            $parameters['search'] = $search_parameter;
         }
 
         # Linked to
@@ -409,6 +425,12 @@ class BaseRepository extends ServiceEntityRepository
     public function mode($mode)
     {
         $this->mode = $mode;
+        return $this;
+    }
+    
+    public function setFlushMode($mode)
+    {
+        $this->flush_mode = $mode;
         return $this;
     }
     
@@ -838,14 +860,29 @@ class BaseRepository extends ServiceEntityRepository
                             $data->$dest_set_method($password);
                         }
                         
-                        if($current) {
-                            # File Type
-                            if(isset($field['form']['type']) && $field['form']['type'] == 'UIFileType' && !$data->$get_method() && $current->$get_method()) {
-                                $data->$set_method($current->$get_method());
+                        # File Type
+                        if(isset($field['form']['type']) && $field['form']['type'] == 'UIFileType') {
+                            
+                            # Get current value in DB
+                            if($data->getId()) {
+                                $connection = $this->getEntityManager()->getConnection();
+                                $stmt = $connection->prepare("SELECT " . $field['name'] . " FROM media WHERE id=" . $data->getId());
+                                $stmt->execute();
+                                $result = $stmt->fetch();
+                                $current_value = $result[$field['name']];
+                            } else {
+                                $current_value = '';
                             }
-                            if(isset($field['form']['type']) && $field['form']['type'] == 'UIFileType' && $data->$get_method() && $current->$get_method() && $data->$get_method() != $current->$get_method()) {
-                                $path = $this->upload_path . '/' . $current->$get_method();
-                                $path_thumbnail = $this->upload_path . '/' . $this->preview_prefix . $current->$get_method();
+                            
+                            # Get current data if no value provided
+                            if(!$data->$get_method() && $current_value) {
+                                $data->$set_method($current_value);
+                            }
+                            
+                            # Upload file if different
+                            if($data->$get_method() && $current_value && $data->$get_method() != $current_value) {
+                                $path = $this->upload_path . '/' . $current_value;
+                                $path_thumbnail = $this->upload_path . '/' . $this->preview_prefix . $current_value;
                                 if(file_exists($path) && !is_dir($path)) {
                                     unlink($path);
                                 }
@@ -871,7 +908,10 @@ class BaseRepository extends ServiceEntityRepository
             $data->setModified(new \Datetime);
 
             $em->persist($data);
-            $em->flush();
+            
+            if($this->flush_mode == 'auto') {
+                $em->flush();
+            }
             
             return $data->getId();
         } else {
@@ -888,7 +928,9 @@ class BaseRepository extends ServiceEntityRepository
                 $row = $this->find($id);
                 $row->setIsConcealed(0);
                 $em->persist($row);
-                $em->flush();
+                if($this->flush_mode == 'auto') {
+                    $em->flush();
+                }
             }
             return true;
         } else {
@@ -904,7 +946,9 @@ class BaseRepository extends ServiceEntityRepository
                 $row = $this->find($id);
                 $row->setIsConcealed(1);
                 $em->persist($row);
-                $em->flush();
+                if($this->flush_mode == 'auto') {
+                    $em->flush();
+                }
             }
             return true;
         } else {
@@ -951,7 +995,9 @@ class BaseRepository extends ServiceEntityRepository
                     $copy->mergeNewTranslations();
                 }
                 $em->persist($copy);
-                $em->flush();
+                if($this->flush_mode == 'auto') {
+                    $em->flush();
+                }
             }
             return true;
         } else {
@@ -1004,7 +1050,9 @@ class BaseRepository extends ServiceEntityRepository
                 }
                 
                 $em->remove($row);
-                $em->flush();
+                if($this->flush_mode == 'auto') {
+                    $em->flush();
+                }
             }
             
             if(isset($exception)) {
@@ -1043,7 +1091,9 @@ class BaseRepository extends ServiceEntityRepository
                             $row->$function_get()[$j]->setPosition($new_position);
                         }
                     }
-                    $em->flush();
+                    if($this->flush_mode == 'auto') {
+                        $em->flush();
+                    }
                 }
                 
             } else {
@@ -1064,7 +1114,9 @@ class BaseRepository extends ServiceEntityRepository
                 } else {
                     $this->find($id)->setPosition($position[$i]);
                 }
-                $em->flush();
+                if($this->flush_mode == 'auto') {
+                    $em->flush();
+                }
             }
             return true;
         } else {
@@ -1081,7 +1133,9 @@ class BaseRepository extends ServiceEntityRepository
                 $parent = $this->find($target);
                 $row->setParent($parent);
                 $em->persist($row);
-                $em->flush();
+                if($this->flush_mode == 'auto') {
+                    $em->flush();
+                }
             }
             return true;
         } else {
@@ -1107,7 +1161,9 @@ class BaseRepository extends ServiceEntityRepository
                 
                 $em = $this->getEntityManager();
                 $em->persist($link);
-                $em->flush();
+                if($this->flush_mode == 'auto') {
+                    $em->flush();
+                }
             }
         }
     }
@@ -1131,14 +1187,18 @@ class BaseRepository extends ServiceEntityRepository
 
                     $em = $this->getEntityManager();
                     $em->remove($link);
-                    $em->flush();               
+                    if($this->flush_mode == 'auto') {
+                        $em->flush();
+                    }
                 }
             } else {
                 $links_results = $model_link->findBy([$table_name=>$row]);
                 foreach($links_results as $link) {
                     $em = $this->getEntityManager();
                     $em->remove($link);
-                    $em->flush();
+                    if($this->flush_mode == 'auto') {
+                        $em->flush();
+                    }
                 }
             }
             
@@ -1159,7 +1219,9 @@ class BaseRepository extends ServiceEntityRepository
                 
                 $em = $this->getEntityManager();
                 $em->persist($row);
-                $em->flush();
+                if($this->flush_mode == 'auto') {
+                    $em->flush();
+                }
             }
         }
     }

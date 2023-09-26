@@ -35,6 +35,12 @@ class Filters
         } else {
             $this->mode = 'single';
         }
+        if(isset($params['limit'])) {
+            unset($params['limit']);
+        }
+        if(isset($params['offset'])) {
+            unset($params['offset']);
+        }
         $this->result = [];
         $this->result['params'] = $params;
         $this->result['actives'] = [];

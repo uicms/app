@@ -9,6 +9,8 @@ use Doctrine\ORM\EntityManager;
 
 class Model
 {	
+    protected $flush_mode = 'auto';
+    
 	public function __construct(EntityManager $em, RequestStack $requestStack, ParameterBagInterface $parameters)
     {
 		$request = $requestStack->getCurrentRequest();
@@ -23,10 +25,17 @@ class Model
         if(strpos($entity_name, 'App\\') === false) {
             $entity_name = 'App\Entity\\' . ucfirst($entity_name);
         }
-        $model = $this->em->getRepository($entity_name);
-        if(isset($this->session) && $this->session !== null) {
-            $model->locale($this->session->get('locale'));
+        $repository = $this->em->getRepository($entity_name);
+        if(isset($this->session) && $this->session !== null && $this->session->get('locale')) {
+            $repository->locale($this->session->get('locale'));
         }
-		return $model;
+        $repository->setFlushMode($this->flush_mode);
+        
+		return $repository;
+    }
+    
+    public function setFlushMode($mode)
+    {
+        $this->flush_mode = $mode;
     }
 }

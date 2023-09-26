@@ -1,0 +1,30 @@
+{% extends "app/tpl/layout.html.twig" %}
+
+{% block body %}
+<section id="contributor_form" class="contributor">
+
+    <header class="page_header">
+        <a href="{{ path('app_page', {'slug': page.slug, 'locale':app.session.get('locale') }) }}"><h1 class="page_title">{{ page.name|raw }}</h1></a>
+        <div class="page_text"></div>
+    </header>
+    
+    <h2 class="form_title title">{% if contributor.email == null %}Nouveau contact{% else %}{{ contributor.firstname }} {{ contributor.lastname }}{% endif %}</h2>
+
+    {% if introductory %}<div class="introductory">{{ introductory.value|raw }}</div>{% endif %}
+    
+    <div class="wrapper">
+        <div class="form">
+            {{ form_start(form) }}
+    
+            <div class="form-group">
+            {% for field in form %}
+                
+               {% include "admin/tpl/editor/form/field.html.twig" %}
+            {% endfor %}
+            </div>
+            
+            <button type="submit">Sauvegarder</button>
+        </div>
+    </div>
+</section>
+{% endblock %}

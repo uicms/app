@@ -1,0 +1,32 @@
+{% trans_default_domain 'app' %}
+{% if url is not defined %}
+    {% set url = path('app_page_action_id_key', {'locale': app.session.get('locale'), 'slug': app.session.get('directory_page_slug'), 'action':'view', 'id':contributor.id, 'key': contributor.email|slugger}) %}
+{% endif %}
+
+<article class="item contributor">
+    <div class="wrapper">
+        <a href="{{ url }}">
+        
+            <div class="thumbnail{% if contributor._thumbnail == '' %} silhouette{% endif %}">
+                <div class="wrapper">
+                    <img src="{% if contributor._thumbnail %}/uploads/{{ contributor._thumbnail }}{% else %}/themes/app/img/silhouette.jpg{% endif %}" class="contributor_thumbnail" />
+                </div>
+                {% if contributor.contributorType %}<div class="type">{{ contributor.contributorType.name }}</div>{% endif %}
+            </div>
+            
+
+            <div class="details">
+                
+                <header>
+                    <h2 class="title">{{ contributor.firstname|raw }} {{ contributor.lastname|raw }}</h2>
+                </header>
+
+                <div class="infos">
+                    {% if contributor.function %}<span class="function">{{ contributor.function|raw }}</span>{% endif %}
+                    {% if contributor.organization and contributor.organization.id != 121 %}<span class="organization"> chez {{ contributor.organization.name }}</span>{% endif %}
+                    {% if contributor.organization and contributor.organization.id == 121 %}<span class="organization"> chez {{ contributor.organizationAlt }}</span>{% endif %}
+                </div>
+            </div>
+        </a>
+    </div>
+</article>

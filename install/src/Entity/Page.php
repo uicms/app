@@ -37,9 +37,9 @@ class Page implements TranslatableInterface
     private $parent=NULL;
 
 	public function __call($method, $args)
-                                   	{
-                                   	    return $this->proxyCurrentLocaleTranslation($method, $args);
-                                   	}
+             	{
+             	    return $this->proxyCurrentLocaleTranslation($method, $args);
+             	}
 
 	
     /**
@@ -117,6 +117,22 @@ class Page implements TranslatableInterface
 	 */
 	private $link_page_media;
 
+    /**
+                * @ORM\Column(type="string",nullable=true)
+                */
+                private $class;
+
+/**
+	 * @ORM\OneToMany(targetEntity="App\Entity\LinkBlockCollectionPage", mappedBy="page")
+	 */
+	private $link_block_collection_page;
+
+
+
+
+
+
+
 
 
 
@@ -125,6 +141,8 @@ class Page implements TranslatableInterface
     {
         $this->link_page_block = new ArrayCollection();
         $this->link_page_media = new ArrayCollection();
+        $this->link_collection_page = new ArrayCollection();
+        $this->link_block_collection_page = new ArrayCollection();
     }
 
 
@@ -368,6 +386,48 @@ class Page implements TranslatableInterface
             // set the owning side to null (unless already changed)
             if ($linkPageMedium->getPage() === $this) {
                 $linkPageMedium->setPage(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getClass(): ?string
+    {
+        return $this->class;
+    }
+
+    public function setClass(?string $class): self
+    {
+        $this->class = $class;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|LinkBlockCollectionPage[]
+     */
+    public function getLinkBlockCollectionPage(): Collection
+    {
+        return $this->link_block_collection_page;
+    }
+
+    public function addLinkBlockCollectionPage(LinkBlockCollectionPage $linkBlockCollectionPage): self
+    {
+        if (!$this->link_block_collection_page->contains($linkBlockCollectionPage)) {
+            $this->link_block_collection_page[] = $linkBlockCollectionPage;
+            $linkBlockCollectionPage->setPage($this);
+        }
+
+        return $this;
+    }
+
+    public function removeLinkBlockCollectionPage(LinkBlockCollectionPage $linkBlockCollectionPage): self
+    {
+        if ($this->link_block_collection_page->removeElement($linkBlockCollectionPage)) {
+            // set the owning side to null (unless already changed)
+            if ($linkBlockCollectionPage->getPage() === $this) {
+                $linkBlockCollectionPage->setPage(null);
             }
         }
 

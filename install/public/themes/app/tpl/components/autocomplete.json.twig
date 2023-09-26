@@ -1,0 +1,9 @@
+[
+    {% for result in results %}
+        {
+            "label": {{ result._name|striptags|json_encode|raw }},
+            "value": {{ result._name|json_encode|raw }}
+        }
+        {% if loop.index < results|length %},{% endif %}
+    {% endfor %}
+]

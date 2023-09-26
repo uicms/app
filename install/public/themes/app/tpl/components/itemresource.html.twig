@@ -7,16 +7,20 @@
     <div class="wrapper">
         <a href="{{ url }}{% if filters is defined %}?{{ filters.url }}{% endif %}" class="ajax" data-url="{{ url }}{% if filters is defined %}?{{ filters.url }}{% endif %}">
             
-            <div class="thumbnail">
-                <div class="wrapper">
-                    {% if item._thumbnail %}<img src="/uploads/{{ item._thumbnail }}" class="{% if item._thumbnail_class is defined %}{{ item._thumbnail_class }}{% endif %}" />{% endif %}
+            <aside>
+                <div class="item_thumbnail">
+                    <div class="wrapper">
+                        {% if item._thumbnail %}<img src="/uploads/{{ item._thumbnail }}" class="{% if item._thumbnail_class is defined %}{{ item._thumbnail_class }}{% endif %}" />{% endif %}
+                    </div>
                 </div>
-            </div>
+            </aside>
             
-            <div class="details">
-                <h2 class="item_name">{{ item.name|raw }}</h2>
-                <div class="description">
-                    {{ item.description|length > 140 ? (item.description|striptags|slice(0, 140) ~ '...')|raw  : item.description|raw  }}
+            <div class="item_content">
+                <div class="item_details">
+                    <h2 class="item_name">{{ item.name|raw }}</h2>
+                    <div class="item_description">
+                        {{ item.description|length > 140 ? (item.description|striptags|slice(0, 140) ~ '...')|raw  : item.description|raw  }}
+                    </div>
                 </div>
             </div>
         </a>

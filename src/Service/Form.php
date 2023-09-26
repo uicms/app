@@ -22,7 +22,6 @@ class Form
     private $session;
     private $translator;
     private $twig;
-    private $clone;
 
     public function __construct(ParameterBagInterface $parameters, Model $model, SessionInterface $session, TranslatorInterface $translator, FormFactoryInterface $form_factory, Environment $twig)
     {
@@ -37,8 +36,11 @@ class Form
 
     public function get($entity, $row=null, $form_config=[])
    	{
+        if(strpos($entity, 'App\Entity') === false) {
+            $entity = 'App\Entity\\' . ucfirst($entity);
+        }
         if(!$form_config) {
-            $form_config = $this->ui_config['entity']['App\Entity\\' . $entity]['form'];
+            $form_config = $this->ui_config['entity'][$entity]['form'];
         }
 
    		# Loop on fields
@@ -73,33 +75,18 @@ class Form
                                                             'ui_config'=>$this->ui_config,
                                             				'form_config'=>$form_config,
                                             				'translator'=>$this->translator,
-                                                            'data_class'=>'App\Entity\\' . $entity
+                                                            'data_class'=>$entity
                                                         ]);
        	return $form ;
    	}
 
-    public function clone($name, $data)
-    {
-        $results = [];
-        if(is_array($data)) {
-            foreach($data as $i=>$row) {
-                $results[$row->getId()] = clone $row;
-            }
-        } else if (is_object($data)) {
-            $results[$data->getId()] = clone $data;
-        }
-        $this->clone[$name] = $results;
-    }
-
-    public function getClone($name)
-    {
-        return isset($this->clone[$name]) ? $this->clone[$name] : [];
-    }
-
     public function getPrototype($collection_name, $entity)
     {
+        if(strpos($entity, 'App\Entity') === false) {
+            $entity = 'App\Entity\\' . ucfirst($entity);
+        }
         $prototype_config = $this->ui_config['entity'][$entity]['form'];
-        $prototype_form = $this->get('media', null, $prototype_config);
+        $prototype_form = $this->get($entity, null, $prototype_config);
         $view = $prototype_form->createView();
         $view->offsetUnset('_token');
         $prototype_html = $this->twig->render('app/tpl/components/prototype.html.twig', [

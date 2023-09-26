@@ -11,7 +11,7 @@
         
         <aside>
             {% if block.medias %}
-            <ul class="medias slider">
+            <ul class="medias {% if block.style == 'medias_grid' %}grid{% else %}slider{% endif %}">
             {% for media in block.medias %}
                 {% include 'app/tpl/components/itemmedia.html.twig' %}
             {% endfor %}

@@ -62,6 +62,19 @@ form .note {
 }
 
 
+/* Autocomplete */
+form .autocomplete_popup {
+    background: #fff;
+    border: 1px solid #ccc;
+}
+form .autocomplete_popup .autocomplete_option:hover,
+form .autocomplete_popup .autocomplete_option.selected {
+    background: #000 !important;
+    color: #fff !important;
+    cursor: pointer;
+}
+
+
 /* Form tabs */
 form .nav-tabs {
     border-bottom: 1px solid #000;

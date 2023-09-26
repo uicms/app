@@ -22,6 +22,8 @@ fld_contact_topics: Ses thématiques
 fld_contributor_skills: Quelles sont vos compétences ?
 fld_contact_skills: Ses compétences
 
+fld_answer_description: Répondre
+
 fld_user_password: Mot de passe
 fld_user_new_password: Saisir un mot de passe
 fld_user_repeat_password: Répéter le mot de passe

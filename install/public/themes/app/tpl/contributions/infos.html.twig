@@ -1,0 +1,11 @@
+{% if item is not defined and contribution is defined %}{% set item = contribution %}{% endif %}
+
+<div class="infos">
+    {{ item.created|date("m/d/Y") }} | 
+    {% if item.contributor %}<span class="contributor">Par {{ item.contributor.firstname }} {{ item.contributor.lastname }}</span>{% endif %}
+    {% if item.contributionObject %}(<span class="object">{{ item.contributionObject.name }}</span>){% endif %}
+     
+    {% if item.likes %} | {{ item.likes }}{% endif %}
+    {% if item.topics %} | {% for topic in item.topics %}#{{ topic.name }}{% if loop.index < item.topics|length %}, {% endif %}{% endfor %}{% endif %}
+    {% if item.keywords %} | {% for keyword in item.keywords %}#{{ keyword.name }}{% if loop.index < item.keywords|length %}, {% endif %}{% endfor %}{% endif %}
+</div>

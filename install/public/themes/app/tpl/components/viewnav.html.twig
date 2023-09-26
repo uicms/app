@@ -1,9 +1,16 @@
 {% if view_nav and (view_nav.prev or view_nav.next) %}
+
 <nav class="view_nav">
-    {% if view_nav.prev %}<a class="prev ajax button" data-url="{{ path('app_page_action_id_key', {slug: page.slug, action: 'view', id: view_nav.prev.id, 'locale':app.session.get('locale'), 'key': view_nav.prev.name|slugger}) }}?{{ filters.url }}" href="#">Précédent</a>{% endif %}
+    {% if view_nav.prev %}
+        {% set prev_url = path('app_page_action_id_key', {slug: page.slug, action: 'view', id: view_nav.prev.id, 'locale':app.session.get('locale'), 'key': view_nav.prev.name|slugger}) %}
+        <a class="prev{% if ajax is defined and ajax %} ajax{% endif %} button" data-url="{{ prev_url }}?{{ filters.url }}" href="{{ prev_url }}?{{ filters.url }}">Précédent</a>
+    {% endif %}
 
-    <span class="infos">{{ view_nav.offset }} / {{ view_nav.total }}</span>    
+    <span class="infos">{{ view_nav.offset }} / {{ view_nav.total }}</span>
 
-    {% if view_nav.next %}<a class="next ajax button" data-url="{{ path('app_page_action_id_key', {slug: page.slug, action: 'view', id: view_nav.next.id, 'locale':app.session.get('locale'), 'key': view_nav.next.name|slugger }) }}?{{ filters.url }}" href="#">Suivant</a>{% endif %}
+    {% if view_nav.next %}
+        {% set next_url = path('app_page_action_id_key', {slug: page.slug, action: 'view', id: view_nav.next.id, 'locale':app.session.get('locale'), 'key': view_nav.next.name|slugger }) %}
+        <a class="next{% if ajax is defined and ajax %} ajax{% endif %} button" data-url="{{ next_url }}?{{ filters.url }}" href="{{ next_url }}?{{ filters.url }}">Suivant</a>
+    {% endif %}
 </nav>
 {% endif %}

@@ -8,7 +8,6 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Uicms\App\Service\Model;
 use Uicms\App\Service\Filters;
 use Uicms\App\Service\Viewnav;
-use Uicms\App\Service\EmailSender;
 
 use App\Service\FormResource;
 
@@ -77,7 +76,7 @@ class ResourcesController extends AbstractController
         );
     }
 
-    public function form($page, $id=0, Model $model, Request $request, FormResource $resource_form, EmailSender $email_sender): Response
+    public function form($page, $id=0, Model $model, Request $request, FormResource $resource_form): Response
     {
         # Form
         $form = $resource_form->get($id);

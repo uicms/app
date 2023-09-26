@@ -14,7 +14,10 @@ function initForms() {
             $(collection_element).find(' > .form_field_body').append(html);
 
             initDelete();
+            
+            /* Common inits */
             initTranslationTabs();
+            initAutocomplete();
         });
 
         initDelete();
@@ -27,7 +30,9 @@ function initForms() {
 	        });
         }
     });
-
+    
+    /* Common inits */
+    initAutocomplete();
     initTranslationTabs();
 
     /* Agreement form */
@@ -37,6 +42,24 @@ function initForms() {
         } else {
             $('#submit_agreement').attr('disabled', 'disabled');
         }
+    });
+}
+
+function initAutocomplete() {
+    $( ".autocomplete" ).each(function() {
+        var element = $(this);
+        var field_name = $(this).attr('id');
+        var source = '/' + $('body').data('locale') + '/' + $('body').data('slug') + '/autocomplete?entity=' + $(this).data('source');
+        
+        $(this).autocomplete({
+          url: source,
+          minLength: 2,
+          delay: 100,
+          onSelect: function(text) {
+          },
+          onFocus: function(text) {
+          }
+        });
     });
 }
 

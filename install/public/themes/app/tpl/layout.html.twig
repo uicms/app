@@ -33,14 +33,15 @@
         <link rel="stylesheet" type="text/css" media="screen" href="{{ theme_path.getUrl('css/common.form.css') }}" />
 
         <link rel="stylesheet" type="text/css" media="screen" href="{{ theme_path.getUrl('css/section.resources.css') }}" />
-
+        <link rel="stylesheet" type="text/css" media="screen" href="{{ theme_path.getUrl('css/section.contributions.css') }}" />
+        
         <link rel="stylesheet" type="text/css" media="screen" href="{{ js_path.getUrl('slick-carousel/slick/slick.css') }}" />
         <link rel="stylesheet" type="text/css" media="screen" href="{{ js_path.getUrl('malihu-custom-scrollbar-plugin/jquery.mCustomScrollbar.css') }}" />
         {% endblock %}
         
     	<meta name="viewport" content="user-scalable=yes, initial-scale=1.0, minimum-scale=1.0, maximum-scale=3.0, width=device-width" />
     </head>
-    <body class="controller_{{ page.controller }} action_{{ app.session.get('current_action') }} page_{{ page.slug }}{% if page.class %} page_{{ page.class }}{% endif %}">
+    <body class="controller_{{ page.controller }} action_{{ app.session.get('current_action') }} page_{{ page.slug }}{% if page.class %} page_{{ page.class }}{% endif %}" data-locale="{{ app.session.get('locale') }}" data-slug="{{ page.slug }}">
         {% for message in app.flashes('error') %}
         <div class="cpnt_message error">{{ message|trans }}</div>
         {% endfor %}
@@ -80,6 +81,7 @@
                     
                     {% if app.session.get('contributor') %}
                         <li>
+                            <span id="authenticated">{{ app.session.get('contributor').email }}</span><br/>
                             <a href="{{ path('app_page_action', {'slug': app.session.get('authentication_page_slug'), 'locale': app.session.get('locale'), 'action': 'logout'}) }}">Déconnexion</a>
                         </li>
                     {% endif %}
@@ -103,6 +105,7 @@
         <script type="text/javascript" src="{{ theme_path.getUrl('js/jquery.cookies.js') }}"></script>
         <script type="text/javascript" src="{{ theme_path.getUrl('js/jquery.salvatore.js') }}"></script>
         <script type="text/javascript" src="{{ theme_path.getUrl('js/infinite_scroll.js') }}"></script>
+        <script type="text/javascript" src="{{ theme_path.getUrl('js/jquery.autocomplete.js') }}"></script>
         <script type="text/javascript" src="{{ theme_path.getUrl('js/app.js') }}"></script>
         <script type="text/javascript" src="{{ theme_path.getUrl('js/form.js') }}"></script>
         {% endblock %}
