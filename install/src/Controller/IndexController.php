@@ -91,11 +91,11 @@ class IndexController extends AbstractController
             'resources',
         ];
         
-        if(in_array($page->getController(), $authenticated_controllers) && !$this->get('session')->get('contributor')) {
-            return $this->redirectToRoute('app_page_action', array('slug'=>$this->get('session')->get('authentication_page_slug'), 'action'=>'index', 'locale'=>$this->get('session')->get('locale')));
-        } else {
-            return $this->forward("App\\Controller\\" . ucfirst($page->getController()) . "Controller::" . $action, $attributes);
+        if($authentication_page && in_array($page->getController(), $authenticated_controllers) && !$this->get('session')->get('contributor')) {
+                return $this->redirectToRoute('app_page_action', array('slug'=>$this->get('session')->get('authentication_page_slug'), 'action'=>'index', 'locale'=>$this->get('session')->get('locale')));
         }
+        
+        return $this->forward("App\\Controller\\" . ucfirst($page->getController()) . "Controller::" . $action, $attributes);
 	}
     
     public function error(FlattenException $exception, Model $model, Request $request, $slug='', $action='', $locale='')
