@@ -63,7 +63,7 @@
 				<ul>
 					{% for menu_page in app.session.get('menu') %}
 					<li>
-                        <a href="{{ path('app_page', {'slug': menu_page.slug, 'locale': app.session.get('locale') }) }}">{{ menu_page.name }}</a>
+                        <a href="{{ path('app_page', {'slug': menu_page.slug, 'locale': app.session.get('locale') }) }}"{% if menu_page.id == page.id %} class="active"{% endif %}>{{ menu_page.name }}</a>
                         {% if menu_page.helper_html is defined and menu_page.helper_html %}{{ menu_page.helper_html|raw }}{% endif %}
                         {% if menu_page.children is defined and menu_page.children %}
                             <ul class="children">

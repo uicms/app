@@ -866,7 +866,7 @@ class BaseRepository extends ServiceEntityRepository
                             # Get current value in DB
                             if($data->getId()) {
                                 $connection = $this->getEntityManager()->getConnection();
-                                $stmt = $connection->prepare("SELECT " . $field['name'] . " FROM media WHERE id=" . $data->getId());
+                                $stmt = $connection->prepare("SELECT " . $field['name'] . " FROM " . $this->getConfig('table_name') . " WHERE id=" . $data->getId());
                                 $stmt->execute();
                                 $result = $stmt->fetch();
                                 $current_value = $result[$field['name']];

@@ -34,9 +34,9 @@
                         {% set current_letter = option.letter %}
                     {% endif %}
                     
-                    <li class="filter_option_name {% if option._active %} active{% endif %}">
+                    <li>
                         {% if option._has_link %}
-                        <a href="{{ path('app_page', {'slug': page.slug, 'locale': app.session.get('locale') }) }}?{% if filters.mode == 'multiple' %}{{ filters.url }}{% endif %}{{ filter.param_name }}[]={% if filter.value_field is defined %}{{ attribute(option, filter.value_field) }}{% else %}{{ option.id }}{% endif %}">
+                        <a href="{{ path('app_page', {'slug': page.slug, 'locale': app.session.get('locale') }) }}?{% if filters.mode == 'multiple' %}{{ filters.url }}{% endif %}{{ filter.param_name }}[]={% if filter.value_field is defined %}{{ attribute(option, filter.value_field) }}{% else %}{{ option.id }}{% endif %}" class="filter_option_name {% if option._active %} active{% endif %}">
                         {% endif %}
 
                             {% if filter.value_field is defined and filter.value_field %}
