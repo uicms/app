@@ -693,7 +693,7 @@ class BaseRepository extends ServiceEntityRepository
     public function getLinkEntityName($entities=array())
     {
         foreach($this->global_config['entity'] as $entity_name=>$entity) {
-            if(isset($entity['link']) && !array_diff($entity['link'], $entities)) {
+            if(isset($entity['link']) && in_array($entities[0], $entity['link']) && in_array($entities[1], $entity['link'])) {
                 return $entity_name;
             }
         }
@@ -704,7 +704,7 @@ class BaseRepository extends ServiceEntityRepository
     public function getLinkEntityBasename($entities=array())
     {
         foreach($this->global_config['entity'] as $entity_name=>$entity) {
-            if(isset($entity['link']) && !array_diff($entity['link'], $entities)) {
+            if(isset($entity['link']) && in_array($entities[0], $entity['link']) && in_array($entities[1], $entity['link'])) {
                 $basename = explode('\\', $entity_name);
                 return end($basename);
             }
@@ -716,7 +716,7 @@ class BaseRepository extends ServiceEntityRepository
     public function getLinkTableName($entities=array())
     {
         foreach($this->global_config['entity'] as $entity_name=>$entity) {
-            if(isset($entity['link']) && !array_diff($entity['link'], $entities)) {
+            if(isset($entity['link']) && in_array($entities[0], $entity['link']) && in_array($entities[1], $entity['link'])) {
                 return $entity['table_name'];
             }
         }
