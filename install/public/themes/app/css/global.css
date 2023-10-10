@@ -57,13 +57,15 @@
 legend,
 label,
 textarea,
-body {
+body,
+a {
     color: var(--main-color);
     font-family: var(--default-font-family);
     font-size: var(--default-font-size);
     line-height: var(--default-line-height);
 }
-.logo {
+.logo,
+.logo a {
     font-family: var(--strong-font-family);
     font-size: var(--title-font-size);
     line-height: var(--title-font-size);
@@ -76,7 +78,8 @@ body {
 #menu li a:hover {
     font-family: var(--strong-font-family);
 }
-.page_name {
+.page_name,
+.page_name a {
     font-family: var(--strong-font-family);
     font-size: var(--title2-font-size);
     line-height: var(--title2-line-height);
@@ -86,12 +89,20 @@ body {
     font-size: var(--title3-font-size);
     line-height: var(--title3-line-height);
 }
-.block_name {
+.view_name,
+.view_name a,
+.block_name,
+.block_name a {
     font-family: var(--strong-font-family);
     font-size: var(--title3-font-size);
     line-height: var(--title3-line-height);
 }
-.item_name {
+.media_name,
+.media_name a,
+.item_name,
+.item_name a,
+.view_block_name,
+.view_block_name a  {
     font-family: var(--strong-font-family);
     font-size: var(--title4-font-size);
     line-height: var(--title4-line-height);
@@ -106,9 +117,13 @@ body {
     line-height: var(--small-line-height);
 }
 .button,
+.button a,
 .infos,
+.infos a,
 .note,
-.caption {
+.note a,
+.caption,
+.caption a {
     font-size: var(--small-font-size);
     line-height: var(--small-line-height);
 }
@@ -117,4 +132,7 @@ body {
 }
 .text {
     max-width: 700px;
+}
+.text strong {
+    font-family: var(--strong-font-family);
 }

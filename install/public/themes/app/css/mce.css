@@ -1,1 +1,8 @@
-
+.accordion_title {
+    font-weight: bold;
+    background: #e2e2e2;
+}
+.accordion_content {
+    font-style: italic;
+    background: #f2f2f2;
+}

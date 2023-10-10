@@ -1,19 +1,21 @@
 {% extends "app/tpl/layout.html.twig" %}
 
 {% block body %}
-<section id="contribution_form">
-    
-    <header>
-        <h2 class="page_name"><a href="{{ path('app_page', {'locale': app.session.get('locale'), 'slug': page.slug }) }}">{{ page.name|raw }}</a></h2>
+<header class="page_header">
+    <h2 class="page_name">
+        <a href="{{ path('app_page', {'locale': app.session.get('locale'), 'slug': page.slug }) }}">{{ page.name|raw }}</a>
+    </h2>
+</header>
+
+<section id="contribution_form" class="form">
+    <header class="form_header">
+    	<h2 class="form_name">{% if form.vars.value.id %}{{ form.vars.value._name }}{% else %}Contribuer{% endif %}</h2>
     </header>
     
-    <div class="wrapper">
-
-        <div class="content">
+    <div class="form_content">
+        <main>
             {{ form_start(form, {'method': 'POST', 'multipart': true}) }}
-           
-            <h2 class="form_name">{% if form.vars.value.id %}{{ form.vars.value._name }}{% else %}Contribuer{% endif %}</h2>
-
+            
             <div class="form_errors">
                 {{ form_errors(form) }}
             </div>
@@ -24,10 +26,10 @@
             {% endfor %}
             </div>
             
-            <button type="submit">{% if form.vars.value.id %}Sauvegarder{% else %}Sauvegarder{% endif %}</button>
+            <button type="submit" class="form_submit_button">{% if form.vars.value.id %}Sauvegarder{% else %}Sauvegarder{% endif %}</button>
             {{ form_end(form) }}
-        </div>
-
+        </main>
+        
         <aside></aside>
     </div>
 </section>

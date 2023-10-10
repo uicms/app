@@ -1,17 +1,16 @@
 <article class="block block_{{ block.template }} {{ block.style }} {{ block.class }}">
-    
     <div class="wrapper">
-
-        <main>
-            <header>
-                <h2 class="block_name">{{ block.name|raw }}</h2>
-            </header>
-            {% if block.text %}<div class="text">{{ block.text|raw }}</div>{% endif %}
-
-            {% include 'app/tpl/components/map.html.twig' %}
-        </main>
-
+        <header class="block_header">
+            <h2 class="block_name">{{ block.name|raw }}</h2>
+        </header>
+        <div class="block_content">
+            <main>
+                {% if block.text %}<div class="block_text">{{ block.text|raw }}</div>{% endif %}
+            </main>
+            <aside>
+                {% include 'app/tpl/components/map.html.twig' %}
+            </aside>
+        <div>
     </div>
-    
 </article>
 

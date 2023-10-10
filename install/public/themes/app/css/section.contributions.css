@@ -1,10 +1,13 @@
 .item.contribution {
     margin-bottom: var(--default-spacing);
 }
+.contribution_infos {
+    margin-top: calc(var(--default-spacing) / 2);
+}
 @media only screen and (min-width: 768px) {
-    .item.contribution.has_thumbnail > .wrapper {
+    /*.item.contribution.has_thumbnail > .wrapper {
         display: grid;
         grid-template-columns: 20% 80%;
         grid-gap: var(--default-spacing);
-    }
+    }*/
 }

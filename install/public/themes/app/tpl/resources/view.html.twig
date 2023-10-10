@@ -1,21 +1,28 @@
 {% trans_default_domain 'app' %}
+{% set ajax = true %}
+    
+<header class="page_header">
+    <h2 class="page_name">
+        <a href="{{ path('app_page', {'locale': app.session.get('locale'), 'slug': page.slug }) }}">{{ page.name|raw }}</a>
+    </h2>
+    {% include "app/tpl/components/viewnav.html.twig" %}
+</header>
 
-<section id="resource">
-    {% set ajax = true %}
-	{% include "app/tpl/components/viewnav.html.twig" %}
-
-    <div class="wrapper">
-        <div class="content">
-        	<header class="page_header">
-		        <h2 class="page_name">{{ resource.name|raw }}</h2>
-		    </header>
-
-            <div class="text">{{ resource.description|raw }}</div>
-        </div>
-
-        <aside>
+<section id="resource" class="view">
+    <header class="view_header">
+        <h2 class="view_name">{{ resource.name|raw }}</h2>
+        {% include 'app/tpl/resources/infos.html.twig' %}
+        {% include 'app/tpl/resources/buttons.html.twig' %}
+    </header>
+    
+    <div class="view_content">
+        <main>
+            <div class="view_text">{{ resource.description|raw }}</div>
+        </main>
+        
+        <aside class="fited">
         	{% if resource.medias %}
-		    <ul class="medias slider">
+		    <ul class="view_medias medias slider">
 		    {% for media in resource.medias %}
 		        {% include 'app/tpl/components/itemmedia.html.twig' %}
 		    {% endfor %}
@@ -23,5 +30,4 @@
 		    {% endif %}
 		</aside>
     </div>
-
 </section>

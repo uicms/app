@@ -29,7 +29,12 @@
 					params.before.call();
 				}
 				
-				var url = $(element).data('url') + '&of=' + new_offset;
+				var url = $(element).data('url');
+                if(url.indexOf('?') == -1) {
+                    url += '?';
+                }
+                url += '&of=' + new_offset;
+                
 				$.ajax({
 					url: url,
 					success: function(result, statut) {

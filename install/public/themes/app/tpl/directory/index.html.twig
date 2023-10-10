@@ -1,30 +1,17 @@
 {% extends "app/tpl/layout.html.twig" %}
 
 {% block body %}
-<section id="directory">
+<section id="directory" class="index">
     
     <header class="page_header">
-        <a href="{{ path('app_page', {'slug': page.slug, 'locale':app.session.get('locale') }) }}"><h1 class="page_title">{{ page.name|raw }}</h1></a>
-        {% if introductory %}<div class="introductory">{{ introductory.value|raw }}</div>{% endif %}
+        <h2 class="page_name"><a href="{{ path('app_page', {'slug': page.slug, 'locale':app.session.get('locale') }) }}">{{ page.name|raw }}</a></h2>
         <a href="{{ path('app_page_action', {'slug':page.slug, 'locale':app.session.get('locale'), 'action':'form' }) }}" class="button contribute">Ajouter un contact</a>
     </header>
     
     {% include "app/tpl/components/filters.html.twig" %}
-
-    {% if search_string is defined %}
-        <div class="current_filter">
-            <div class="wrapper">
-                <a href="{{ path('app_page', {'slug':page.slug, 'locale':app.session.get('locale') })}}" class="button">
-                    {{ search_string }}
-                </a>
-            </div>
-        </div>
-    {% endif %}
     
-    <div class="grid items contributors">
-    {% for contributor in contributors %}
-        {% include "app/tpl/directory/item.html.twig" %}
-    {% endfor %}
+    <div class="items grid contributors infiniteScroll" data-url="{{ path('app_page_action', {'locale':app.session.get('locale'), 'slug':page.slug, 'action': 'results' }) }}" data-total="{{ total }}" data-limit="{{ params.limit }}" data-offset="0">
+    {% include "app/tpl/directory/results.html.twig" %}
     </div>
 </section>
 {% endblock %}

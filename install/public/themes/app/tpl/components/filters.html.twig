@@ -18,8 +18,9 @@
             {% endif %}
 
             {% if filter.type == 'input' %}
-            <form method="get">
-                <input type="text" placeholder="{{ filter.i18n|trans }}" name="{{ filter.param_name }}" value="{% if filter.param_value is defined %}{{ filter.param_value }}{% endif %}" />
+            <form method="get" name="filter_form_{{ filter.slug }}" id="filter_form_{{ filter.slug }}">
+                <input type="text" placeholder="{{ filter.i18n|trans }}" name="{{ filter.param_name }}" value="" />
+                <!-- {% if filter.param_value is defined %}{{ filter.param_value }}{% endif %} -->
                 <button type="submit">Ok</button>
             </form>
             {% endif %}

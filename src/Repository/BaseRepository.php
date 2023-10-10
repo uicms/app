@@ -683,8 +683,7 @@ class BaseRepository extends ServiceEntityRepository
     public function getLinkEntity($entities=array())
     {
         foreach($this->global_config['entity'] as $entity_name=>$entity) {
-            if(isset($entity['link']) && !array_diff($entity['link'], $entities)) {
-
+            if(isset($entity['link']) && in_array($entities[0], $entity['link']) && in_array($entities[1], $entity['link'])) {
                 return $this->getEntityManager()->getRepository($entity_name)->mode('admin')->locale($this->locale);
             }
         }

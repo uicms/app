@@ -1,6 +1,4 @@
-/* Items */
-.item {
-}
+/* Item thumbnail */
 .item_thumbnail {
     position: relative;
     padding-top: 65%;
@@ -23,6 +21,9 @@
 .item_thumbnail .wrapper img.portrait {
     object-fit: contain;
 }
+
+
+/* Item details */
 .item_details {
     padding-right: var(--default-spacing);
 }

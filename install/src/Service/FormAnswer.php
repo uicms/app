@@ -40,10 +40,14 @@ class FormAnswer
     {
 		$form_config = $this->ui_config['entity']['App\Entity\\' . $this->entity]['form'];
 
-        if((int)$id && ($row = $this->model->get($this->entity)->getRowById($id))) {
-            $this->form->clone('answer', $row);
-        } else {
-            $row = $this->model->get($this->entity)->mode('admin')->new($this->model->get('User')->getRowById(1));
+        if(!(int)$id || (!$row = $this->model->get($this->entity)->getRowById($id))) {
+            $row = $this->model->get($this->entity)->mode('admin')->new();
+        }
+        
+        # Parent
+        $form_config['fields']['parent_answer']['options']['label'] = false;
+        if($parent) {
+            $form_config['fields']['parent_answer']['options']['data'] = $parent;
         }
 
        	return $this->form->get($this->entity, $row, $form_config);
@@ -59,14 +63,9 @@ class FormAnswer
             $row->setContributor($this->model->get('Contributor')->getRowById($this->session->get('contributor')->getId()));
             $row->setContribution($this->model->get('Contribution')->getRowById($this->route['id']));
             
-            /*if($parent) {
-                $answer->setParentAnswer($parent);
-            }*/
-            
             try {
-                $current = isset($this->form->getClone('answer')[$row->getId()]) ? $this->form->getClone('answer')[$row->getId()] : null;
                 $message = $row->getId() ? 'answer_updated' : 'answer_inserted';
-                $this->model->get($this->entity)->mode('admin')->persist($row, $current);
+                $this->model->get($this->entity)->mode('admin')->persist($row);
                 $this->flash->add('success', $message);
                 return $row;
             } catch (\Throwable $throwable) {

@@ -67,6 +67,6 @@ body.menu_expanded #menu_button {
     background: #deae1e;
     color: #fff;
     padding: 20px;
-    width: 220px;
+    width: auto;
     text-align: center;
 }

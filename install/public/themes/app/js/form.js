@@ -3,13 +3,19 @@ $(document).ready(function() {
 });
 
 function initForms() {
+    
+    /* Anwsers */
+    $('.answer_response_button').click(function() {
+        $(this).parent().parent().find('.answer_child_form').toggleClass('expanded');
+    });
+    
     /* Prototype */
     $('.form_type_collection').each(function() {
     	var collection_element = this;
     	
-    	$(collection_element).append('<button type="button" class="add_collection_entry button2">Ajouter</button>');
-        $(collection_element).find('.add_collection_entry').unbind('click').click(function (e) {
-            var counter = $(collection_element).find(' > .form_field_body > .collection_entry').length;
+    	$(collection_element).append('<button type="button" class="form_collection_entry_add">Ajouter</button>');
+        $(collection_element).find('.form_collection_entry_add').unbind('click').click(function (e) {
+            var counter = $(collection_element).find(' > .form_field_body > .form_collection_entry').length;
             var html = $(collection_element).data('prototype').replace(/__name__label__/g, counter).replace(/__name__/g, counter);
             $(collection_element).find(' > .form_field_body').append(html);
 
@@ -23,10 +29,10 @@ function initForms() {
         initDelete();
 
         function initDelete() {
-        	$(collection_element).find('.delete_collection_entry').remove();
-        	$(collection_element).find('.collection_entry').append('<button type="button" class="delete_collection_entry button2">Supprimer</button>');
-	        $(collection_element).find('.delete_collection_entry').unbind('click').click(function (e) {
-	            $(this).closest('.collection_entry').remove();
+        	$(collection_element).find('.form_collection_entry_delete').remove();
+        	$(collection_element).find('.form_collection_entry').append('<button type="button" class="form_collection_entry_delete">Supprimer</button>');
+	        $(collection_element).find('.form_collection_entry_delete').unbind('click').click(function (e) {
+	            $(this).closest('.form_collection_entry').remove();
 	        });
         }
     });

@@ -1,9 +1,9 @@
 {% extends "app/tpl/layout.html.twig" %}
 
 {% block body %}
-<section id="resources">
+<section id="resources" class="index">
     
-    <header>
+    <header class="page_header">
         <h2 class="page_name"><a href="{{ path('app_page', {'locale': app.session.get('locale'), 'slug': page.slug }) }}">{{ page.name|raw }}</a></h2>
         <a href="{{ path('app_page_action', {'locale': app.session.get('locale'), 'slug': page.slug, 'action': 'form'}) }}" class="button">Ajouter une ressource</a>
     </header>

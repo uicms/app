@@ -1,10 +1,3 @@
 <div class="infos">
-    {% if contribution.contributor %}<span class="contributor">Par {{ contribution.contributor.firstname }} {{ contribution.contributor.lastname }}</span>{% endif %}
-     | {% if contribution.contributionObject %}<span class="status">{{ contribution.contributionObject.name }}</span>{% endif %}
-     | {% if contribution.contributionStatus %}<span class="status">{{ contribution.contributionStatus.name }}</span>{% endif %}
-
-    {% if contribution.count_answers %} | {{ contribution.count_answers }} réponse(s){% else %} | Aucune réponse{% endif %}
-    {% if contribution.likes %} | {{ contribution.likes }}{% endif %}
-    {% if contribution.topics %} | {% for topic in contribution.topics %}#{{ topic.name }}{% if loop.index < contribution.topics|length %}, {% endif %}{% endfor %}{% endif %}
-    {% if contribution.keywords %} | {% for keyword in contribution.keywords %}#{{ keyword.name }}{% if loop.index < contribution.keywords|length %}, {% endif %}{% endfor %}{% endif %}
+    {% if contributor.topics %}{% for topic in contributor.topics %}<a href="{{ path('app_page', {'locale': app.session.get('locale'), 'slug': app.session.get('directory_page_slug') })}}?tp[]={{ topic.id }}" class="contributor_topic button">#{{ topic.name }}</a> {% endfor %}{% endif %}
 </div>

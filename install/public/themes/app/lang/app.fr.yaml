@@ -1,11 +1,18 @@
-flr_topic: Thèmes
+flr_topic: Thématiques
 flr_keyword: Mots-clés
 flr_search: Recherche
 flr_type: Types
-flr_status: Status
+flr_status: Statuts
 flr_object: Objets
+flr_date: Date
 flr_my_selection: Ma sélection
 flr_my_contributions: Mes contributions
+flr_contributor: Membres
+
+resource_pending: En attende de validation
+
+answer_updated: Réponse sauvegardée !
+answer_inserted: Réponse ajoutée !
 
 resource_updated: Ressource sauvegardée !
 resource_inserted: Ressource ajoutée !

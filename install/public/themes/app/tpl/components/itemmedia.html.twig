@@ -1,5 +1,6 @@
-<li>
-  <div class="media">
+<li class="media">
+    
+  <div class="media_viewer">
       {% set extension = media.file|split('.')|last %}
       {% if extension == 'mp4' %}
          <video poster="/uploads/{{ media._thumbnail }}" class="{{ media.class }}" controls>
@@ -12,8 +13,8 @@
       {% endif %}
   </div>
 
-  <div class="details">
-      <h3 class="item_name">{{ media.name|raw }}</h3>
-      {% if media.description %}<div class="caption">{{ media.description|raw }}</div>{% endif %}
+  <div class="media_details">
+      <h3 class="media_name">{{ media.name|raw }}</h3>
+      {% if media.description %}<div class="media_caption">{{ media.description|raw }}</div>{% endif %}
   </div>
 </li>

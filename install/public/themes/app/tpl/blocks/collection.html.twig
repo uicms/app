@@ -2,7 +2,7 @@
     
     <div class="wrapper">
 
-        <header>
+        <header class="block_header">
             <h2 class="block_name">{{ block.name|raw }}</h2>
             {% if block.text %}<div class="text">{{ block.text|raw }}</div>{% endif %}
         </header>
@@ -16,6 +16,7 @@
         
         </div>
         {% endif %}
+        
     </div>
     
 </article>

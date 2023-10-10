@@ -3,8 +3,7 @@
     margin-top: var(--default-spacing);
 }
 .filters .filter {
-    padding: calc(var(--default-spacing) / 4) 0;
-    border-top: 1px solid #000;   
+    padding: calc(var(--default-spacing) / 2) 0; 
 }
 .filters .filter.choice .filter_name {
     background: url('../img/expand.svg') no-repeat right center;
@@ -44,9 +43,16 @@
     border: 1px solid #000;
     margin-right: calc(var(--default-spacing) / 4);
 }
-/*.mCSB_draggerRail {
-    background-color: #fff !important;
-}*/
+
+/* Fix */
+.daterangepicker .ranges .active {
+     background-color: #fff !important; 
+     border-color: #fff !important; 
+     color: #000 !important; 
+}
+.daterangepicker .ranges .active:hover {
+     background-color: #eee !important; 
+}
 
 @media only screen and (min-width: 768px) {
     .filters {
@@ -60,6 +66,7 @@
         position: relative;
         display: flex;
         align-items: center;
+        margin-bottom: calc(var(--default-spacing) / 2);
     }
     .filters .filter .options {
         margin-top: 0;
@@ -74,5 +81,8 @@
         padding: 0 0 calc(var(--default-spacing) / 4) calc(var(--default-spacing) / 4);
         border-right: 1px solid #eaeaea;
         border-bottom: 1px solid #eaeaea;
+    }
+    .active_filters {
+        margin-top: 0;
     }
 }

@@ -1,13 +1,16 @@
-section#resource > .wrapper {
+.item.resource .resource_topics,
+.item.resource .resource_keywords {
+    display: none;
+}
+section#resource .view_content {
     display: flex;
     flex-direction: column-reverse;
-    margin-top: calc(var(--default-spacing) / 2);
-}
-section#resource .content {
     margin-top: var(--default-spacing);
 }
-section#resource .content .text {
-    margin-top: calc(var(--default-spacing) / 2);
+section#resource .view_content main,
+section#resource .view_content aside {
+    width: 100%;
 }
-section#resource_form .form_fields {
+section#resource .view_content .view_text {
+    margin-top: calc(var(--default-spacing) / 2);
 }

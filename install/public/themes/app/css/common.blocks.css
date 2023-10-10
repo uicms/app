@@ -1,4 +1,7 @@
 /* Common */
+#blocks .page_header {
+    margin-bottom: calc(var(--default-spacing) * 2);
+}
 .block {
     margin-bottom: calc(var(--default-spacing) * 2);
 }
@@ -8,10 +11,10 @@
 .block img {
     width: 100%;
 }
-.block .text {
+.block .block_content {
     margin-top: calc(var(--default-spacing) / 2);
 }
-.block aside {
+.block .block_content aside {
     margin-top: var(--default-spacing);
 }
 
@@ -23,7 +26,7 @@
     justify-content: center;
 }
 .block.block_default.title aside,
-.block.block_default.title .text {
+.block.block_default.title .block_text {
     display: none;
 }
 .block.block_default.title .block_name {
@@ -36,7 +39,7 @@
 .block.block_default.chapo .block_name {
     display: none;
 }
-.block.block_default.chapo .text {
+.block.block_default.chapo .block_text {
     font-family: var(--strong-font-family);
     font-size: var(--title2-font-size);
     line-height: var(--title2-line-height);
@@ -48,53 +51,91 @@
 }
 
 /* Block default : cover */
+.block.block_default.cover header,
 .block.block_default.cover main {
     display: none;
 }
 .block.block_default.cover aside {
   margin-top: 0;
 }
-.block.block_default.cover aside .medias {
+.block.block_default.cover aside .block_medias {
     position: relative;
     left: calc(var(--default-spacing) * -1);
     width: 100vw;
 }
-.block.block_default.cover aside .medias .media {
+.block.block_default.cover aside .block_medias .media .media_viewer {
     width: 100%;
     height: 100vh;
     position: relative;
     padding: 0;
 }
-.block.block_default.cover aside .medias li .details {
+.block.block_default.cover aside .block_medias .media .media_details {
     padding-left: var(--default-spacing);
 }
 
+/* Accordion */
+.block.accordion {
+    margin-bottom: var(--default-spacing)
+}
+.block.accordion .block_content {
+    display: none;
+}
+.block.accordion.unfolded .block_content {
+    display: block;
+}
+.block .block_text .accordion_title,
+.block.accordion .block_name {
+    cursor: pointer;
+    background: url('../img/folded.svg') no-repeat 0 center;
+    background-size: 5px;
+    padding-left: 18px;
+}
+.block .block_text .accordion_title.unfolded,
+.block.accordion.unfolded .block_name {
+    background: url('../img/unfolded.svg') no-repeat 0 center;
+    background-size: 10px;
+}
+.block .block_text .accordion_title {
+    font-family: var(--strong-font-family);
+    user-select: none;
+}
+.block .block_text .accordion_content {
+    display: none;
+    padding-left: 18px;
+}
+.block .block_text .accordion_title.unfolded {
+    display: inline-block;
+    margin-bottom: calc(var(--default-spacing) / 2);
+}
+.block .block_text .accordion_content.unfolded {
+    display: block;
+}
 
 /* Responsive */
 @media only screen and (min-width: 768px) {
-    .block aside {
+    .block .block_content aside {
         margin-top: 0;
     }
 
     /* Block default : medias alignment */
-    .block.block_default.medias_right > .wrapper,
-    .block.block_default.medias_left > .wrapper {
+    .block.block_default.medias_right .block_content,
+    .block.block_default.medias_left .block_content {
         display: flex;
     }
-    .block.block_default.medias_right > .wrapper main,
-    .block.block_default.medias_right > .wrapper aside,
-    .block.block_default.medias_left > .wrapper main,
-    .block.block_default.medias_left > .wrapper aside  {
+    .block.block_default.medias_right .block_content main,
+    .block.block_default.medias_right .block_content aside,
+    .block.block_default.medias_left .block_content main,
+    .block.block_default.medias_left .block_content aside  {
         width: 50%;
         box-sizing: border-box;
     }
-    .block.block_default.medias_right > .wrapper main {
+    .block.block_default.medias_right .block_content main {
         padding-right: var(--default-spacing);
     }
-    .block.block_default.medias_left > .wrapper main {
+    .block.block_default.medias_left .block_content main {
         padding-left: var(--default-spacing);
     }
-    .block.block_default.medias_left > .wrapper {
+    .block.block_default.medias_left .block_content {
         flex-direction: row-reverse;
     }
 }

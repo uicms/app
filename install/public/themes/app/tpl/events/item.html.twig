@@ -1,0 +1,32 @@
+{% trans_default_domain 'app' %}
+{% if event is not defined and item is defined %}{% set event = item %}{% endif %}
+{% if url is not defined %}
+    {% set url = path('app_page_action_id_key', {'locale': app.session.get('locale'), 'slug': app.session.get('events_page_slug'), 'action':'view', 'id':event.id, 'key': event.name|slugger}) %}
+{% endif %}
+
+<article class="item event">
+    <a href="{{ url }}{% if filters is defined %}?{{ filters.url }}{% endif %}" class="ajax" data-url="{{ url }}{% if filters is defined %}?{{ filters.url }}{% endif %}">
+        
+        <div class="item_content">
+            
+            <div class="item_thumbnail">
+                <div class="wrapper">
+                    {% if event._thumbnail %}<img src="/uploads/{{ event._thumbnail }}" class="{% if event._thumbnail_class is defined %}{{ event._thumbnail_class }}{% endif %}" />{% endif %}
+                </div>
+            </div>
+            
+            <div class="item_details">
+                <h2 class="item_name">{{ event.name|raw }}</h2>
+                
+                {% include 'app/tpl/events/infos.html.twig' %}
+                {% include 'app/tpl/events/buttons.html.twig' %}
+                
+                <div class="item_description">
+                    {{ event.description|length > 140 ? (event.description|striptags|slice(0, 140) ~ '...')|raw  : event.description|raw  }}
+                </div>
+            </div>
+            
+        </div>
+        
+    </a>
+</article>

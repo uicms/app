@@ -1,0 +1,48 @@
+.answers_title {
+    font-family: var(--strong-font-family);
+    font-size: var(--title3-font-size);
+    line-height: var(--title3-line-height);
+}
+
+.answers .answers_form,
+.answers .answers_results .answer {
+    margin-top: var(--default-spacing);
+}
+.answers .answer {
+    border-top: 1px dotted #ccc;
+    padding-top: calc(var(--default-spacing) / 2);
+}
+.answers .answer.selected {
+    background: #f2f2f2;
+    padding: calc(var(--default-spacing) / 2);
+}
+.answers .answer .answer_author,
+.answers .answer .answer_response_form {
+    margin-top: calc(var(--default-spacing) / 2);
+}
+.answers .answers_form .form_field_label label {
+    font-family: var(--strong-font-family);
+}
+
+.answers .answer .answer_children {
+    padding-left: var(--default-spacing);
+    margin-top: calc(var(--default-spacing) / 2);
+}
+.answers .answer .answer_children .answer_children_title {
+    font-family: var(--strong-font-family);
+}
+.answers .answer .answer_children .answer_buttons {
+    margin-top: calc(var(--default-spacing) / 2);
+}
+
+.answers .answer .answer_child {
+    margin-top: calc(var(--default-spacing) / 2);
+}
+.answers .answer .answer_child_form {
+    display: none;
+    padding-left: var(--default-spacing);
+    margin-top: calc(var(--default-spacing) / 2);
+}
+.answers .answer .answer_child_form.expanded {
+    display: block;
+}

@@ -1,20 +1,20 @@
 {% extends "app/tpl/layout.html.twig" %}
 
 {% block body %}
+<header class="page_header">
+    <h1 class="page_name">{{ page.name|raw }}</h1>
+</header>
+            
 <section id="default" class="view">
     
-    <div class="wrapper">
-        <div class="content">
-            <header>
-                <h1 class="page_name">{{ page.name|raw }}</h1>
-            </header>
-
-            <div class="text">{{ page.html|raw }}</div>
-        </div>
+    <div class="view_content">
+        <main>
+            <div class="view_text text">{{ page.html|raw }}</div>
+        </main>
         
         <aside>
             {% if page.medias %}
-            <ul class="medias slider">
+            <ul class="view_medias medias slider">
                 {% for media in page.medias %}
                 {% include 'app/tpl/components/itemmedia.html.twig' %}
                 {% endfor %}

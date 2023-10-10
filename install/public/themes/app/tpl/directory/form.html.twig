@@ -1,30 +1,36 @@
 {% extends "app/tpl/layout.html.twig" %}
 
 {% block body %}
-<section id="contributor_form" class="contributor">
+<header class="page_header">
+    <h2 class="page_name">
+        <a href="{{ path('app_page', {'locale': app.session.get('locale'), 'slug': page.slug }) }}">{{ page.name|raw }}</a>
+    </h2>
+</header>
 
-    <header class="page_header">
-        <a href="{{ path('app_page', {'slug': page.slug, 'locale':app.session.get('locale') }) }}"><h1 class="page_title">{{ page.name|raw }}</h1></a>
-        <div class="page_text"></div>
+<section id="contributor_form" class="form">
+    <header class="form_header">
+    	<h2 class="form_name">{% if form.vars.value.id %}{{ form.vars.value._name }}{% else %}Ajouter un contact{% endif %}</h2>
     </header>
     
-    <h2 class="form_title title">{% if contributor.email == null %}Nouveau contact{% else %}{{ contributor.firstname }} {{ contributor.lastname }}{% endif %}</h2>
+    <div class="form_content">
+        <main>
+            {{ form_start(form, {'method': 'POST', 'multipart': true}) }}
+            
+            <div class="form_errors">
+                {{ form_errors(form) }}
+            </div>
 
-    {% if introductory %}<div class="introductory">{{ introductory.value|raw }}</div>{% endif %}
-    
-    <div class="wrapper">
-        <div class="form">
-            {{ form_start(form) }}
-    
-            <div class="form-group">
+            <div class="form_fields">
             {% for field in form %}
-                
                {% include "admin/tpl/editor/form/field.html.twig" %}
             {% endfor %}
             </div>
             
-            <button type="submit">Sauvegarder</button>
-        </div>
+            <button type="submit" class="form_submit_button">{% if form.vars.value.id %}Sauvegarder{% else %}Sauvegarder{% endif %}</button>
+            {{ form_end(form) }}
+        </main>
+        
+        <aside></aside>
     </div>
 </section>
 {% endblock %}

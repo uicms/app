@@ -2,78 +2,121 @@
 {% trans_default_domain 'app' %}
     
 {% block body %}
-<section id="contribution" class="view">
+<header class="page_header">
+    <h2 class="page_name">
+        <a href="{{ path('app_page', {'locale': app.session.get('locale'), 'slug': page.slug }) }}">{{ page.name|raw }}</a>
+    </h2>
     
-
+    {% include "app/tpl/components/viewnav.html.twig" %}
+</header>
+        
+<section id="contribution" class="view">
     <div class="wrapper">
-        <div class="content">
-            <header class="page_header">
-                <h2 class="page_name">
-                    <a href="{{ path('app_page', {'locale': app.session.get('locale'), 'slug': page.slug }) }}">{{ page.name|raw }}</a>
-                </h2>
-                
-                {% include "app/tpl/components/viewnav.html.twig" %}
-                <h3 class="content_name">{{ contribution.name|raw }}</h3>
+        
+        <header class="view_header">
+            <h3 class="view_name">{{ contribution.name|raw }}</h3>
+        </header>
+        
+        <div class="view_content">
+            <main>
+                <div class="view_text text">{{ contribution.description|raw }}</div>
                 {% include 'app/tpl/contributions/infos.html.twig' %}
-
-                <div class="buttons">
-                    {% if contribution.is_selected is defined and contribution.is_selected is same as(true) %}
-                    <a href="{{ path('app_page_action', {'locale': app.session.get('locale'), 'slug': app.session.get('contributions_page_slug'), 'action': 'deletefromselection'}) }}?id={{ contribution.id }}" class="button add_to_selection">Retirer</a>
-                    {% elseif contribution.is_selected is same as(false) %}
-                    <a href="{{ path('app_page_action', {'locale': app.session.get('locale'), 'slug': app.session.get('contributions_page_slug'), 'action': 'addtoselection'}) }}?id={{ contribution.id }}" class="button add_to_selection">Sélectionner</a>
-                    {% endif %}
-                </div>
-            </header>
-
-            <div class="text">{{ contribution.description|raw }}</div>
-
-            <div class="like">
-                {% if contribution.count_likes %}<psan class="num_likes">{{ contribution.count_likes }}</psan>{% endif %}
-                <a class="button" href="{{ path('app_page_action', {'locale': app.session.get('locale'), 'slug': app.session.get('contributions_page_slug'), 'action': 'like'}) }}?id={{ contribution.id }}">Je trouve ce partage utile</a>
-
-                 <a class="button" href="mailto:{{ app.session.get('params').contact_email_address }}?subject=Contenu indiqué comme suspect&amp;body=http://www.reciprocity.eu/{{ path('app_page_action_id_key', {'locale': app.session.get('locale'), 'slug': app.session.get('contributions_page_slug'), 'action':'view', 'id':contribution.id, 'key': contribution.name|slugger}) }}"> | Signaler le contenu</a>
-            </div>
+                {% include 'app/tpl/contributions/buttons.html.twig' %}
+            </main>
             
-            {% if contribution.contributionStatus.slug == 'pending' %}
-            <div class="anwser_form">
-                {{ form_start(answer_form) }}
+            <aside>
                 
-                <div class="form-group">
-                {% for field in answer_form %}
-                   {% include "admin/tpl/editor/form/field.html.twig" %}
-                {% endfor %}
-                </div>
-                
-                <button type="submit">Envoyer</button>
-                {{ form_end(answer_form) }}
-            </div>
-            {% endif %}
-
-            <div class="answers_container">
-                {% if answers %}
                 <div class="answers">
                     
-                    <h3 class="title">Réponses</h3>
+                    {% if answers %}
+                    <div class="answers_results">
+                        <header class="answers_header">
+                            <h3 class="answers_title">Réponses</h3>
+                        </header>
+                        
+                        <ul>
+                        {% for answer in answers %}
+                            <li class="answer{% if answer.isSelected %} selected{% endif %}">
+                                <div class="answer_description">{{ answer.description }}</div>
+                                <h4 class="answer_author infos">Par {{ answer.contributor.firstname }} {{ answer.contributor.lastname }} le {{ answer.created|date("m/d/Y") }}</h4>
+                                <div class="answer_buttons buttons infos">
+                                    {% if answer.count_likes %}<span class="answer_num_likes">{{ answer.count_likes }} <span class="answer_num_likes_label"> mention(s) j'aime</span></span> | {% endif %}
+                                    
+                                    {% if answer.is_liked == false %}
+                                    <a href="{{ path('app_page_action', {'locale': app.session.get('locale'), 'slug': app.session.get('contributions_page_slug'), 'action': 'likeanswer'}) }}?id={{ answer.id }}" class="answer_like_button button">Aimer</a>
+                                    {% else %}
+                                    <a href="{{ path('app_page_action', {'locale': app.session.get('locale'), 'slug': app.session.get('contributions_page_slug'), 'action': 'unlikeanswer'}) }}?id={{ answer.id }}" class="answer_like_button button">Ne plus aimer</a>
+                                    {% endif %}
+                                    
+                                    {% if contribution.contributor.id == app.session.get('contributor').id and  answer.isSelected == false %}
+                                     | <a href="{{ path('app_page_action', {'locale': app.session.get('locale'), 'slug': app.session.get('contributions_page_slug'), 'action': 'selectanswer' }) }}?id={{ answer.id }}" class="answer_select_button button">Sélectionner</a>
+                                    {% endif %}
+                                    
+                                    {% if contribution.contributor.id == app.session.get('contributor').id and contribution.contributionStatus.slug == 'pending' %} | <a href="javascript:;" class="answer_response_button button">Réagir</a>{% endif %}
+                                </div>
+                                
+                                {% if answer.children %}
+                                <div class="answer_children">
+                                    <!--<h5 class="answer_children_title">Réponses de {{ answer.contributor.firstname }} {{ answer.contributor.lastname }} :</h5>-->
+                                    {% for answer_child in answer.children %}
+                                    <div class="answer_child">
+                                        <div class="answer_description">{{ answer_child.description }}</div>
+                                        <div class="answer_buttons buttons infos">
+                                            <span class="answer_author">Par {{ answer.contributor.firstname }} {{ answer.contributor.lastname }} le {{ answer_child.created|date("m/d/Y") }}</span>
+                                             | 
+                                            {% if answer_child.count_likes %}<span class="answer_num_likes">{{ answer_child.count_likes }} <span class="answer_num_likes_label"> mention(s) j'aime</span></span> | {% endif %}
+                                            
+                                            {% if answer_child.is_liked == false %}
+                                            <a href="{{ path('app_page_action', {'locale': app.session.get('locale'), 'slug': app.session.get('contributions_page_slug'), 'action': 'likeanswer'}) }}?id={{ answer_child.id }}" class="answer_like_button button">Aimer</a>
+                                            {% else %}
+                                            <a href="{{ path('app_page_action', {'locale': app.session.get('locale'), 'slug': app.session.get('contributions_page_slug'), 'action': 'unlikeanswer'}) }}?id={{ answer_child.id }}" class="answer_like_button button">Ne plus aimer</a>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                    {% endfor %}
+                                </div>
+                                {% endif %}
+                                
+                                {% if answer.form is not null %}
+                                <div class="answer_child_form">
+                                    {{ form_start(answer.form) }}
+                
+                                    <div class="form-group">
+                                    {% for field in answer.form %}
+                            
+                                       {% include "admin/tpl/editor/form/field.html.twig" %}
+                                    {% endfor %}
+                                    </div>
+                        
+                                    <button type="submit">Réagir à cette réponse</button>
+                            
+                                    {{ form_end(answer.form) }}
+                                </div>
+                                {% endif %}
+                            </li>
+                        {% endfor %}
+                        </ul>
+                    </div>
+                    {% else %}
+                    Encore aucune réponse...
+                    {% endif %}
                     
-                    <ul>
-                    {% for answer in answers %}
-                        <li class="answer{% if answer.isSelected %} selected{% endif %}">
-                            <h4>Par {{ answer.contributor.firstname }} {{ answer.contributor.lastname }}</h4>
-                            <div class="date">{{ answer.created|date("m/d/Y") }}</div>
-                            <div class="description">{{ answer.description }}</div>
-
-                            <div class="like">
-                                {% if answer.count_likes %}<psan class="num_likes">{{ answer.count_likes }}</psan>{% endif %}
-                    
-                    <a class="button_alt" href="{{ path('app_page_action', {'locale': app.session.get('locale'), 'slug': app.session.get('contributions_page_slug'), 'action': 'likeanswer'}) }}?id={{ answer.id }}">Je trouve cette réponse utile</a>
-                            {% if contribution.contributor == app.session.get('contributor') and  answer.isSelected == false %} <a href="{{ path('app_page_action', {'locale': app.session.get('locale'), 'slug': app.session.get('contributions_page_slug'), 'action': 'selectanswer' }) }}?id={{ answer.id }}" class="select_answer button_alt">Choisir cette réponse</a>{% endif %}
-                            </div>
-                        </li>
-                    {% endfor %}
-                    </ul>
+                    {% if contribution.contributionStatus.slug == 'pending' %}
+                    <div class="answers_form">
+                        {{ form_start(answer_form) }}
+                        
+                        <div class="form-group">
+                        {% for field in answer_form %}
+                           {% include "admin/tpl/editor/form/field.html.twig" %}
+                        {% endfor %}
+                        </div>
+                        
+                        <button type="submit">Envoyer</button>
+                        {{ form_end(answer_form) }}
+                    </div>
+                    {% endif %}
                 </div>
-                {% endif %}
-            </div>
+            </aside>
         </div>
     </div>
 </section>

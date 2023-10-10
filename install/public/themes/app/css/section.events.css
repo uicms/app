@@ -1,0 +1,23 @@
+section#event .view_content {
+    display: flex;
+    flex-direction: column-reverse;
+    margin-top: var(--default-spacing);
+}
+section#event .view_content main,
+section#event .view_content aside {
+    width: 100%;
+}
+section#event .view_content .view_text {
+    margin-top: calc(var(--default-spacing) / 2);
+}
+.event_date,
+.event_date a {
+    font-family: var(--strong-font-family);
+    font-size: var(--title4-font-size);
+    line-height: var(--title4-line-height);
+}
+.event_venue,
+.event_venue a {
+    font-size: var(--title4-font-size);
+    line-height: var(--title4-line-height);
+}

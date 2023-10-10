@@ -1,0 +1,31 @@
+{% trans_default_domain 'app' %}
+{% if resource is not defined and item is defined %}{% set resource = item %}{% endif %}
+{% if url is not defined %}
+    {% set url = path('app_page_action_id_key', {'locale': app.session.get('locale'), 'slug': app.session.get('resources_page_slug'), 'action':'view', 'id':item.id, 'key': item.name|slugger}) %}
+{% endif %}
+
+<article class="item resource">
+    <div class="item_content">
+        <div class="item_thumbnail">
+            <div class="wrapper">
+                <a href="{{ url }}{% if filters is defined %}?{{ filters.url }}{% endif %}" class="ajax" data-url="{{ url }}{% if filters is defined %}?{{ filters.url }}{% endif %}">
+                    {% if resource._thumbnail %}<img src="/uploads/{{ resource._thumbnail }}" class="{% if resource._thumbnail_class is defined %}{{ resource._thumbnail_class }}{% endif %}" />{% endif %}
+                </a>
+            </div>
+        </div>
+        
+        <div class="item_details">
+            <header class="idem_header">
+                <a href="{{ url }}{% if filters is defined %}?{{ filters.url }}{% endif %}" class="ajax" data-url="{{ url }}{% if filters is defined %}?{{ filters.url }}{% endif %}">
+                    <h2 class="item_name">{{ resource.name|raw }}</h2>
+                </a>
+                {% include 'app/tpl/resources/infos.html.twig' %}
+                {% include 'app/tpl/resources/buttons.html.twig' %}
+            </header>
+            
+            <div class="item_description">
+                {{ resource.description|length > 140 ? (resource.description|striptags|slice(0, 140) ~ '...')|raw  : resource.description|raw  }}
+            </div>
+        </div>
+    </div>
+</article>

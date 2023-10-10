@@ -1,16 +1,26 @@
 .medias {
     width: 100%;
 }
-.medias li .media {
-    padding-top: 56.25%;
-    position: relative;
-}
-.medias li .details {
+.medias li .media_details {
     margin-top: calc(var(--default-spacing) / 2);
 }
 .medias img,
 .medias video,
 .medias audio {
+    width: 100%;
+}
+
+.cover .medias .media .media_viewer,
+.fited .medias .media .media_viewer {
+    padding-top: 56.25%;
+    position: relative;
+}
+.cover .medias img,
+.cover .medias video,
+.cover .medias audio,
+.fited .medias img,
+.fited .medias video,
+.fited .medias audio {
     position: absolute;
     z-index: 1;
     left: 0;
@@ -19,12 +29,15 @@
     height: 100%;
     object-fit: cover;
 }
-.medias img.portrait {
+.cover .medias img.portrait,
+.fited .medias img.portrait {
 	object-fit: contain;
 	background: #000;
 }
-.medias audio,
-.medias video {
+.cover .medias audio,
+.cover .medias video,
+.fited .medias audio,
+.fited .medias video {
     object-fit: contain;
     background: #000;
 }

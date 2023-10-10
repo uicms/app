@@ -1,69 +1,66 @@
 {% extends "app/tpl/layout.html.twig" %}
 
 {% block body %}
-<section id="authentication" class="view">
-    
-    <header>
-        <h1 class="page_name">{{ page.name|raw }}</h1>
-    </header>
-    
-    <div class="wrapper">
 
-	    <div class="content">
-	        <div class="login">
+<header class="page_header">
+    <h1 class="page_name">{{ page.name|raw }}</h1>
+</header>
 
-	            <form name="login" action="{{ path('app_page_action', {'locale':app.session.get('locale'), 'slug':page.slug, 'action':'login'}) }}" method="post">
-	            	<h2 class="form_name">Connexion</h2>
+<section id="authentication" class="form">
 
-	                <fieldset>
-	                	<div class="form-group">
-		                    <div class="form_field">
-		                        <h3><label class="required">Email</label></h3>
-		                        <input type="email" name="email" required="required" />
-		                    </div>
-		                    <div class="form_field">
-		                        <h3><label class="required">Mot de passe</label></h3>
-		                        <input type="password" name="password" required="required" />
-		                    </div>
-		                </div>
-	                </fieldset>
+    <div class="form_content">
+        
+        <main>
+            <form name="login" action="{{ path('app_page_action', {'locale':app.session.get('locale'), 'slug':page.slug, 'action':'login'}) }}" method="post">
+                <header class="form_header">
+                    <h2 class="form_name">Connexion</h2>
+                </header>
+                
+                <fieldset>
+                    <div class="form-group">
+                        <div class="form_field">
+                            <h3><label class="required">Email</label></h3>
+                            <input type="email" name="email" required="required" />
+                        </div>
+                        <div class="form_field">
+                            <h3><label class="required">Mot de passe</label></h3>
+                            <input type="password" name="password" required="required" />
+                        </div>
+                    </div>
+                </fieldset>
 
-	                <div class="note">
-	                	<a href="{{ path('app_page_action', {'locale':app.session.get('locale'), 'slug':page.slug, 'action':'password'}) }}">
-	                		Mot de passe oublié ? Cliquez ici
-	                	</a>
-	                </div>
+                <button type="submit">Connexion</button>
+                
+                <div class="form_note note">
+                    <a href="{{ path('app_page_action', {'locale':app.session.get('locale'), 'slug':page.slug, 'action':'password'}) }}">
+                        Mot de passe oublié ? Cliquez ici
+                    </a>
+                </div>
+            </form>
+        </main>
 
-	                <button type="submit">Connexion</button>
-	            </form>
-	        </div>
-	    </div>
+        <aside>
+            {{ form_start(form) }}
 
-	    <aside>
-	        <div class="register">
-	            
-	        	{{ form_start(form) }}
+            <h2 class="form_name">Inscription</h2>
 
-	        	<h2 class="form_name">Inscription</h2>
+            <fieldset>
+                <div class="form-group">
+                {% for field in form %}
+                    {% include "admin/tpl/editor/form/field.html.twig" %}
+                {% endfor %}
+                </div>
 
-	        	<fieldset>
-	        		<div class="form-group">
-	                {% for field in form %}
-	                   {% include "admin/tpl/editor/form/field.html.twig" %}
-	                {% endfor %}
-	                </div>
-	        
-	                <button type="submit">S'inscrire</button>
-	            </fieldset>
+                <button type="submit">S'inscrire</button>
+            </fieldset>
 
-	            <div class="note">
-	                <a href="/fr/conditions-generales-d-utilisation">* Lire les conditions générales d'utilisations</a>
-	            </div>
+            <div class="form_note note">
+                <a href="/fr/conditions-generales-d-utilisation">* Lire les conditions générales d'utilisations</a>
+            </div>
 
-	        	{{ form_end(form) }}
-	        	
-	        </div>
-	    </aside>
+            {{ form_end(form) }}
+        </aside>
     </div>
+
 </section>
 {% endblock %}

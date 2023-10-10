@@ -7,6 +7,7 @@ $(document).ready(function() {
     initInfiniteScroll();
     initScrollBars();
     initFilters();
+    initAccordion();
 });
 
 function initAjax() {
@@ -79,6 +80,8 @@ function initNav() {
 }
 
 function initFilters() {
+    
+    // Dropdown
     $('.filter_name').click(function(e) {
         e.stopPropagation();
         $('.filter').not('#' + $(this).parent().attr('id')).removeClass('expanded');
@@ -89,6 +92,62 @@ function initFilters() {
     });
     $('body').click(function() {
         $('.filter').removeClass('expanded');
+    });
+    
+    // Date picker
+    var date_element = 'input[name="d"]';
+    var date_format = 'YYYY-MM-DD';
+    $(date_element).daterangepicker({
+        autoUpdateInput: false,
+        ranges: {
+            'Aujourd\'hui': [moment(), moment()],
+            'Demain': [moment().add(1, 'days'), moment().add(1, 'days')],
+            'Les 7 prochains jours': [ moment(), moment().add(6, 'days')],
+            'Ce mois-ci': [moment().startOf('month'), moment().endOf('month')],
+            'Le mois prochain': [moment().add(1, 'month').startOf('month'), moment().add(1, 'month').endOf('month')]
+        },
+        locale: {
+            format: date_format,
+            "separator": " - ",
+            "applyLabel": "Valider",
+            "cancelLabel": "Annuler",
+            "fromLabel": "De",
+            "toLabel": "à",
+            "customRangeLabel": "Personnaliser",
+            "daysOfWeek": [
+                "Dim",
+                "Lun",
+                "Mar",
+                "Mer",
+                "Jeu",
+                "Ven",
+                "Sam"
+            ],
+            "monthNames": [
+                "Janvier",
+                "Février",
+                "Mars",
+                "Avril",
+                "Mai",
+                "Juin",
+                "Juillet",
+                "Août",
+                "Septembre",
+                "Octobre",
+                "Novembre",
+                "Décembre"
+            ],
+            "firstDay": 1
+        }
+    });
+    
+    $(date_element).on('apply.daterangepicker', function(ev, picker) {
+        $(this).val(picker.startDate.format(date_format) + ' - ' + picker.endDate.format(date_format));
+        $('#filter_form_date').submit();
+    });
+
+    $(date_element).on('cancel.daterangepicker', function(ev, picker) {
+        $(this).val('');
     });
 }
 
@@ -129,6 +188,29 @@ function initScrollBars() {
         callbacks:{
             onInit:function(){
             }
+        }
+    });
+}
+
+function initAccordion() {
+    
+    // Block case
+    $('.block.accordion').each(function() {
+        var block = this;
+        $(this).find('.block_name').click(function() {
+            is_unfolded = $(block).hasClass('unfolded') ? true : false;
+            $('.block.accordion').removeClass('unfolded');
+            if(!is_unfolded) $(block).addClass('unfolded');
+       });
+    });
+    
+    // Inline case
+    $('.accordion_title').click(function() {
+        var is_unfolded = $(this).next().hasClass('unfolded') ? true : false;
+        $('.accordion_content,.accordion_title').removeClass('unfolded');
+        if(!is_unfolded) {
+            $(this).addClass('unfolded');
+            $(this).next().addClass('unfolded');
         }
     });
 }

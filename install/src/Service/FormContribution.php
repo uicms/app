@@ -64,7 +64,7 @@ class FormContribution
                 'expanded' => true,
                 'multiple' => true,
                 'data'=> $topics,
-                'label' => $this->translator->trans('fld_resource_topics', [], 'admin'),
+                'label' => $this->translator->trans('fld_topics', [], 'admin'),
                 'mapped' => false,
             ],
         ];
@@ -94,7 +94,7 @@ class FormContribution
                 'by_reference' => false,
                 'prototype' => false,
                 'data'=> $keywords,
-                'label' => $this->translator->trans('fld_contribution_keywords', [], 'admin'),
+                'label' => $this->translator->trans('fld_keywords', [], 'admin'),
                 'mapped'=>false,
                 'attr'=>['prototype'=>$this->form->getPrototype('keywords', 'App\Entity\Keyword'), 'class'=>'collection_type'],
             ],
@@ -116,6 +116,9 @@ class FormContribution
             $pending_status = $this->model->get('ContributionStatus')->getRow(['findby'=>['slug'=>'pending']]);
             $row->setContributionStatus($pending_status);
             
+            # Contributor
+            $row->setContributor($this->session->get('contributor'));
+            
             try {
                 $message = $row->getId() ? 'contribution_updated' : 'contribution_inserted';
                 
@@ -123,7 +126,6 @@ class FormContribution
                 
                 # Persist row
                 $this->model->get($this->entity)->mode('admin')->persist($row);
-                
                 $this->em->flush();
                 
                 # Unlink
@@ -142,7 +144,8 @@ class FormContribution
                                 }
                             }
                         }
-                        $this->model->get('Contribution')->mode('admin')->link([$row->getId()], 'App\Entity\Keyword', [$keyword->getId()]);
+                        $this->em->flush();
+                        $this->model->get($this->entity)->mode('admin')->link([$row->getId()], 'App\Entity\Keyword', [$keyword->getId()]);
                     }
                 }
                 
@@ -150,7 +153,6 @@ class FormContribution
                 if($topics = $form->get('topics')->getData()) {
                     $this->model->get($this->entity)->mode('admin')->link([$row->getId()], 'App\Entity\Topic', $topics);
                 }
-                
                 $this->em->flush();
                 
                 $this->flash->add('success', $message);

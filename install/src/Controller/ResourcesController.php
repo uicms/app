@@ -21,7 +21,7 @@ class ResourcesController extends AbstractController
         $ui_config = $this->getParameter('ui_config');
         
         # Filters
-        $params = ['findby'=>['status'=>'validated']];
+        $params = ['findby'=>[]];
         $data['filters'] = $filters->getFilters('Resource', $ui_config['filters'], $params);
         $params = array_merge($params, $data['filters']['params']);
 
@@ -45,7 +45,7 @@ class ResourcesController extends AbstractController
         
          # Results
         $data['filters'] = $filters->getFilters('Resource', $ui_config['filters']);
-        $params = ['offset'=>$of, 'limit'=>$limit, 'is_allowed'=>true, 'findby'=>['status'=>'validated']];
+        $params = ['offset'=>$of, 'limit'=>$limit, 'is_allowed'=>true, 'findby'=>[]];
         $data['params'] = array_merge($params, $data['filters']['params']);
         $data['results'] = $model->get('Resource')->getAll($data['params']);
         
@@ -63,7 +63,7 @@ class ResourcesController extends AbstractController
 
             # Filters & params
             $data['filters'] = $filters->getFilters('Resource', $ui_config['filters']);
-            $params = ['findby'=>['status'=>'validated']];
+            $params = ['findby'=>[]];
             $data['params'] = array_merge($params, $data['filters']['params']);
 
             # Nav
@@ -91,5 +91,20 @@ class ResourcesController extends AbstractController
                 'form'=>$form->createView(),
             ]
         );
+    }
+    
+    public function autocomplete($term='', $entity, $page, Model $model)
+    {
+        $data = ['page'=>$page];
+        $params = ['order_by'=>'name', 'order_dir'=>'asc'];
+
+        $data['results'] = $model->get($entity)->getAll(['search'=>$term, 'truncation'=>'left']);
+        
+        $response = new Response(
+            $this->renderView('app/tpl/components/autocomplete.json.twig', $data),
+            Response::HTTP_OK,
+            ['Access-Control-Allow-Origin'=>'*', 'content-type' => 'application/json']
+        );
+        $response->send();
     }
 }

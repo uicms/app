@@ -2,106 +2,63 @@
 {% trans_default_domain 'app' %}
     
 {% block body %}
-
-<section id="contributor" class="view contributor">
+<header class="page_header">
+    <h2 class="page_name">
+        <a href="{{ path('app_page', {'slug': page.slug, 'locale':app.session.get('locale') }) }}">{{ page.name|raw }}</a>
+    </h2>
+</header>
     
-    <header class="page_header">
-        <a href="{{ path('app_page', {'slug': page.slug, 'locale':app.session.get('locale') }) }}"><h1 class="page_title">{{ page.name|raw }}</h1></a>
+<section id="contributor" class="view">
+    
+    <header class="view_header">
+        <h3 class="view_name">{{ contributor.firstname|raw }} {{ contributor.lastname|raw }}</h3>
+        {% if contributor.contributorType %}<h4 class="view_subtitle">{{ contributor.contributorType.name }}</h4>{% endif %}
+        {% include 'app/tpl/directory/infos.html.twig' %}
+        {% include 'app/tpl/directory/buttons.html.twig' %}
     </header>
-
-    <main>
-        <header>
-            <div class="infos">
-                <h2 class="title">{{ contributor.firstname|raw }} {{ contributor.lastname|raw }}</h2>
-                
-                <div class="details">
-                    <span class="function">
-                        {% if contributor.function %}<span class="function">{{ contributor.function|raw }}</span>{% endif %}
-                        {% if contributor.organization and contributor.organization.id != 121 %}<span class="organization"> chez {{ contributor.organization.name }}</span>{% endif %}
-                        {% if contributor.organization and contributor.organization.id == 121 %}<span class="organization"> chez {{ contributor.organizationAlt }}</span>{% endif %}
-                    </span>
-                    {% if contributor.contributorType %}<span class="type">{{ contributor.contributorType.name }}</span>{% endif %}
-                </div>
-            </div>
-            
-            {% if contributor.parentContributor and is_recommended == null %}
-            <div class="recommend">
-                <a href="{{ path('app_page_action', {'slug': app.session.get('directory_page_slug'), 'locale':app.session.get('locale'), 'action': 'recommend' }) }}?id={{ contributor.id }}" class="button">Recommander</a>
+    
+    <div class="view_content">
+        <main>
+            {% if contributor.shortDescription %}
+            <div class="view_block">
+                <h3 class="view_block_name">En une phrase</h3>
+                <div class="view_text">{{ contributor.shortDescription }}</div>
             </div>
             {% endif %}
-        </header>
-
-        <div class="wrapper">
-            <div class="content">
-                <div class="body">
-                    {% if contributor.shortDescription %}
-                    <div class="block short_description">
-                        <h3>En une phrase</h3>
-                        <div class="text">{{ contributor.shortDescription }}</div>
-                    </div>
+            
+            {% if contributor.description %}
+            <div class="view_block">
+                <h3 class="view_block_name">Description</h3>
+                <div class="view_text">{{ contributor.description }}</div>
+            </div>
+            {% endif %}
+            
+            {% if contributor.isContactable %}
+            <div class="view_block">
+                <h3 class="view_block_name">Peut être contacté</h3>
+                <div class="view_text">
+                    {% for contact in contributor.isContactable %}
+                    {% if contact == 'email' %}
+                    <span class="email">Par email : <a href="mailto:{{ contributor.email }}">{{ contributor.email }}</a></span><br/>
                     {% endif %}
-                    
-                    {% if contributor.description %}
-                    <div class="block description">
-                        <h3>Description</h3>
-                        <div class="text">{{ contributor.description }}</div>
-                    </div>
+                    {% if contact == 'phone' %}
+                    <span class="phone">Par téléphone : <a href="tel:{{ contributor.phone }}">{{ contributor.phone }}</a></span><br/>
                     {% endif %}
-
-                    {% if contributor.isContactable %}
-                    <div class="block contact">
-                        <h3>Peut être contacté</h3>
-                        {% for contact in contributor.isContactable %}
-                        {% if contact == 'email' %}
-                        <div class="email">Par email : <a href="mailto:{{ contributor.email }}">{{ contributor.email }}</a></div>
-                        {% endif %}
-
-                        {% if contact == 'phone' %}
-                        <div class="phone">Par téléphone : <a href="tel:{{ contributor.phone }}">{{ contributor.phone }}</a></div>
-                        {% endif %}
-                        {% endfor %}
-                    </div>
-                    {% endif %}
-
-                    {% if contributor.skills %}
-                    <div class="block skills">
-                        <h3>Compétences</h3>
-                        <ul>
-                            {% for skill in contributor.skills %}
-                            <li>{{ skill.name }}</li>
-                            {% endfor %}
-                        </ul>
-                    </div>
-                    {% endif %}
-
-                    {% if recommendations %}
-                    <div class="block recommendations">
-                        <h3>Recommandé par</h3>
-                        <ul>
-                            {% for recommendation in recommendations %}
-                            <li>{{ recommendation.parentContributor.firstname|raw }} {{ recommendation.parentContributor.lastname|raw }}</li>
-                            {% endfor %}
-                        </ul>
-                    </div>
-                    {% endif %}
-
-                    {% if contributor.parentContributor %}
-                    <div class="block parent">
-                         Ajouté par {{ contributor.parentContributor.firstname|raw }} {{ contributor.parentContributor.lastname|raw }}
-                     </div>
-                    {% endif %}
+                    {% endfor %}
                 </div>
             </div>
+            {% endif %}
+        </main>
+        
+        <aside>
+            {% if contributor._thumbnail %}
+            <div class="thumbnail">
+                <img src="/uploads/{{ contributor._thumbnail }}" class="contributor_thumbnail" />
+            </div>
+            {% endif %}
+        </aside>
+    </div>
 
-            <aside>
-                {% if contributor._thumbnail %}
-                <div class="thumbnail">
-                    <img src="/uploads/{{ contributor._thumbnail }}" class="contributor_thumbnail" />
-                </div>
-                {% endif %}
-            </aside>
-        </div>
-    </main>
 </section>
 
 {% endblock %}

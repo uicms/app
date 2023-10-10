@@ -1,7 +1,25 @@
-.form_fields,
-form fieldset {
-    margin-top: calc(var(--default-spacing) / 2);
+section.form .form_content aside {
+    margin-top: var(--default-spacing);
 }
+
+@media only screen and (min-width: 768px) {
+    section.form .form_content {
+        display: flex;
+        margin-top: calc(var(--default-spacing) / 2);
+    }
+    section.form .form_content main {
+        width: 50%;
+        box-sizing: border-box;
+        padding-right: var(--default-spacing);
+        margin-top: 0;
+    }
+    section.form .form_content aside {
+        width: 50%;
+        margin-top: 0;
+    }
+}
+
+/* Objects */
 form textarea,
 form input[type=date],
 form input[type=text],
@@ -25,33 +43,82 @@ form button {
     border: 0;
     height: 30px;
     cursor: pointer;
-    margin-top: var(--default-spacing);
     padding: 0 10px;
     text-transform: uppercase;
 }
-form button.button2 {
+label {
+    margin-bottom: 5px;
+}
+
+
+/* Misc */
+form .form_fields,
+form .form_header,
+form .form_submit_button,
+form .form_collection_entry_add,
+form fieldset {
+    margin-top: calc(var(--default-spacing) / 2);
+}
+form .form-check label {
+    display: inline;
+}
+form .hidden {
+    display: none;
+}
+form .form_field,
+form .form_collection_entry {
+    margin-bottom: calc(var(--default-spacing) / 2);
+}
+form .form_field.form_type_hidden {
+    margin: 0;
+}
+form .form_note {
+    margin-top: calc(var(--default-spacing) / 2);
+}
+form .form_check {
+    display: flex;
+}
+form .form_check input {
+    margin-right: 5px;
+}
+form .form_check label {
+    margin: 0;
+}
+
+
+/* Required */
+legend.required::after,
+label.required::after {
+    content: ' *';
+}
+
+
+/* Collection */
+.form_collection_entry {
+    margin-top: calc(var(--default-spacing) / 2);
+    position: relative;
+    padding: var(--default-spacing);
+    border: 1px solid #ccc;
+    max-width: 600px;
+}
+.form_collection_entry_delete {
+    padding: 0;
+    font-size: 0;
+    background: url('../img/close.svg') no-repeat;
+    background-size: 100%;
+    display: block;
+    width: 15px;
+    height: 15px;
+    position: absolute;
+    right: var(--default-spacing);
+    top: var(--default-spacing);
+}
+.form_collection_entry_add {
     background: #fff;
     color: #000;
     border: 1px solid #000;
 }
 
-legend.required::after,
-label.required::after {
-    content: ' *';
-}
-label {
-    margin-bottom: 5px;
-}
-form .form-check label {
-    display: inline;
-}
-form .form_field,
-form .collection_entry {
-    margin-bottom: calc(var(--default-spacing) / 2);
-}
-form .note {
-    margin-top: calc(var(--default-spacing) / 2);
-}
 
 /* Form types */
 .form_type_file img {
@@ -72,6 +139,12 @@ form .autocomplete_popup .autocomplete_option.selected {
     background: #000 !important;
     color: #fff !important;
     cursor: pointer;
+}
+
+
+/* Translations (disabled) */
+.a2lix_translationsLocales {
+    display: none;
 }
 
 
@@ -105,5 +178,5 @@ form .tab-pane.active {
     display: block;
 }
 form .tab-content {
-    padding-top: var(--default-spacing);
+    margin-top: calc(var(--default-spacing) / 2);
 }
