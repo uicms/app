@@ -6,6 +6,7 @@ use Uicms\App\Repository\BaseRepository;
 
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Persistence\ManagerRegistry;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
@@ -19,8 +20,9 @@ use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
  */
 class AnswerRepository extends BaseRepository
 {
-    public function __construct(Security $security, ManagerRegistry $registry, UserPasswordEncoderInterface $password_encoder, ParameterBagInterface $parameters)
+    public function __construct(Security $security, ManagerRegistry $registry, UserPasswordEncoderInterface $password_encoder, ParameterBagInterface $parameters, SessionInterface $session)
     {
+        $this->session = $session;
         parent::__construct($security, $registry, $password_encoder, $parameters, 'App\Entity\Answer');
     }
 
@@ -29,8 +31,6 @@ class AnswerRepository extends BaseRepository
         $query = parent::getQuery($params);
 
         if($this->mode == 'front') {
-
-            /* Filters */
             if(isset($params['has_not_parent']) && $params['has_not_parent']) {
                 $query->andWhere('t.parent_answer IS NULL OR t.parent_answer=0');  
             }
@@ -44,8 +44,8 @@ class AnswerRepository extends BaseRepository
         $row = parent::setRowData($row, $params);
         
         if($row && $this->mode == 'front') {
-            $row->count_likes = $this->model('LikeAnswer')->count(array('findby'=>['answer'=>$row->getId()]));
-            $row->sub_answers = $this->model('Answer')->mode('front')->getAll(['findby'=>['parent_answer'=>$row]]);
+            $row->count_likes = $this->model('Selection')->count(array('findby'=>['type'=>'like', 'answer'=>$row]));
+            $row->is_liked = $this->model('Selection')->getRow(['findby'=>['type'=>'like', 'answer'=>$row, 'contributor'=>$this->session->get('contributor')]]) ? true : false;
         }
         
         return $row;

@@ -8,6 +8,23 @@ parameters:
     filters:
       multiple: true
       settings:
+        contributor:
+          slug: contributor
+          entity: Contributor
+          i18n: flr_contributor
+          data:
+          - Resource
+          - Contribution
+          - Event
+          param_name: c
+        date:
+          slug: date
+          type: input
+          entity: ~
+          i18n: flr_date
+          data:
+          - Event
+          param_name: d
         topic:
           slug: topic
           entity: Topic
@@ -15,6 +32,8 @@ parameters:
           data:
           - Resource
           - Contribution
+          - Event
+          - Contributor
           param_name: tp
         keyword:
           slug: keyword
@@ -23,6 +42,7 @@ parameters:
           data:
           - Resource
           - Contribution
+          - Event
           param_name: k
         type:
           slug: type
@@ -71,6 +91,8 @@ parameters:
           data:
           - Resource
           - Contribution
+          - Event
+          - Contributor
           param_name: s
     entity:
       App\Entity\Page:
@@ -368,6 +390,19 @@ parameters:
                   label: fld_contributor_repeat_password
                   attr:
                     autocomplete: new-password
+            contributor_grade:
+              name: ContributorGrade
+              type: EntityType
+              namespace: Symfony\Bridge\Doctrine\Form\Type
+              transformer: ""
+              options:
+                help: ""
+                label: ""
+                attr:
+                  class: ""
+                required: false
+                choice_label: translations[fr].name
+                class: App\Entity\ContributorGrade
             contributor_type:
               name: ContributorType
               type: EntityType
@@ -394,24 +429,6 @@ parameters:
                 attr:
                   class: ""
                 required: false
-            email_notification:
-              name: EmailNotification
-              type: ChoiceType
-              namespace: Symfony\Component\Form\Extension\Core\Type
-              transformer: ""
-              public: false
-              public_required: false
-              options:
-                help: ""
-                label: fld_contributor_email_notification
-                attr:
-                  class: ""
-                required: false
-                multiple: true
-                expanded: true
-                choices:
-                  opt_contributor_email_notification_answer: answer
-                  opt_contributor_email_notification_weekly: weekly
             parent_contributor:
               name: ParentContributor
               type: EntityType
@@ -458,6 +475,39 @@ parameters:
                 attr:
                   class: ""
                 required: false
+      App\Entity\ContributorGrade:
+        table_name: contributor_grade
+        name: App\Entity\ContributorGrade
+        name_field: name
+        is_tree: 0
+        order_by: id
+        order_dir: desc
+        form:
+          class: App\Entity\ContributorGrade
+          translations:
+            name:
+              name: Name
+              type: TextType
+              namespace: Symfony\Component\Form\Extension\Core\Type
+              transformer: ""
+              options:
+                help: ""
+                label: ""
+                attr:
+                  class: ""
+                required: false
+          fields:
+            slug:
+              name: Slug
+              type: TextType
+              namespace: Symfony\Component\Form\Extension\Core\Type
+              transformer: ""
+              options:
+                help: ""
+                label: ""
+                attr:
+                  class: ""
+                required: false
       App\Entity\Media:
         table_name: media
         name: App\Entity\Media
@@ -477,7 +527,7 @@ parameters:
               public_required: true
               options:
                 help: ""
-                label: ""
+                label: fld_media_name
                 attr:
                   class: ""
                 required: true
@@ -490,7 +540,7 @@ parameters:
               public_required: true
               options:
                 help: ""
-                label: ""
+                label: fld_media_description
                 attr:
                   class: tinymce
                 required: false
@@ -504,7 +554,7 @@ parameters:
               public_required: true
               options:
                 help: ""
-                label: ""
+                label: fld_media_file
                 attr:
                   class: ""
                 required: false
@@ -516,7 +566,7 @@ parameters:
               transformer: ""
               options:
                 help: ""
-                label: ""
+                label: fld_media_class
                 attr:
                   class: ""
                 required: false
@@ -587,6 +637,7 @@ parameters:
                   Planche contact: medias_grid
                   "Medias \xE0 gauche": medias_left
                   "Medias \xE0 droite": medias_right
+                  "Accord\xE9on": accordion
             class:
               name: Class
               type: TextType
@@ -707,7 +758,7 @@ parameters:
               public_required: true
               options:
                 help: ""
-                label: ""
+                label: fld_resource_name
                 attr:
                   class: ""
                 required: false
@@ -720,7 +771,7 @@ parameters:
               public_required: true
               options:
                 help: ""
-                label: ""
+                label: fld_resource_description
                 attr:
                   class: tinymce
                 required: false
@@ -740,6 +791,19 @@ parameters:
                   En attente: pending
                   "Valid\xE9": validated
                   "Refus\xE9": refused
+            contributor:
+              name: Contributor
+              type: EntityType
+              namespace: Symfony\Bridge\Doctrine\Form\Type
+              transformer: ""
+              options:
+                help: ""
+                label: ""
+                attr:
+                  class: ""
+                required: false
+                choice_label: email
+                class: App\Entity\Contributor
       App\Entity\Keyword:
         table_name: keyword
         name: App\Entity\Keyword
@@ -759,10 +823,10 @@ parameters:
               public_required: true
               options:
                 help: ""
-                label: ""
+                label: fld_keyword_name
                 attr:
-                  class: "autocomplete"
-                  data-source: "Keyword"
+                  class: autocomplete
+                  data-source: Keyword
                   autocomplete: "off"
                 required: true
           fields: []
@@ -854,78 +918,6 @@ parameters:
                 attr:
                   class: ""
                 required: false
-      App\Entity\LinkBlockCollectionPage:
-        table_name: link_block_collection_page
-        name: App\Entity\Page
-        name_field: id
-        order_by: id
-        order_dir: id
-        link:
-        - App\Entity\BlockCollection
-        - App\Entity\Page
-      App\Entity\LinkResourceMedia:
-        table_name: link_resource_media
-        name: App\Entity\Media
-        name_field: id
-        order_by: id
-        order_dir: id
-        link:
-        - App\Entity\Resource
-        - App\Entity\Media
-      App\Entity\LinkPageBlock:
-        table_name: link_page_block
-        name: App\Entity\Block
-        name_field: id
-        order_by: id
-        order_dir: id
-        link:
-        - App\Entity\Page
-        - App\Entity\Block
-      App\Entity\LinkBlockMedia:
-        table_name: link_block_media
-        name: App\Entity\Media
-        name_field: id
-        order_by: id
-        order_dir: id
-        link:
-        - App\Entity\Block
-        - App\Entity\Media
-      App\Entity\LinkPageMedia:
-        table_name: link_page_media
-        name: App\Entity\Media
-        name_field: id
-        order_by: id
-        order_dir: id
-        link:
-        - App\Entity\Page
-        - App\Entity\Media
-      App\Entity\LinkResourceTopic:
-        table_name: link_resource_topic
-        name: App\Entity\Topic
-        name_field: id
-        order_by: id
-        order_dir: id
-        link:
-        - App\Entity\Resource
-        - App\Entity\Topic
-      App\Entity\LinkResourceKeyword:
-        table_name: link_resource_keyword
-        name: App\Entity\Keyword
-        name_field: id
-        order_by: id
-        order_dir: id
-        link:
-        - App\Entity\Resource
-        - App\Entity\Keyword
-      App\Entity\LinkContributorTopic:
-        table_name: link_contributor_topic
-        name: App\Entity\Topic
-        name_field: id
-        order_by: id
-        order_dir: id
-        link:
-        - App\Entity\Contributor
-        - App\Entity\Topic
       App\Entity\Contribution:
         table_name: contribution
         name: App\Entity\Contribution
@@ -1113,11 +1105,13 @@ parameters:
               type: EntityType
               namespace: Symfony\Bridge\Doctrine\Form\Type
               transformer: ""
+              public: true
+              public_required: false
               options:
                 help: ""
                 label: ""
                 attr:
-                  class: ""
+                  class: hidden
                 required: false
                 choice_label: id
                 class: App\Entity\Answer
@@ -1132,61 +1126,6 @@ parameters:
                 attr:
                   class: ""
                 required: false
-      App\Entity\LinkContributionKeyword:
-        table_name: link_contribution_keyword
-        name: App\Entity\Keyword
-        name_field: id
-        order_by: id
-        order_dir: id
-        link:
-        - App\Entity\Contribution
-        - App\Entity\Keyword
-      App\Entity\LinkContributionTopic:
-        table_name: link_contribution_topic
-        name: App\Entity\Topic
-        name_field: id
-        order_by: id
-        order_dir: id
-        link:
-        - App\Entity\Contribution
-        - App\Entity\Topic
-      App\Entity\Selection:
-        table_name: selection
-        name: App\Entity\Selection
-        name_field: contribution
-        is_tree: 0
-        order_by: id
-        order_dir: desc
-        form:
-          class: App\Entity\Selection
-          translations: []
-          fields:
-            contribution:
-              name: Contribution
-              type: EntityType
-              namespace: Symfony\Bridge\Doctrine\Form\Type
-              transformer: ""
-              options:
-                help: ""
-                label: ""
-                attr:
-                  class: ""
-                required: false
-                choice_label: name
-                class: App\Entity\Contribution
-            contributor:
-              name: Contributor
-              type: EntityType
-              namespace: Symfony\Bridge\Doctrine\Form\Type
-              transformer: ""
-              options:
-                help: ""
-                label: ""
-                attr:
-                  class: ""
-                required: false
-                choice_label: email
-                class: App\Entity\Contributor
       App\Entity\ContributionStatus:
         table_name: contribution_status
         name: App\Entity\ContributionStatus
@@ -1275,6 +1214,225 @@ parameters:
                   class: ""
                 required: false
           fields: []
+      App\Entity\Event:
+        table_name: event
+        name: App\Entity\Event
+        name_field: name
+        is_tree: 0
+        order_by: id
+        order_dir: desc
+        form:
+          class: App\Entity\Event
+          translations:
+            name:
+              name: Name
+              type: TextType
+              namespace: Symfony\Component\Form\Extension\Core\Type
+              transformer: ""
+              public: true
+              public_required: true
+              options:
+                help: ""
+                label: fld_event_name
+                attr:
+                  class: ""
+                required: false
+            description:
+              name: Description
+              type: TextareaType
+              namespace: Symfony\Component\Form\Extension\Core\Type
+              transformer: ""
+              public: true
+              public_required: true
+              options:
+                help: ""
+                label: fld_event_description
+                attr:
+                  class: tinymce
+                required: false
+          fields:
+            date_begin:
+              name: DateBegin
+              type: DateType
+              namespace: Symfony\Component\Form\Extension\Core\Type
+              transformer: ""
+              public: true
+              public_required: true
+              options:
+                help: ""
+                label: fld_event_date_begin
+                attr:
+                  class: ""
+                required: false
+                widget: single_text
+            date_end:
+              name: DateEnd
+              type: DateType
+              namespace: Symfony\Component\Form\Extension\Core\Type
+              transformer: ""
+              public: true
+              public_required: true
+              options:
+                help: ""
+                label: fld_event_date_end
+                attr:
+                  class: ""
+                required: false
+                widget: single_text
+            time_begin:
+              name: TimeBegin
+              type: TimeType
+              namespace: Symfony\Component\Form\Extension\Core\Type
+              transformer: ""
+              public: true
+              public_required: true
+              options:
+                help: ""
+                label: fld_event_time_begin
+                attr:
+                  class: ""
+                required: false
+                widget: single_text
+            time_end:
+              name: TimeEnd
+              type: TimeType
+              namespace: Symfony\Component\Form\Extension\Core\Type
+              transformer: ""
+              public: true
+              public_required: true
+              options:
+                help: ""
+                label: fld_event_time_end
+                attr:
+                  class: ""
+                required: false
+                widget: single_text
+            contributor:
+              name: Contributor
+              type: EntityType
+              namespace: Symfony\Bridge\Doctrine\Form\Type
+              transformer: ""
+              options:
+                help: ""
+                label: ""
+                attr:
+                  class: ""
+                required: false
+                choice_label: email
+                class: App\Entity\Contributor
+      App\Entity\Venue:
+        table_name: venue
+        name: App\Entity\Venue
+        name_field: name
+        is_tree: 0
+        order_by: id
+        order_dir: desc
+        form:
+          class: App\Entity\Venue
+          translations:
+            name:
+              name: Name
+              type: TextType
+              namespace: Symfony\Component\Form\Extension\Core\Type
+              transformer: ""
+              public: true
+              public_required: true
+              options:
+                help: ""
+                label: fld_venue_name
+                attr:
+                  class: ""
+                required: false
+            description:
+              name: Description
+              type: TextareaType
+              namespace: Symfony\Component\Form\Extension\Core\Type
+              transformer: ""
+              public: true
+              public_required: true
+              options:
+                help: ""
+                label: fld_venue_description
+                attr:
+                  class: tinymce
+                required: false
+          fields:
+            latitude:
+              name: Latitude
+              type: TextType
+              namespace: Symfony\Component\Form\Extension\Core\Type
+              transformer: ""
+              options:
+                help: ""
+                label: fld_venue_latitude
+                attr:
+                  class: ""
+                required: false
+            longitude:
+              name: Longitude
+              type: TextType
+              namespace: Symfony\Component\Form\Extension\Core\Type
+              transformer: ""
+              options:
+                help: ""
+                label: fld_venue_longitude
+                attr:
+                  class: ""
+                required: false
+      App\Entity\LinkEventVenue:
+        table_name: link_event_venue
+        name: App\Entity\Venue
+        name_field: id
+        order_by: id
+        order_dir: id
+        link:
+        - App\Entity\Event
+        - App\Entity\Venue
+      App\Entity\LinkEventContributor:
+        table_name: link_event_contributor
+        name: App\Entity\Contributor
+        name_field: id
+        order_by: id
+        order_dir: id
+        link:
+        - App\Entity\Event
+        - App\Entity\Contributor
+      App\Entity\LinkEventMedia:
+        table_name: link_event_media
+        name: App\Entity\Media
+        name_field: id
+        order_by: id
+        order_dir: id
+        link:
+        - App\Entity\Event
+        - App\Entity\Media
+      App\Entity\LinkEventTopic:
+        table_name: link_event_topic
+        name: App\Entity\Topic
+        name_field: id
+        order_by: id
+        order_dir: id
+        link:
+        - App\Entity\Event
+        - App\Entity\Topic
+      App\Entity\LinkEventKeyword:
+        table_name: link_event_keyword
+        name: App\Entity\Keyword
+        name_field: id
+        order_by: id
+        order_dir: id
+        link:
+        - App\Entity\Event
+        - App\Entity\Keyword
+      App\Entity\LinkVenueMedia:
+        table_name: link_venue_media
+        name: App\Entity\Media
+        name_field: id
+        order_by: id
+        order_dir: id
+        link:
+        - App\Entity\Venue
+        - App\Entity\Media
       App\Entity\LinkContributionResource:
         table_name: link_contribution_resource
         name: App\Entity\Resource
@@ -1284,17 +1442,134 @@ parameters:
         link:
         - App\Entity\Contribution
         - App\Entity\Resource
-      App\Entity\LikeContribution:
-        table_name: like_contribution
-        name: App\Entity\LikeContribution
-        name_field: contribution
+      App\Entity\LinkContributionKeyword:
+        table_name: link_contribution_keyword
+        name: App\Entity\Keyword
+        name_field: id
+        order_by: id
+        order_dir: id
+        link:
+        - App\Entity\Contribution
+        - App\Entity\Keyword
+      App\Entity\LinkContributionTopic:
+        table_name: link_contribution_topic
+        name: App\Entity\Topic
+        name_field: id
+        order_by: id
+        order_dir: id
+        link:
+        - App\Entity\Contribution
+        - App\Entity\Topic
+      App\Entity\LinkBlockCollectionPage:
+        table_name: link_block_collection_page
+        name: App\Entity\Page
+        name_field: id
+        order_by: id
+        order_dir: id
+        link:
+        - App\Entity\BlockCollection
+        - App\Entity\Page
+      App\Entity\LinkResourceMedia:
+        table_name: link_resource_media
+        name: App\Entity\Media
+        name_field: id
+        order_by: id
+        order_dir: id
+        link:
+        - App\Entity\Resource
+        - App\Entity\Media
+      App\Entity\LinkPageBlock:
+        table_name: link_page_block
+        name: App\Entity\Block
+        name_field: id
+        order_by: id
+        order_dir: id
+        link:
+        - App\Entity\Page
+        - App\Entity\Block
+      App\Entity\LinkBlockMedia:
+        table_name: link_block_media
+        name: App\Entity\Media
+        name_field: id
+        order_by: id
+        order_dir: id
+        link:
+        - App\Entity\Block
+        - App\Entity\Media
+      App\Entity\LinkPageMedia:
+        table_name: link_page_media
+        name: App\Entity\Media
+        name_field: id
+        order_by: id
+        order_dir: id
+        link:
+        - App\Entity\Page
+        - App\Entity\Media
+      App\Entity\LinkResourceTopic:
+        table_name: link_resource_topic
+        name: App\Entity\Topic
+        name_field: id
+        order_by: id
+        order_dir: id
+        link:
+        - App\Entity\Resource
+        - App\Entity\Topic
+      App\Entity\LinkResourceKeyword:
+        table_name: link_resource_keyword
+        name: App\Entity\Keyword
+        name_field: id
+        order_by: id
+        order_dir: id
+        link:
+        - App\Entity\Resource
+        - App\Entity\Keyword
+      App\Entity\LinkContributorTopic:
+        table_name: link_contributor_topic
+        name: App\Entity\Topic
+        name_field: id
+        order_by: id
+        order_dir: id
+        link:
+        - App\Entity\Contributor
+        - App\Entity\Topic
+      App\Entity\Selection:
+        table_name: selection
+        name: App\Entity\Selection
+        name_field: type
         is_tree: 0
         order_by: id
         order_dir: desc
         form:
-          class: App\Entity\LikeContribution
+          class: App\Entity\Selection
           translations: []
           fields:
+            type:
+              name: Type
+              type: ChoiceType
+              namespace: Symfony\Component\Form\Extension\Core\Type
+              transformer: ""
+              options:
+                help: ""
+                label: ""
+                attr:
+                  class: ""
+                required: false
+                choices:
+                  Like: like
+                  "S\xE9lection": selection
+            contributor:
+              name: Contributor
+              type: EntityType
+              namespace: Symfony\Bridge\Doctrine\Form\Type
+              transformer: ""
+              options:
+                help: ""
+                label: ""
+                attr:
+                  class: ""
+                required: false
+                choice_label: email
+                class: App\Entity\Contributor
             contribution:
               name: Contribution
               type: EntityType
@@ -1308,30 +1583,6 @@ parameters:
                 required: false
                 choice_label: name
                 class: App\Entity\Contribution
-            contributor:
-              name: Contributor
-              type: EntityType
-              namespace: Symfony\Bridge\Doctrine\Form\Type
-              transformer: ""
-              options:
-                help: ""
-                label: ""
-                attr:
-                  class: ""
-                required: false
-                choice_label: email
-                class: App\Entity\Contributor
-      App\Entity\LikeAnswer:
-        table_name: like_answer
-        name: App\Entity\LikeAnswer
-        name_field: answer
-        is_tree: 0
-        order_by: id
-        order_dir: desc
-        form:
-          class: App\Entity\LikeAnswer
-          translations: []
-          fields:
             answer:
               name: Answer
               type: EntityType
@@ -1343,22 +1594,17 @@ parameters:
                 attr:
                   class: ""
                 required: false
-                choice_label: description
+                choice_label: contributor.email
                 class: App\Entity\Answer
-            contributor:
-              name: Contributor
-              type: EntityType
-              namespace: Symfony\Bridge\Doctrine\Form\Type
-              transformer: ""
-              options:
-                help: ""
-                label: ""
-                attr:
-                  class: ""
-                required: false
-                choice_label: email
-                class: App\Entity\Contributor
-    
+      App\Entity\LinkContributorGradePage:
+        table_name: link_contributor_grade_page
+        name: App\Entity\Page
+        name_field: id
+        order_by: id
+        order_dir: id
+        link:
+        - App\Entity\ContributorGrade
+        - App\Entity\Page
     admin:
       vars:
         limit: 50
@@ -1406,6 +1652,20 @@ parameters:
             entity_name: App\Entity\Resource
           params:
             display: thumbnails
+        events:
+          controller: Uicms\Admin\Controller\Editor
+          action: index
+          slug: events
+          arguments:
+            entity_name: App\Entity\Event
+          params: []
+        venues:
+          controller: Uicms\Admin\Controller\Editor
+          action: index
+          slug: venues
+          arguments:
+            entity_name: App\Entity\Venue
+          params: []
         medias:
           controller: Uicms\Admin\Controller\Editor
           action: index
@@ -1428,48 +1688,6 @@ parameters:
           arguments:
             entity_name: App\Entity\BlockCollection
           params: []
-        contributor_types:
-          controller: Uicms\Admin\Controller\Editor
-          action: index
-          slug: contributor_types
-          arguments:
-            entity_name: App\Entity\ContributorType
-          params: []
-        contribution_status:
-          controller: Uicms\Admin\Controller\Editor
-          action: index
-          slug: contribution_status
-          arguments:
-            entity_name: App\Entity\ContributionStatus
-          params: []
-        contribution_types:
-          controller: Uicms\Admin\Controller\Editor
-          action: index
-          slug: contribution_types
-          arguments:
-            entity_name: App\Entity\ContributionType
-          params: []
-        contribution_objects:
-          controller: Uicms\Admin\Controller\Editor
-          action: index
-          slug: contribution_objects
-          arguments:
-            entity_name: App\Entity\ContributionObject
-          params: []
-        like_contributions:
-          controller: Uicms\Admin\Controller\Editor
-          action: index
-          slug: like_contributions
-          arguments:
-            entity_name: App\Entity\LikeContribution
-          params: []
-        like_answers:
-          controller: Uicms\Admin\Controller\Editor
-          action: index
-          slug: like_answers
-          arguments:
-            entity_name: App\Entity\LikeAnswer
-          params: []
         keywords:
           controller: Uicms\Admin\Controller\Editor
           action: index
@@ -1483,13 +1701,6 @@ parameters:
           slug: topics
           arguments:
             entity_name: App\Entity\Topic
-          params: []
-        selections:
-          controller: Uicms\Admin\Controller\Editor
-          action: index
-          slug: selections
-          arguments:
-            entity_name: App\Entity\Selection
           params: []
         pages:
           controller: Uicms\Admin\Controller\Editor
@@ -1524,10 +1735,54 @@ parameters:
           arguments:
             entity_name: App\Entity\User
           params: ~
+        contributor_grades:
+          controller: Uicms\Admin\Controller\Editor
+          action: index
+          slug: contributor_grades
+          arguments:
+            entity_name: App\Entity\ContributorGrade
+          params: []
+        contributor_types:
+          controller: Uicms\Admin\Controller\Editor
+          action: index
+          slug: contributor_types
+          arguments:
+            entity_name: App\Entity\ContributorType
+          params: []
+        contribution_types:
+          controller: Uicms\Admin\Controller\Editor
+          action: index
+          slug: contribution_types
+          arguments:
+            entity_name: App\Entity\ContributionType
+          params: []
+        contribution_status:
+          controller: Uicms\Admin\Controller\Editor
+          action: index
+          slug: contribution_status
+          arguments:
+            entity_name: App\Entity\ContributionStatus
+          params: []
+        contribution_objects:
+          controller: Uicms\Admin\Controller\Editor
+          action: index
+          slug: contribution_objects
+          arguments:
+            entity_name: App\Entity\ContributionObject
+          params: []
         action:
           controller: Uicms\Admin\Controller\Action
           action: index
           slug: action
           display: false
           params: ~
+        selections:
+          controller: Uicms\Admin\Controller\Editor
+          action: index
+          slug: selections
+          arguments:
+            entity_name: App\Entity\Selection
+          params: []
+          displayed_fields:
+          - contributor
 ...

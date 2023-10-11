@@ -93,11 +93,19 @@ class Topic implements TranslatableInterface
      */
     private $link_resource_topic;
 
+/**
+	 * @ORM\OneToMany(targetEntity="App\Entity\LinkEventTopic", mappedBy="topic")
+	 */
+	private $link_event_topic;
+
+
+
     public function __construct()
     {
         $this->link_contribution_topic = new ArrayCollection();
         $this->link_contributor_topic = new ArrayCollection();
         $this->link_resource_topic = new ArrayCollection();
+        $this->link_event_topic = new ArrayCollection();
     }
 
     public function getCreated(): ?\DateTimeInterface
@@ -292,6 +300,36 @@ class Topic implements TranslatableInterface
             // set the owning side to null (unless already changed)
             if ($linkResourceTopic->getTopic() === $this) {
                 $linkResourceTopic->setTopic(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|LinkEventTopic[]
+     */
+    public function getLinkEventTopic(): Collection
+    {
+        return $this->link_event_topic;
+    }
+
+    public function addLinkEventTopic(LinkEventTopic $linkEventTopic): self
+    {
+        if (!$this->link_event_topic->contains($linkEventTopic)) {
+            $this->link_event_topic[] = $linkEventTopic;
+            $linkEventTopic->setTopic($this);
+        }
+
+        return $this;
+    }
+
+    public function removeLinkEventTopic(LinkEventTopic $linkEventTopic): self
+    {
+        if ($this->link_event_topic->removeElement($linkEventTopic)) {
+            // set the owning side to null (unless already changed)
+            if ($linkEventTopic->getTopic() === $this) {
+                $linkEventTopic->setTopic(null);
             }
         }
 

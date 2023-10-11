@@ -33,24 +33,23 @@ class ContributionRepository extends BaseRepository
 
         if($this->mode == 'front') {
 
-            if(isset($params['linked_to_topics']) && (array)$params['linked_to_topics']) {
-                $query->innerJoin('t.link_contribution_topic', 'ltp', 'WITH', 'ltp.contribution=t.id');
-                $condition = [];
-                foreach($params['linked_to_topics'] as $i=>$topic) {
-                    $condition[] = 'ltp.topic=' . $topic->getId();
-                }
-                $query->andWhere(implode(' OR ', $condition));        
-            }
-
             /* Filters */
             if($contributor = $this->session->get('contributor')) {
                 if(isset($params['sl']) && $params['sl']) {
-                    $query->innerJoin('t.selection', 'lsl', 'WITH', 'lsl.contribution=t.id');     
-                    $query->andWhere('lsl.contributor=' . $contributor->getId());   
+                    $query->innerJoin('t.selection', 'sl', 'WITH', "sl.contribution=t.id");
+                    $query->andWhere("sl.type='selection' AND sl.contributor=" . $contributor->getId());   
                 }
                 if(isset($params['mc']) && $params['mc']) {   
-                    $query->andWhere('t.contributor=' . $contributor->getId());   
+                    $query->andWhere('t.contributor=' . $contributor->getId());
                 }
+            }
+            
+            if(isset($params['c']) && (array)$params['c']) {
+                $condition = [];
+                foreach($params['c'] as $i=>$c) {
+                    $condition[] = "t.contributor=" . (int)$c;
+                }
+                $query->andWhere(implode(' AND ', $condition));
             }
             
             if(isset($params['t']) && (array)$params['t']) {
@@ -66,7 +65,7 @@ class ContributionRepository extends BaseRepository
                 foreach($params['st'] as $i=>$st) {
                     $condition[] = "t.contribution_status=" . (int)$st;
                 }
-                $query->andWhere(implode(' AND ', $condition));             
+                $query->andWhere(implode(' AND ', $condition));
             }
 
             if(isset($params['o']) && (array)$params['o']) {
@@ -74,7 +73,7 @@ class ContributionRepository extends BaseRepository
                 foreach($params['o'] as $i=>$o) {
                     $condition[] = "t.contribution_object=" . (int)$o;
                 }
-                $query->andWhere(implode(' AND ', $condition));             
+                $query->andWhere(implode(' AND ', $condition));
             }
 
             if(isset($params['tp']) && (array)$params['tp']) {
@@ -83,7 +82,7 @@ class ContributionRepository extends BaseRepository
                 foreach($params['tp'] as $i=>$tp) {
                     $condition[] = 'ltp.topic=' . (int)$tp;
                 }
-                $query->andWhere(implode(' AND ', $condition));             
+                $query->andWhere(implode(' AND ', $condition));
             }
 
             if(isset($params['k']) && (array)$params['k']) {
@@ -138,21 +137,16 @@ class ContributionRepository extends BaseRepository
 		$row = parent::setRowData($row, $params);
         
         if($row && $this->mode == 'front') {
+            
+            # Linked data
             $row->topics = $this->model('Topic')->getAll(array('linked_to'=>'Contribution', 'linked_to_id'=>$row->getId()));
             $row->keywords = $this->model('Keyword')->getAll(array('linked_to'=>'Contribution', 'linked_to_id'=>$row->getId()));
-            if(($row->resources = $this->model('Resource')->getAll(array('linked_to'=>'Contribution', 'linked_to_id'=>$row->getId()))) && isset($row->resources[0]->_thumbnail) && $row->resources[0]->_thumbnail) {
-                $row->_thumbnail = $row->resources[0]->_thumbnail;
-            }
+            
+            # Selection & counting
             $row->count_answers = $this->model('Answer')->count(array('findby'=>['contribution'=>$row->getId()]));
-            $row->is_selected = null;
-            $row->count_likes = $this->model('LikeContribution')->count(array('findby'=>['contribution'=>$row->getId()]));
-
-            # Selection
-            $contributor = $this->session->get('contributor');
-            $row->is_selected = false;
-            if($this->model('Selection')->getRow(['findby'=>['contributor'=>$contributor, 'contribution'=>$row]])) {
-                $contribution->is_selected = true;
-            }
+            $row->count_likes = $this->model('Selection')->count(array('findby'=>['type'=>'like', 'contribution'=>$row]));
+            $row->is_selected = $this->model('Selection')->getRow(['findby'=>['type'=>'selection', 'contribution'=>$row, 'contributor'=>$this->session->get('contributor')]]) ? true : false;
+            $row->is_liked = $this->model('Selection')->getRow(['findby'=>['type'=>'like', 'contribution'=>$row, 'contributor'=>$this->session->get('contributor')]]) ? true : false;
 
             # Status depending on date
             $today = new \DateTime();

@@ -156,7 +156,7 @@ CREATE TABLE `block_collection_translation` (
   UNIQUE KEY `block_collection_translation_unique_translation` (`translatable_id`,`locale`),
   KEY `IDX_3D12769E2C2AC5D3` (`translatable_id`),
   CONSTRAINT `FK_3D12769E2C2AC5D3` FOREIGN KEY (`translatable_id`) REFERENCES `block_collection` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -185,7 +185,7 @@ CREATE TABLE `block_translation` (
   UNIQUE KEY `block_translation_unique_translation` (`translatable_id`,`locale`),
   KEY `IDX_6E6410B42C2AC5D3` (`translatable_id`),
   CONSTRAINT `FK_6E6410B42C2AC5D3` FOREIGN KEY (`translatable_id`) REFERENCES `block` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=46 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -274,7 +274,7 @@ CREATE TABLE `contribution_object` (
   KEY `IDX_8DA70A47727ACA70` (`parent_id`),
   CONSTRAINT `FK_8DA70A47727ACA70` FOREIGN KEY (`parent_id`) REFERENCES `contribution_object` (`id`),
   CONSTRAINT `FK_8DA70A47A76ED395` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -283,7 +283,6 @@ CREATE TABLE `contribution_object` (
 
 LOCK TABLES `contribution_object` WRITE;
 /*!40000 ALTER TABLE `contribution_object` DISABLE KEYS */;
-INSERT INTO `contribution_object` VALUES (1,1,NULL,'2023-09-18 21:19:04','2023-09-18 21:19:04','2023-09-18 21:19:04',0,0,0,0),(2,1,NULL,'2023-09-18 21:19:19','2023-09-18 21:19:19','2023-09-18 21:19:19',0,0,0,0),(3,1,NULL,'2023-09-18 21:19:28','2023-09-18 21:19:28','2023-09-18 21:19:28',0,0,0,0);
 /*!40000 ALTER TABLE `contribution_object` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -303,7 +302,7 @@ CREATE TABLE `contribution_object_translation` (
   UNIQUE KEY `contribution_object_translation_unique_translation` (`translatable_id`,`locale`),
   KEY `IDX_901E07DA2C2AC5D3` (`translatable_id`),
   CONSTRAINT `FK_901E07DA2C2AC5D3` FOREIGN KEY (`translatable_id`) REFERENCES `contribution_object` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -312,7 +311,6 @@ CREATE TABLE `contribution_object_translation` (
 
 LOCK TABLES `contribution_object_translation` WRITE;
 /*!40000 ALTER TABLE `contribution_object_translation` DISABLE KEYS */;
-INSERT INTO `contribution_object_translation` VALUES (1,1,'Compétences externes','fr'),(2,2,'Ressources','fr'),(3,3,'Conseils','fr');
 /*!40000 ALTER TABLE `contribution_object_translation` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -340,7 +338,7 @@ CREATE TABLE `contribution_status` (
   KEY `IDX_5E0AC4B7727ACA70` (`parent_id`),
   CONSTRAINT `FK_5E0AC4B7727ACA70` FOREIGN KEY (`parent_id`) REFERENCES `contribution_status` (`id`),
   CONSTRAINT `FK_5E0AC4B7A76ED395` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -349,7 +347,6 @@ CREATE TABLE `contribution_status` (
 
 LOCK TABLES `contribution_status` WRITE;
 /*!40000 ALTER TABLE `contribution_status` DISABLE KEYS */;
-INSERT INTO `contribution_status` VALUES (1,1,NULL,'2023-09-18 21:18:09','2023-09-18 21:18:09','2023-09-18 21:18:09',0,0,0,0,'closed'),(2,1,NULL,'2023-09-18 21:18:23','2023-09-18 21:18:23','2023-09-18 21:18:23',0,0,0,0,'pending'),(3,1,NULL,'2023-09-18 21:18:36','2023-09-18 21:18:36','2023-09-18 21:18:36',0,0,0,0,'solved');
 /*!40000 ALTER TABLE `contribution_status` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -378,7 +375,6 @@ CREATE TABLE `contribution_status_translation` (
 
 LOCK TABLES `contribution_status_translation` WRITE;
 /*!40000 ALTER TABLE `contribution_status_translation` DISABLE KEYS */;
-INSERT INTO `contribution_status_translation` VALUES (1,1,'Close','fr'),(2,2,'En cours','fr'),(3,3,'Résolue','fr');
 /*!40000 ALTER TABLE `contribution_status_translation` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -406,7 +402,7 @@ CREATE TABLE `contribution_type` (
   KEY `IDX_4F0C2371727ACA70` (`parent_id`),
   CONSTRAINT `FK_4F0C2371727ACA70` FOREIGN KEY (`parent_id`) REFERENCES `contribution_type` (`id`),
   CONSTRAINT `FK_4F0C2371A76ED395` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -415,7 +411,6 @@ CREATE TABLE `contribution_type` (
 
 LOCK TABLES `contribution_type` WRITE;
 /*!40000 ALTER TABLE `contribution_type` DISABLE KEYS */;
-INSERT INTO `contribution_type` VALUES (1,1,NULL,'2023-09-18 21:17:01','2023-09-18 21:17:01','2023-09-18 21:17:01',0,0,0,0,'request'),(2,1,NULL,'2023-09-18 21:17:24','2023-09-18 21:17:24','2023-09-18 21:17:24',0,0,0,0,'offer');
 /*!40000 ALTER TABLE `contribution_type` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -444,7 +439,6 @@ CREATE TABLE `contribution_type_translation` (
 
 LOCK TABLES `contribution_type_translation` WRITE;
 /*!40000 ALTER TABLE `contribution_type_translation` DISABLE KEYS */;
-INSERT INTO `contribution_type_translation` VALUES (1,1,'Demande','fr'),(2,2,'Proposition','fr');
 /*!40000 ALTER TABLE `contribution_type_translation` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -481,16 +475,18 @@ CREATE TABLE `contributor` (
   `short_description` varchar(255) DEFAULT NULL,
   `description` longtext DEFAULT NULL,
   `is_contactable` longtext DEFAULT NULL COMMENT '(DC2Type:array)',
-  `email_notification` longtext DEFAULT NULL COMMENT '(DC2Type:array)',
+  `contributor_grade_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `IDX_DA6F9793A76ED395` (`user_id`),
   KEY `IDX_DA6F9793727ACA70` (`parent_id`),
   KEY `IDX_DA6F9793834C39` (`contributor_type_id`),
   KEY `IDX_DA6F979364C4D75C` (`parent_contributor_id`),
+  KEY `IDX_DA6F9793C8DF249E` (`contributor_grade_id`),
   CONSTRAINT `FK_DA6F979364C4D75C` FOREIGN KEY (`parent_contributor_id`) REFERENCES `contributor` (`id`),
   CONSTRAINT `FK_DA6F9793727ACA70` FOREIGN KEY (`parent_id`) REFERENCES `contributor` (`id`),
   CONSTRAINT `FK_DA6F9793834C39` FOREIGN KEY (`contributor_type_id`) REFERENCES `contributor_type` (`id`),
-  CONSTRAINT `FK_DA6F9793A76ED395` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`)
+  CONSTRAINT `FK_DA6F9793A76ED395` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`),
+  CONSTRAINT `FK_DA6F9793C8DF249E` FOREIGN KEY (`contributor_grade_id`) REFERENCES `contributor_grade` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -501,6 +497,70 @@ CREATE TABLE `contributor` (
 LOCK TABLES `contributor` WRITE;
 /*!40000 ALTER TABLE `contributor` DISABLE KEYS */;
 /*!40000 ALTER TABLE `contributor` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `contributor_grade`
+--
+
+DROP TABLE IF EXISTS `contributor_grade`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `contributor_grade` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `user_id` int(11) DEFAULT NULL,
+  `parent_id` int(11) DEFAULT NULL,
+  `created` datetime DEFAULT NULL,
+  `modified` datetime DEFAULT NULL,
+  `published` datetime DEFAULT NULL,
+  `is_concealed` tinyint(1) NOT NULL,
+  `is_locked` tinyint(1) NOT NULL,
+  `is_dir` tinyint(1) NOT NULL,
+  `position` int(11) NOT NULL,
+  `slug` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `IDX_C8ED8AF6A76ED395` (`user_id`),
+  KEY `IDX_C8ED8AF6727ACA70` (`parent_id`),
+  CONSTRAINT `FK_C8ED8AF6727ACA70` FOREIGN KEY (`parent_id`) REFERENCES `contributor_grade` (`id`),
+  CONSTRAINT `FK_C8ED8AF6A76ED395` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `contributor_grade`
+--
+
+LOCK TABLES `contributor_grade` WRITE;
+/*!40000 ALTER TABLE `contributor_grade` DISABLE KEYS */;
+/*!40000 ALTER TABLE `contributor_grade` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `contributor_grade_translation`
+--
+
+DROP TABLE IF EXISTS `contributor_grade_translation`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `contributor_grade_translation` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `translatable_id` int(11) DEFAULT NULL,
+  `name` varchar(255) DEFAULT NULL,
+  `locale` varchar(5) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `contributor_grade_translation_unique_translation` (`translatable_id`,`locale`),
+  KEY `IDX_1529F6EF2C2AC5D3` (`translatable_id`),
+  CONSTRAINT `FK_1529F6EF2C2AC5D3` FOREIGN KEY (`translatable_id`) REFERENCES `contributor_grade` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `contributor_grade_translation`
+--
+
+LOCK TABLES `contributor_grade_translation` WRITE;
+/*!40000 ALTER TABLE `contributor_grade_translation` DISABLE KEYS */;
+/*!40000 ALTER TABLE `contributor_grade_translation` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -527,7 +587,7 @@ CREATE TABLE `contributor_type` (
   KEY `IDX_5F960267727ACA70` (`parent_id`),
   CONSTRAINT `FK_5F960267727ACA70` FOREIGN KEY (`parent_id`) REFERENCES `contributor_type` (`id`),
   CONSTRAINT `FK_5F960267A76ED395` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -536,7 +596,6 @@ CREATE TABLE `contributor_type` (
 
 LOCK TABLES `contributor_type` WRITE;
 /*!40000 ALTER TABLE `contributor_type` DISABLE KEYS */;
-INSERT INTO `contributor_type` VALUES (1,1,NULL,'2023-09-09 13:08:57','2023-09-09 13:09:04','2023-09-09 13:08:57',0,0,0,0,'admin'),(2,1,NULL,'2023-09-09 13:09:11','2023-09-09 13:09:11','2023-09-09 13:09:11',0,0,0,0,'member'),(3,1,NULL,'2023-09-09 13:09:19','2023-09-09 13:09:19','2023-09-09 13:09:19',0,0,0,0,'guest');
 /*!40000 ALTER TABLE `contributor_type` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -565,7 +624,6 @@ CREATE TABLE `contributor_type_translation` (
 
 LOCK TABLES `contributor_type_translation` WRITE;
 /*!40000 ALTER TABLE `contributor_type_translation` DISABLE KEYS */;
-INSERT INTO `contributor_type_translation` VALUES (1,1,'Administrateur','fr'),(2,2,'Membre','fr'),(3,3,'Invité','fr');
 /*!40000 ALTER TABLE `contributor_type_translation` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -663,6 +721,77 @@ INSERT INTO `email_translation` VALUES (1,1,'Nouveau mot de passe','Bonjour,<br 
 UNLOCK TABLES;
 
 --
+-- Table structure for table `event`
+--
+
+DROP TABLE IF EXISTS `event`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `event` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `user_id` int(11) DEFAULT NULL,
+  `parent_id` int(11) DEFAULT NULL,
+  `created` datetime DEFAULT NULL,
+  `modified` datetime DEFAULT NULL,
+  `published` datetime DEFAULT NULL,
+  `is_concealed` tinyint(1) NOT NULL,
+  `is_locked` tinyint(1) NOT NULL,
+  `is_dir` tinyint(1) NOT NULL,
+  `position` int(11) NOT NULL,
+  `date_begin` date DEFAULT NULL,
+  `date_end` date DEFAULT NULL,
+  `time_begin` time DEFAULT NULL,
+  `time_end` time DEFAULT NULL,
+  `contributor_id` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `IDX_3BAE0AA7A76ED395` (`user_id`),
+  KEY `IDX_3BAE0AA7727ACA70` (`parent_id`),
+  KEY `IDX_3BAE0AA77A19A357` (`contributor_id`),
+  CONSTRAINT `FK_3BAE0AA7727ACA70` FOREIGN KEY (`parent_id`) REFERENCES `event` (`id`),
+  CONSTRAINT `FK_3BAE0AA77A19A357` FOREIGN KEY (`contributor_id`) REFERENCES `contributor` (`id`),
+  CONSTRAINT `FK_3BAE0AA7A76ED395` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `event`
+--
+
+LOCK TABLES `event` WRITE;
+/*!40000 ALTER TABLE `event` DISABLE KEYS */;
+/*!40000 ALTER TABLE `event` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `event_translation`
+--
+
+DROP TABLE IF EXISTS `event_translation`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `event_translation` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `translatable_id` int(11) DEFAULT NULL,
+  `name` varchar(255) DEFAULT NULL,
+  `description` longtext DEFAULT NULL,
+  `locale` varchar(5) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `event_translation_unique_translation` (`translatable_id`,`locale`),
+  KEY `IDX_1FE096EF2C2AC5D3` (`translatable_id`),
+  CONSTRAINT `FK_1FE096EF2C2AC5D3` FOREIGN KEY (`translatable_id`) REFERENCES `event` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `event_translation`
+--
+
+LOCK TABLES `event_translation` WRITE;
+/*!40000 ALTER TABLE `event_translation` DISABLE KEYS */;
+/*!40000 ALTER TABLE `event_translation` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `keyword`
 --
 
@@ -713,7 +842,7 @@ CREATE TABLE `keyword_translation` (
   UNIQUE KEY `keyword_translation_unique_translation` (`translatable_id`,`locale`),
   KEY `IDX_7D2310AA2C2AC5D3` (`translatable_id`),
   CONSTRAINT `FK_7D2310AA2C2AC5D3` FOREIGN KEY (`translatable_id`) REFERENCES `keyword` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=23 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -723,88 +852,6 @@ CREATE TABLE `keyword_translation` (
 LOCK TABLES `keyword_translation` WRITE;
 /*!40000 ALTER TABLE `keyword_translation` DISABLE KEYS */;
 /*!40000 ALTER TABLE `keyword_translation` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `like_answer`
---
-
-DROP TABLE IF EXISTS `like_answer`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `like_answer` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `user_id` int(11) DEFAULT NULL,
-  `parent_id` int(11) DEFAULT NULL,
-  `answer_id` int(11) DEFAULT NULL,
-  `contributor_id` int(11) DEFAULT NULL,
-  `created` datetime DEFAULT NULL,
-  `modified` datetime DEFAULT NULL,
-  `published` datetime DEFAULT NULL,
-  `is_concealed` tinyint(1) NOT NULL,
-  `is_locked` tinyint(1) NOT NULL,
-  `is_dir` tinyint(1) NOT NULL,
-  `position` int(11) NOT NULL,
-  PRIMARY KEY (`id`),
-  KEY `IDX_E40459D7A76ED395` (`user_id`),
-  KEY `IDX_E40459D7727ACA70` (`parent_id`),
-  KEY `IDX_E40459D7AA334807` (`answer_id`),
-  KEY `IDX_E40459D77A19A357` (`contributor_id`),
-  CONSTRAINT `FK_E40459D7727ACA70` FOREIGN KEY (`parent_id`) REFERENCES `like_answer` (`id`),
-  CONSTRAINT `FK_E40459D77A19A357` FOREIGN KEY (`contributor_id`) REFERENCES `contributor` (`id`),
-  CONSTRAINT `FK_E40459D7A76ED395` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`),
-  CONSTRAINT `FK_E40459D7AA334807` FOREIGN KEY (`answer_id`) REFERENCES `answer` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `like_answer`
---
-
-LOCK TABLES `like_answer` WRITE;
-/*!40000 ALTER TABLE `like_answer` DISABLE KEYS */;
-/*!40000 ALTER TABLE `like_answer` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `like_contribution`
---
-
-DROP TABLE IF EXISTS `like_contribution`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `like_contribution` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `user_id` int(11) DEFAULT NULL,
-  `parent_id` int(11) DEFAULT NULL,
-  `contribution_id` int(11) DEFAULT NULL,
-  `contributor_id` int(11) DEFAULT NULL,
-  `created` datetime DEFAULT NULL,
-  `modified` datetime DEFAULT NULL,
-  `published` datetime DEFAULT NULL,
-  `is_concealed` tinyint(1) NOT NULL,
-  `is_locked` tinyint(1) NOT NULL,
-  `is_dir` tinyint(1) NOT NULL,
-  `position` int(11) NOT NULL,
-  PRIMARY KEY (`id`),
-  KEY `IDX_E08675DCA76ED395` (`user_id`),
-  KEY `IDX_E08675DC727ACA70` (`parent_id`),
-  KEY `IDX_E08675DCFE5E5FBD` (`contribution_id`),
-  KEY `IDX_E08675DC7A19A357` (`contributor_id`),
-  CONSTRAINT `FK_E08675DC727ACA70` FOREIGN KEY (`parent_id`) REFERENCES `like_contribution` (`id`),
-  CONSTRAINT `FK_E08675DC7A19A357` FOREIGN KEY (`contributor_id`) REFERENCES `contributor` (`id`),
-  CONSTRAINT `FK_E08675DCA76ED395` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`),
-  CONSTRAINT `FK_E08675DCFE5E5FBD` FOREIGN KEY (`contribution_id`) REFERENCES `contribution` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `like_contribution`
---
-
-LOCK TABLES `like_contribution` WRITE;
-/*!40000 ALTER TABLE `like_contribution` DISABLE KEYS */;
-/*!40000 ALTER TABLE `like_contribution` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -836,7 +883,7 @@ CREATE TABLE `link_block_collection_page` (
   CONSTRAINT `FK_3A44B80B727ACA70` FOREIGN KEY (`parent_id`) REFERENCES `link_block_collection_page` (`id`),
   CONSTRAINT `FK_3A44B80BA76ED395` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`),
   CONSTRAINT `FK_3A44B80BC4663E4` FOREIGN KEY (`page_id`) REFERENCES `page` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -877,7 +924,7 @@ CREATE TABLE `link_block_media` (
   CONSTRAINT `FK_60BDEBB9A76ED395` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`),
   CONSTRAINT `FK_60BDEBB9E9ED820C` FOREIGN KEY (`block_id`) REFERENCES `block` (`id`),
   CONSTRAINT `FK_60BDEBB9EA9FDD75` FOREIGN KEY (`media_id`) REFERENCES `media` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=20 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -918,7 +965,7 @@ CREATE TABLE `link_contribution_keyword` (
   CONSTRAINT `FK_71990B44727ACA70` FOREIGN KEY (`parent_id`) REFERENCES `link_contribution_keyword` (`id`),
   CONSTRAINT `FK_71990B44A76ED395` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`),
   CONSTRAINT `FK_71990B44FE5E5FBD` FOREIGN KEY (`contribution_id`) REFERENCES `contribution` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=42 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=45 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1000,7 +1047,7 @@ CREATE TABLE `link_contribution_topic` (
   CONSTRAINT `FK_B6BD7469727ACA70` FOREIGN KEY (`parent_id`) REFERENCES `link_contribution_topic` (`id`),
   CONSTRAINT `FK_B6BD7469A76ED395` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`),
   CONSTRAINT `FK_B6BD7469FE5E5FBD` FOREIGN KEY (`contribution_id`) REFERENCES `contribution` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=109 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=117 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1010,6 +1057,47 @@ CREATE TABLE `link_contribution_topic` (
 LOCK TABLES `link_contribution_topic` WRITE;
 /*!40000 ALTER TABLE `link_contribution_topic` DISABLE KEYS */;
 /*!40000 ALTER TABLE `link_contribution_topic` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `link_contributor_grade_page`
+--
+
+DROP TABLE IF EXISTS `link_contributor_grade_page`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `link_contributor_grade_page` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `user_id` int(11) DEFAULT NULL,
+  `parent_id` int(11) DEFAULT NULL,
+  `contributor_grade_id` int(11) DEFAULT NULL,
+  `page_id` int(11) DEFAULT NULL,
+  `created` datetime DEFAULT NULL,
+  `modified` datetime DEFAULT NULL,
+  `published` datetime DEFAULT NULL,
+  `is_concealed` tinyint(1) NOT NULL,
+  `is_locked` tinyint(1) NOT NULL,
+  `is_dir` tinyint(1) NOT NULL,
+  `position` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `IDX_34352B2FA76ED395` (`user_id`),
+  KEY `IDX_34352B2F727ACA70` (`parent_id`),
+  KEY `IDX_34352B2FC8DF249E` (`contributor_grade_id`),
+  KEY `IDX_34352B2FC4663E4` (`page_id`),
+  CONSTRAINT `FK_34352B2F727ACA70` FOREIGN KEY (`parent_id`) REFERENCES `link_contributor_grade_page` (`id`),
+  CONSTRAINT `FK_34352B2FA76ED395` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`),
+  CONSTRAINT `FK_34352B2FC4663E4` FOREIGN KEY (`page_id`) REFERENCES `page` (`id`),
+  CONSTRAINT `FK_34352B2FC8DF249E` FOREIGN KEY (`contributor_grade_id`) REFERENCES `contributor_grade` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `link_contributor_grade_page`
+--
+
+LOCK TABLES `link_contributor_grade_page` WRITE;
+/*!40000 ALTER TABLE `link_contributor_grade_page` DISABLE KEYS */;
+/*!40000 ALTER TABLE `link_contributor_grade_page` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -1041,7 +1129,7 @@ CREATE TABLE `link_contributor_topic` (
   CONSTRAINT `FK_86D56E3B727ACA70` FOREIGN KEY (`parent_id`) REFERENCES `link_contributor_topic` (`id`),
   CONSTRAINT `FK_86D56E3B7A19A357` FOREIGN KEY (`contributor_id`) REFERENCES `contributor` (`id`),
   CONSTRAINT `FK_86D56E3BA76ED395` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1051,6 +1139,211 @@ CREATE TABLE `link_contributor_topic` (
 LOCK TABLES `link_contributor_topic` WRITE;
 /*!40000 ALTER TABLE `link_contributor_topic` DISABLE KEYS */;
 /*!40000 ALTER TABLE `link_contributor_topic` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `link_event_contributor`
+--
+
+DROP TABLE IF EXISTS `link_event_contributor`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `link_event_contributor` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `user_id` int(11) DEFAULT NULL,
+  `parent_id` int(11) DEFAULT NULL,
+  `event_id` int(11) DEFAULT NULL,
+  `contributor_id` int(11) DEFAULT NULL,
+  `created` datetime DEFAULT NULL,
+  `modified` datetime DEFAULT NULL,
+  `published` datetime DEFAULT NULL,
+  `is_concealed` tinyint(1) NOT NULL,
+  `is_locked` tinyint(1) NOT NULL,
+  `is_dir` tinyint(1) NOT NULL,
+  `position` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `IDX_FBC4D0F1A76ED395` (`user_id`),
+  KEY `IDX_FBC4D0F1727ACA70` (`parent_id`),
+  KEY `IDX_FBC4D0F171F7E88B` (`event_id`),
+  KEY `IDX_FBC4D0F17A19A357` (`contributor_id`),
+  CONSTRAINT `FK_FBC4D0F171F7E88B` FOREIGN KEY (`event_id`) REFERENCES `event` (`id`),
+  CONSTRAINT `FK_FBC4D0F1727ACA70` FOREIGN KEY (`parent_id`) REFERENCES `link_event_contributor` (`id`),
+  CONSTRAINT `FK_FBC4D0F17A19A357` FOREIGN KEY (`contributor_id`) REFERENCES `contributor` (`id`),
+  CONSTRAINT `FK_FBC4D0F1A76ED395` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `link_event_contributor`
+--
+
+LOCK TABLES `link_event_contributor` WRITE;
+/*!40000 ALTER TABLE `link_event_contributor` DISABLE KEYS */;
+/*!40000 ALTER TABLE `link_event_contributor` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `link_event_keyword`
+--
+
+DROP TABLE IF EXISTS `link_event_keyword`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `link_event_keyword` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `user_id` int(11) DEFAULT NULL,
+  `parent_id` int(11) DEFAULT NULL,
+  `event_id` int(11) DEFAULT NULL,
+  `keyword_id` int(11) DEFAULT NULL,
+  `created` datetime DEFAULT NULL,
+  `modified` datetime DEFAULT NULL,
+  `published` datetime DEFAULT NULL,
+  `is_concealed` tinyint(1) NOT NULL,
+  `is_locked` tinyint(1) NOT NULL,
+  `is_dir` tinyint(1) NOT NULL,
+  `position` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `IDX_AA5CD488A76ED395` (`user_id`),
+  KEY `IDX_AA5CD488727ACA70` (`parent_id`),
+  KEY `IDX_AA5CD48871F7E88B` (`event_id`),
+  KEY `IDX_AA5CD488115D4552` (`keyword_id`),
+  CONSTRAINT `FK_AA5CD488115D4552` FOREIGN KEY (`keyword_id`) REFERENCES `keyword` (`id`),
+  CONSTRAINT `FK_AA5CD48871F7E88B` FOREIGN KEY (`event_id`) REFERENCES `event` (`id`),
+  CONSTRAINT `FK_AA5CD488727ACA70` FOREIGN KEY (`parent_id`) REFERENCES `link_event_keyword` (`id`),
+  CONSTRAINT `FK_AA5CD488A76ED395` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `link_event_keyword`
+--
+
+LOCK TABLES `link_event_keyword` WRITE;
+/*!40000 ALTER TABLE `link_event_keyword` DISABLE KEYS */;
+/*!40000 ALTER TABLE `link_event_keyword` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `link_event_media`
+--
+
+DROP TABLE IF EXISTS `link_event_media`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `link_event_media` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `user_id` int(11) DEFAULT NULL,
+  `parent_id` int(11) DEFAULT NULL,
+  `event_id` int(11) DEFAULT NULL,
+  `media_id` int(11) DEFAULT NULL,
+  `created` datetime DEFAULT NULL,
+  `modified` datetime DEFAULT NULL,
+  `published` datetime DEFAULT NULL,
+  `is_concealed` tinyint(1) NOT NULL,
+  `is_locked` tinyint(1) NOT NULL,
+  `is_dir` tinyint(1) NOT NULL,
+  `position` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `IDX_E6B79C73A76ED395` (`user_id`),
+  KEY `IDX_E6B79C73727ACA70` (`parent_id`),
+  KEY `IDX_E6B79C7371F7E88B` (`event_id`),
+  KEY `IDX_E6B79C73EA9FDD75` (`media_id`),
+  CONSTRAINT `FK_E6B79C7371F7E88B` FOREIGN KEY (`event_id`) REFERENCES `event` (`id`),
+  CONSTRAINT `FK_E6B79C73727ACA70` FOREIGN KEY (`parent_id`) REFERENCES `link_event_media` (`id`),
+  CONSTRAINT `FK_E6B79C73A76ED395` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`),
+  CONSTRAINT `FK_E6B79C73EA9FDD75` FOREIGN KEY (`media_id`) REFERENCES `media` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `link_event_media`
+--
+
+LOCK TABLES `link_event_media` WRITE;
+/*!40000 ALTER TABLE `link_event_media` DISABLE KEYS */;
+/*!40000 ALTER TABLE `link_event_media` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `link_event_topic`
+--
+
+DROP TABLE IF EXISTS `link_event_topic`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `link_event_topic` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `user_id` int(11) DEFAULT NULL,
+  `parent_id` int(11) DEFAULT NULL,
+  `event_id` int(11) DEFAULT NULL,
+  `topic_id` int(11) DEFAULT NULL,
+  `created` datetime DEFAULT NULL,
+  `modified` datetime DEFAULT NULL,
+  `published` datetime DEFAULT NULL,
+  `is_concealed` tinyint(1) NOT NULL,
+  `is_locked` tinyint(1) NOT NULL,
+  `is_dir` tinyint(1) NOT NULL,
+  `position` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `IDX_11DBE364A76ED395` (`user_id`),
+  KEY `IDX_11DBE364727ACA70` (`parent_id`),
+  KEY `IDX_11DBE36471F7E88B` (`event_id`),
+  KEY `IDX_11DBE3641F55203D` (`topic_id`),
+  CONSTRAINT `FK_11DBE3641F55203D` FOREIGN KEY (`topic_id`) REFERENCES `topic` (`id`),
+  CONSTRAINT `FK_11DBE36471F7E88B` FOREIGN KEY (`event_id`) REFERENCES `event` (`id`),
+  CONSTRAINT `FK_11DBE364727ACA70` FOREIGN KEY (`parent_id`) REFERENCES `link_event_topic` (`id`),
+  CONSTRAINT `FK_11DBE364A76ED395` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `link_event_topic`
+--
+
+LOCK TABLES `link_event_topic` WRITE;
+/*!40000 ALTER TABLE `link_event_topic` DISABLE KEYS */;
+/*!40000 ALTER TABLE `link_event_topic` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `link_event_venue`
+--
+
+DROP TABLE IF EXISTS `link_event_venue`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `link_event_venue` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `user_id` int(11) DEFAULT NULL,
+  `parent_id` int(11) DEFAULT NULL,
+  `event_id` int(11) DEFAULT NULL,
+  `venue_id` int(11) DEFAULT NULL,
+  `created` datetime DEFAULT NULL,
+  `modified` datetime DEFAULT NULL,
+  `published` datetime DEFAULT NULL,
+  `is_concealed` tinyint(1) NOT NULL,
+  `is_locked` tinyint(1) NOT NULL,
+  `is_dir` tinyint(1) NOT NULL,
+  `position` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `IDX_1D0A2672A76ED395` (`user_id`),
+  KEY `IDX_1D0A2672727ACA70` (`parent_id`),
+  KEY `IDX_1D0A267271F7E88B` (`event_id`),
+  KEY `IDX_1D0A267240A73EBA` (`venue_id`),
+  CONSTRAINT `FK_1D0A267240A73EBA` FOREIGN KEY (`venue_id`) REFERENCES `venue` (`id`),
+  CONSTRAINT `FK_1D0A267271F7E88B` FOREIGN KEY (`event_id`) REFERENCES `event` (`id`),
+  CONSTRAINT `FK_1D0A2672727ACA70` FOREIGN KEY (`parent_id`) REFERENCES `link_event_venue` (`id`),
+  CONSTRAINT `FK_1D0A2672A76ED395` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `link_event_venue`
+--
+
+LOCK TABLES `link_event_venue` WRITE;
+/*!40000 ALTER TABLE `link_event_venue` DISABLE KEYS */;
+/*!40000 ALTER TABLE `link_event_venue` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -1082,7 +1375,7 @@ CREATE TABLE `link_page_block` (
   CONSTRAINT `FK_B210A801A76ED395` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`),
   CONSTRAINT `FK_B210A801C4663E4` FOREIGN KEY (`page_id`) REFERENCES `page` (`id`),
   CONSTRAINT `FK_B210A801E9ED820C` FOREIGN KEY (`block_id`) REFERENCES `block` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=50 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1123,7 +1416,7 @@ CREATE TABLE `link_page_media` (
   CONSTRAINT `FK_5B279E2FA76ED395` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`),
   CONSTRAINT `FK_5B279E2FC4663E4` FOREIGN KEY (`page_id`) REFERENCES `page` (`id`),
   CONSTRAINT `FK_5B279E2FEA9FDD75` FOREIGN KEY (`media_id`) REFERENCES `media` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1164,7 +1457,7 @@ CREATE TABLE `link_resource_keyword` (
   CONSTRAINT `FK_406E98C8727ACA70` FOREIGN KEY (`parent_id`) REFERENCES `link_resource_keyword` (`id`),
   CONSTRAINT `FK_406E98C889329D25` FOREIGN KEY (`resource_id`) REFERENCES `resource` (`id`),
   CONSTRAINT `FK_406E98C8A76ED395` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=20 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1205,7 +1498,7 @@ CREATE TABLE `link_resource_media` (
   CONSTRAINT `FK_55E31F7D89329D25` FOREIGN KEY (`resource_id`) REFERENCES `resource` (`id`),
   CONSTRAINT `FK_55E31F7DA76ED395` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`),
   CONSTRAINT `FK_55E31F7DEA9FDD75` FOREIGN KEY (`media_id`) REFERENCES `media` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=142 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=145 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1246,7 +1539,7 @@ CREATE TABLE `link_resource_topic` (
   CONSTRAINT `FK_A28F606A727ACA70` FOREIGN KEY (`parent_id`) REFERENCES `link_resource_topic` (`id`),
   CONSTRAINT `FK_A28F606A89329D25` FOREIGN KEY (`resource_id`) REFERENCES `resource` (`id`),
   CONSTRAINT `FK_A28F606AA76ED395` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=353 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=359 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1256,6 +1549,47 @@ CREATE TABLE `link_resource_topic` (
 LOCK TABLES `link_resource_topic` WRITE;
 /*!40000 ALTER TABLE `link_resource_topic` DISABLE KEYS */;
 /*!40000 ALTER TABLE `link_resource_topic` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `link_venue_media`
+--
+
+DROP TABLE IF EXISTS `link_venue_media`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `link_venue_media` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `user_id` int(11) DEFAULT NULL,
+  `parent_id` int(11) DEFAULT NULL,
+  `venue_id` int(11) DEFAULT NULL,
+  `media_id` int(11) DEFAULT NULL,
+  `created` datetime DEFAULT NULL,
+  `modified` datetime DEFAULT NULL,
+  `published` datetime DEFAULT NULL,
+  `is_concealed` tinyint(1) NOT NULL,
+  `is_locked` tinyint(1) NOT NULL,
+  `is_dir` tinyint(1) NOT NULL,
+  `position` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `IDX_7F172088A76ED395` (`user_id`),
+  KEY `IDX_7F172088727ACA70` (`parent_id`),
+  KEY `IDX_7F17208840A73EBA` (`venue_id`),
+  KEY `IDX_7F172088EA9FDD75` (`media_id`),
+  CONSTRAINT `FK_7F17208840A73EBA` FOREIGN KEY (`venue_id`) REFERENCES `venue` (`id`),
+  CONSTRAINT `FK_7F172088727ACA70` FOREIGN KEY (`parent_id`) REFERENCES `link_venue_media` (`id`),
+  CONSTRAINT `FK_7F172088A76ED395` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`),
+  CONSTRAINT `FK_7F172088EA9FDD75` FOREIGN KEY (`media_id`) REFERENCES `media` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `link_venue_media`
+--
+
+LOCK TABLES `link_venue_media` WRITE;
+/*!40000 ALTER TABLE `link_venue_media` DISABLE KEYS */;
+/*!40000 ALTER TABLE `link_venue_media` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -1312,7 +1646,7 @@ CREATE TABLE `media_translation` (
   UNIQUE KEY `media_translation_unique_translation` (`translatable_id`,`locale`),
   KEY `IDX_430137FC2C2AC5D3` (`translatable_id`),
   CONSTRAINT `FK_430137FC2C2AC5D3` FOREIGN KEY (`translatable_id`) REFERENCES `media` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=54 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=77 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1345,7 +1679,7 @@ CREATE TABLE `migration_versions` (
 
 LOCK TABLES `migration_versions` WRITE;
 /*!40000 ALTER TABLE `migration_versions` DISABLE KEYS */;
-INSERT INTO `migration_versions` VALUES ('DoctrineMigrations\\Version20230906085842','2023-09-06 10:58:43',1762),('DoctrineMigrations\\Version20230906090222','2023-09-06 11:02:23',2440),('DoctrineMigrations\\Version20230906090415','2023-09-06 11:04:16',872),('DoctrineMigrations\\Version20230906090504','2023-09-06 11:05:05',85),('DoctrineMigrations\\Version20230907072951','2023-09-07 09:29:53',194),('DoctrineMigrations\\Version20230907203008','2023-09-07 22:30:09',1950),('DoctrineMigrations\\Version20230908131640','2023-09-08 15:16:42',2725),('DoctrineMigrations\\Version20230908133246','2023-09-08 15:32:47',1561),('DoctrineMigrations\\Version20230908195357','2023-09-08 21:53:58',3715),('DoctrineMigrations\\Version20230908200109','2023-09-08 22:01:10',2761),('DoctrineMigrations\\Version20230908200129','2023-09-08 22:02:11',1256),('DoctrineMigrations\\Version20230908224100','2023-09-09 00:41:01',10768),('DoctrineMigrations\\Version20230908224505','2023-09-09 00:45:05',151),('DoctrineMigrations\\Version20230909140036','2023-09-09 16:00:38',1896),('DoctrineMigrations\\Version20230909181816','2023-09-09 20:18:17',137),('DoctrineMigrations\\Version20230909210924','2023-09-09 23:09:25',83),('DoctrineMigrations\\Version20230910143946','2023-09-10 16:39:48',135),('DoctrineMigrations\\Version20230918152110','2023-09-18 17:21:11',29811);
+INSERT INTO `migration_versions` VALUES ('DoctrineMigrations\\Version20230906085842','2023-09-06 10:58:43',1762),('DoctrineMigrations\\Version20230906090222','2023-09-06 11:02:23',2440),('DoctrineMigrations\\Version20230906090415','2023-09-06 11:04:16',872),('DoctrineMigrations\\Version20230906090504','2023-09-06 11:05:05',85),('DoctrineMigrations\\Version20230907072951','2023-09-07 09:29:53',194),('DoctrineMigrations\\Version20230907203008','2023-09-07 22:30:09',1950),('DoctrineMigrations\\Version20230908131640','2023-09-08 15:16:42',2725),('DoctrineMigrations\\Version20230908133246','2023-09-08 15:32:47',1561),('DoctrineMigrations\\Version20230908195357','2023-09-08 21:53:58',3715),('DoctrineMigrations\\Version20230908200109','2023-09-08 22:01:10',2761),('DoctrineMigrations\\Version20230908200129','2023-09-08 22:02:11',1256),('DoctrineMigrations\\Version20230908224100','2023-09-09 00:41:01',10768),('DoctrineMigrations\\Version20230908224505','2023-09-09 00:45:05',151),('DoctrineMigrations\\Version20230909140036','2023-09-09 16:00:38',1896),('DoctrineMigrations\\Version20230909181816','2023-09-09 20:18:17',137),('DoctrineMigrations\\Version20230909210924','2023-09-09 23:09:25',83),('DoctrineMigrations\\Version20230910143946','2023-09-10 16:39:48',135),('DoctrineMigrations\\Version20230918152110','2023-09-18 17:21:11',29811),('DoctrineMigrations\\Version20231004085350','2023-10-04 10:53:52',7375),('DoctrineMigrations\\Version20231004090102','2023-10-04 11:01:03',14571),('DoctrineMigrations\\Version20231004090401','2023-10-04 11:04:03',453),('DoctrineMigrations\\Version20231004090439','2023-10-04 11:04:40',589),('DoctrineMigrations\\Version20231004090759','2023-10-04 11:08:01',1844),('DoctrineMigrations\\Version20231005110329','2023-10-05 13:03:31',1143),('DoctrineMigrations\\Version20231005110434','2023-10-05 13:04:35',527),('DoctrineMigrations\\Version20231005111856','2023-10-05 13:18:58',77),('DoctrineMigrations\\Version20231005122935','2023-10-05 14:29:36',201),('DoctrineMigrations\\Version20231005145118','2023-10-05 16:51:19',55),('DoctrineMigrations\\Version20231005152147','2023-10-05 17:21:48',109),('DoctrineMigrations\\Version20231006082453','2023-10-06 10:24:55',1503),('DoctrineMigrations\\Version20231006085528','2023-10-06 10:55:29',107),('DoctrineMigrations\\Version20231006090801','2023-10-06 11:08:02',537),('DoctrineMigrations\\Version20231006091119','2023-10-06 11:11:20',3282),('DoctrineMigrations\\Version20231006102136','2023-10-06 12:21:37',1074),('DoctrineMigrations\\Version20231009140119','2023-10-09 16:01:21',1440);
 /*!40000 ALTER TABLE `migration_versions` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -1388,7 +1722,7 @@ CREATE TABLE `page` (
 
 LOCK TABLES `page` WRITE;
 /*!40000 ALTER TABLE `page` DISABLE KEYS */;
-INSERT INTO `page` VALUES (1,'default','index',NULL,'bienvenue',3,'menu','0',1,NULL,'2020-11-23 00:50:16','2023-09-26 16:22:32','2020-11-23 00:50:16',0,0,NULL,NULL);
+INSERT INTO `page` VALUES (1,'blocks','index',NULL,'accueil',9,NULL,'0',1,NULL,'2020-11-23 00:50:16','2023-10-11 13:30:16','2020-11-23 00:50:16',0,0,NULL,NULL);
 /*!40000 ALTER TABLE `page` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -1409,7 +1743,7 @@ CREATE TABLE `page_translation` (
   UNIQUE KEY `page_translation_unique_translation` (`translatable_id`,`locale`),
   KEY `IDX_A3D51B1D2C2AC5D3` (`translatable_id`),
   CONSTRAINT `FK_A3D51B1D2C2AC5D3` FOREIGN KEY (`translatable_id`) REFERENCES `page` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1418,7 +1752,7 @@ CREATE TABLE `page_translation` (
 
 LOCK TABLES `page_translation` WRITE;
 /*!40000 ALTER TABLE `page_translation` DISABLE KEYS */;
-INSERT INTO `page_translation` VALUES (1,1,'fr','Bienvenue !',NULL);
+INSERT INTO `page_translation` VALUES (1,1,'fr','Accueil',NULL);
 /*!40000 ALTER TABLE `page_translation` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -1455,7 +1789,7 @@ CREATE TABLE `param` (
 
 LOCK TABLES `param` WRITE;
 /*!40000 ALTER TABLE `param` DISABLE KEYS */;
-INSERT INTO `param` VALUES (1,1,NULL,'2023-09-07 22:34:18','2023-09-09 23:24:31','2023-09-07 22:34:18',0,0,0,0,'site_name'),(2,1,NULL,'2023-09-07 22:35:03','2023-09-07 22:35:20','2023-09-07 22:35:03',0,0,0,0,'meta_description'),(3,1,NULL,'2023-09-07 22:42:08','2023-09-07 22:42:08','2023-09-07 22:42:08',0,0,0,0,'meta_author'),(4,1,NULL,'2023-09-07 23:01:41','2023-09-07 23:03:54','2023-09-07 23:01:41',0,0,0,0,'facebook_url'),(5,1,NULL,'2023-09-07 23:02:19','2023-09-07 23:03:45','2023-09-07 23:02:19',0,0,0,0,'instagram_url'),(6,1,NULL,'2023-09-07 23:03:29','2023-09-07 23:03:39','2023-09-07 23:03:29',0,0,0,0,'youtube_url'),(7,1,NULL,'2023-09-09 20:07:56','2023-09-09 20:07:56','2023-09-09 20:07:56',0,0,0,0,'sender_email_address'),(8,1,NULL,'2023-09-10 22:58:33','2023-09-10 22:58:36','2023-09-10 22:58:33',0,0,0,0,'results_limit'),(9,1,NULL,'2023-09-19 20:37:55','2023-09-19 20:37:55','2023-09-19 20:37:55',0,0,0,0,'contact_email_address');
+INSERT INTO `param` VALUES (1,1,NULL,'2023-09-07 22:34:18','2023-10-11 13:25:51','2023-09-07 22:34:18',0,0,0,0,'site_name'),(2,1,NULL,'2023-09-07 22:35:03','2023-09-07 22:35:20','2023-09-07 22:35:03',0,0,0,0,'meta_description'),(3,1,NULL,'2023-09-07 22:42:08','2023-09-07 22:42:08','2023-09-07 22:42:08',0,0,0,0,'meta_author'),(4,1,NULL,'2023-09-07 23:01:41','2023-09-07 23:03:54','2023-09-07 23:01:41',0,0,0,0,'facebook_url'),(5,1,NULL,'2023-09-07 23:02:19','2023-09-07 23:03:45','2023-09-07 23:02:19',0,0,0,0,'instagram_url'),(6,1,NULL,'2023-09-07 23:03:29','2023-10-11 13:26:10','2023-09-07 23:03:29',0,0,0,0,'youtube_url'),(7,1,NULL,'2023-09-09 20:07:56','2023-09-09 20:07:56','2023-09-09 20:07:56',0,0,0,0,'sender_email_address'),(8,1,NULL,'2023-09-10 22:58:33','2023-10-05 17:57:13','2023-09-10 22:58:33',0,0,0,0,'results_limit'),(9,1,NULL,'2023-09-19 20:37:55','2023-09-19 20:37:55','2023-09-19 20:37:55',0,0,0,0,'contact_email_address');
 /*!40000 ALTER TABLE `param` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -1475,7 +1809,7 @@ CREATE TABLE `param_translation` (
   UNIQUE KEY `param_translation_unique_translation` (`translatable_id`,`locale`),
   KEY `IDX_5DA4AD642C2AC5D3` (`translatable_id`),
   CONSTRAINT `FK_5DA4AD642C2AC5D3` FOREIGN KEY (`translatable_id`) REFERENCES `param` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1484,7 +1818,7 @@ CREATE TABLE `param_translation` (
 
 LOCK TABLES `param_translation` WRITE;
 /*!40000 ALTER TABLE `param_translation` DISABLE KEYS */;
-INSERT INTO `param_translation` VALUES (1,1,'UI5','fr'),(2,2,'Description du site pour les moteurs de recherche','fr'),(3,3,'Timothée Rolin','fr'),(4,4,'https://www.facebook.com/','fr'),(5,5,'https://www.instagram.com/','fr'),(6,6,'https://www.youtube.com','fr'),(7,7,'contact@metaproject.net','fr'),(8,8,'20','fr'),(9,9,'contact@metaproject.net','fr');
+INSERT INTO `param_translation` VALUES (1,1,'UI5','fr'),(2,2,'Description du site pour les moteurs de recherche','fr'),(3,3,'Timothée Rolin','fr'),(4,4,'https://www.facebook.com/','fr'),(5,5,'https://www.instagram.com/','fr'),(7,7,'contact@metaproject.net','fr'),(8,8,'20','fr'),(9,9,'contact@metaproject.net','fr'),(10,6,'https://www.youtube.com','fr');
 /*!40000 ALTER TABLE `param_translation` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -1507,10 +1841,13 @@ CREATE TABLE `resource` (
   `is_dir` tinyint(1) NOT NULL,
   `position` int(11) NOT NULL,
   `status` varchar(255) NOT NULL,
+  `contributor_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `IDX_BC91F416A76ED395` (`user_id`),
   KEY `IDX_BC91F416727ACA70` (`parent_id`),
+  KEY `IDX_BC91F4167A19A357` (`contributor_id`),
   CONSTRAINT `FK_BC91F416727ACA70` FOREIGN KEY (`parent_id`) REFERENCES `resource` (`id`),
+  CONSTRAINT `FK_BC91F4167A19A357` FOREIGN KEY (`contributor_id`) REFERENCES `contributor` (`id`),
   CONSTRAINT `FK_BC91F416A76ED395` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -1541,7 +1878,7 @@ CREATE TABLE `resource_translation` (
   UNIQUE KEY `resource_translation_unique_translation` (`translatable_id`,`locale`),
   KEY `IDX_B0D27B3D2C2AC5D3` (`translatable_id`),
   CONSTRAINT `FK_B0D27B3D2C2AC5D3` FOREIGN KEY (`translatable_id`) REFERENCES `resource` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=31 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=39 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1564,8 +1901,9 @@ CREATE TABLE `selection` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `user_id` int(11) DEFAULT NULL,
   `parent_id` int(11) DEFAULT NULL,
-  `contribution_id` int(11) DEFAULT NULL,
   `contributor_id` int(11) DEFAULT NULL,
+  `contribution_id` int(11) DEFAULT NULL,
+  `answer_id` int(11) DEFAULT NULL,
   `created` datetime DEFAULT NULL,
   `modified` datetime DEFAULT NULL,
   `published` datetime DEFAULT NULL,
@@ -1573,14 +1911,17 @@ CREATE TABLE `selection` (
   `is_locked` tinyint(1) NOT NULL,
   `is_dir` tinyint(1) NOT NULL,
   `position` int(11) NOT NULL,
+  `type` varchar(255) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `IDX_96A50CD7A76ED395` (`user_id`),
   KEY `IDX_96A50CD7727ACA70` (`parent_id`),
-  KEY `IDX_96A50CD7FE5E5FBD` (`contribution_id`),
   KEY `IDX_96A50CD77A19A357` (`contributor_id`),
+  KEY `IDX_96A50CD7FE5E5FBD` (`contribution_id`),
+  KEY `IDX_96A50CD7AA334807` (`answer_id`),
   CONSTRAINT `FK_96A50CD7727ACA70` FOREIGN KEY (`parent_id`) REFERENCES `selection` (`id`),
   CONSTRAINT `FK_96A50CD77A19A357` FOREIGN KEY (`contributor_id`) REFERENCES `contributor` (`id`),
   CONSTRAINT `FK_96A50CD7A76ED395` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`),
+  CONSTRAINT `FK_96A50CD7AA334807` FOREIGN KEY (`answer_id`) REFERENCES `answer` (`id`),
   CONSTRAINT `FK_96A50CD7FE5E5FBD` FOREIGN KEY (`contribution_id`) REFERENCES `contribution` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -1645,7 +1986,7 @@ CREATE TABLE `topic_translation` (
   UNIQUE KEY `topic_translation_unique_translation` (`translatable_id`,`locale`),
   KEY `IDX_6F17DF172C2AC5D3` (`translatable_id`),
   CONSTRAINT `FK_6F17DF172C2AC5D3` FOREIGN KEY (`translatable_id`) REFERENCES `topic` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1697,6 +2038,72 @@ LOCK TABLES `user` WRITE;
 INSERT INTO `user` VALUES (1,'root',0,'MP3ZsTibrQcBooRgIxgSng==','root@ui-cms.com','3rhs1+IWNtC8jPvlRD9RH1Gw53vNgFCanPj63TlD','[\"ROLE_SUPER_ADMIN\",\"ROLE_USER\"]','0',1,NULL,NULL,NULL,NULL,0,0);
 /*!40000 ALTER TABLE `user` ENABLE KEYS */;
 UNLOCK TABLES;
+
+--
+-- Table structure for table `venue`
+--
+
+DROP TABLE IF EXISTS `venue`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `venue` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `user_id` int(11) DEFAULT NULL,
+  `parent_id` int(11) DEFAULT NULL,
+  `created` datetime DEFAULT NULL,
+  `modified` datetime DEFAULT NULL,
+  `published` datetime DEFAULT NULL,
+  `is_concealed` tinyint(1) NOT NULL,
+  `is_locked` tinyint(1) NOT NULL,
+  `is_dir` tinyint(1) NOT NULL,
+  `position` int(11) NOT NULL,
+  `latitude` double DEFAULT NULL,
+  `longitude` double DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `IDX_91911B0DA76ED395` (`user_id`),
+  KEY `IDX_91911B0D727ACA70` (`parent_id`),
+  CONSTRAINT `FK_91911B0D727ACA70` FOREIGN KEY (`parent_id`) REFERENCES `venue` (`id`),
+  CONSTRAINT `FK_91911B0DA76ED395` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `venue`
+--
+
+LOCK TABLES `venue` WRITE;
+/*!40000 ALTER TABLE `venue` DISABLE KEYS */;
+/*!40000 ALTER TABLE `venue` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `venue_translation`
+--
+
+DROP TABLE IF EXISTS `venue_translation`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `venue_translation` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `translatable_id` int(11) DEFAULT NULL,
+  `name` varchar(255) DEFAULT NULL,
+  `description` longtext DEFAULT NULL,
+  `locale` varchar(5) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `venue_translation_unique_translation` (`translatable_id`,`locale`),
+  KEY `IDX_A2B005A2C2AC5D3` (`translatable_id`),
+  CONSTRAINT `FK_A2B005A2C2AC5D3` FOREIGN KEY (`translatable_id`) REFERENCES `venue` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `venue_translation`
+--
+
+LOCK TABLES `venue_translation` WRITE;
+/*!40000 ALTER TABLE `venue_translation` DISABLE KEYS */;
+/*!40000 ALTER TABLE `venue_translation` ENABLE KEYS */;
+UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -1707,4 +2114,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2023-09-26 16:39:21
+-- Dump completed on 2023-10-11 13:30:53

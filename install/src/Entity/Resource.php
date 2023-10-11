@@ -15,9 +15,9 @@ class Resource implements TranslatableInterface
     use TranslatableTrait;
     
 	public function __call($method, $args)
-                                                                                                    	{
-                                                                                                         return $this->proxyCurrentLocaleTranslation($method, $args);
-                                                                                                    	}
+                                                                                                          	{
+                                                                                                               return $this->proxyCurrentLocaleTranslation($method, $args);
+                                                                                                          	}
     
     /**
      * @ORM\Id()
@@ -102,6 +102,14 @@ class Resource implements TranslatableInterface
      * @ORM\OneToMany(targetEntity="App\Entity\LinkContributionResource", mappedBy="resource")
      */
     private $link_contribution_resource;
+
+/**
+                * @ORM\ManyToOne(targetEntity="App\Entity\Contributor")
+                * @ORM\JoinColumn(name="contributor_id", referencedColumnName="id")
+                */
+                private $contributor;
+
+
 
 
 
@@ -352,6 +360,18 @@ class Resource implements TranslatableInterface
                             $linkContributionResource->setResource(null);
                         }
                     }
+
+                    return $this;
+                }
+
+                public function getContributor(): ?Contributor
+                {
+                    return $this->contributor;
+                }
+
+                public function setContributor(?Contributor $contributor): self
+                {
+                    $this->contributor = $contributor;
 
                     return $this;
                 }

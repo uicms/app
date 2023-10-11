@@ -8,16 +8,16 @@ use Knp\DoctrineBehaviors\Contract\Entity\TranslatableInterface;
 use Knp\DoctrineBehaviors\Model\Translatable\TranslatableTrait;
 
 /**
- * @ORM\Entity(repositoryClass="App\Repository\KeywordRepository")
+ * @ORM\Entity(repositoryClass="App\Repository\ContributorGradeRepository")
  */
-class Keyword implements TranslatableInterface
+class ContributorGrade implements TranslatableInterface
 {
     use TranslatableTrait;
     
 	public function __call($method, $args)
-                                                                                  	{
-                                                                                       return $this->proxyCurrentLocaleTranslation($method, $args);
-                                                                                  	}
+                                                                            	{
+                                                                                 return $this->proxyCurrentLocaleTranslation($method, $args);
+                                                                            	}
     
     /**
      * @ORM\Id()
@@ -38,7 +38,7 @@ class Keyword implements TranslatableInterface
     private $user=NULL;
 	
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Keyword")
+     * @ORM\ManyToOne(targetEntity="App\Entity\ContributorGrade")
      * @ORM\JoinColumn(name="parent_id", referencedColumnName="id")
      */
     private $parent=NULL;
@@ -79,30 +79,21 @@ class Keyword implements TranslatableInterface
     private $position=0;
 
     /**
-	 * @ORM\OneToMany(targetEntity="App\Entity\LinkResourceKeyword", mappedBy="keyword")
-	 */
-	private $link_resource_keyword;
-
-
-    /**
-     * @ORM\OneToMany(targetEntity="App\Entity\LinkContributionKeyword", mappedBy="keyword")
-     */
-    private $link_contribution_keyword;
+                * @ORM\Column(type="string",nullable=true)
+                */
+                private $slug;
 
 /**
-	 * @ORM\OneToMany(targetEntity="App\Entity\LinkEventKeyword", mappedBy="keyword")
+	 * @ORM\OneToMany(targetEntity="App\Entity\LinkContributorGradePage", mappedBy="contributor_grade")
 	 */
-	private $link_event_keyword;
-
-
-
+	private $link_contributor_grade_page;
 
     public function __construct()
     {
-        $this->link_resource_keyword = new ArrayCollection();
-        $this->link_contribution_keyword = new ArrayCollection();
-        $this->link_event_keyword = new ArrayCollection();
+        $this->link_contributor_grade_page = new ArrayCollection();
     }
+
+
 
 
 
@@ -214,91 +205,42 @@ class Keyword implements TranslatableInterface
         return $this;
     }
 
-    /**
-     * @return Collection<int, LinkContributionKeyword>
-     */
-    public function getLinkContributionKeyword(): Collection
+    public function getSlug(): ?string
     {
-        return $this->link_contribution_keyword;
+        return $this->slug;
     }
 
-    public function addLinkContributionKeyword(LinkContributionKeyword $linkContributionKeyword): self
+    public function setSlug(?string $slug): self
     {
-        if (!$this->link_contribution_keyword->contains($linkContributionKeyword)) {
-            $this->link_contribution_keyword[] = $linkContributionKeyword;
-            $linkContributionKeyword->setKeyword($this);
-        }
-
-        return $this;
-    }
-
-    public function removeLinkContributionKeyword(LinkContributionKeyword $linkContributionKeyword): self
-    {
-        if ($this->link_contribution_keyword->removeElement($linkContributionKeyword)) {
-            // set the owning side to null (unless already changed)
-            if ($linkContributionKeyword->getKeyword() === $this) {
-                $linkContributionKeyword->setKeyword(null);
-            }
-        }
-
-        return $this;
-    }
-    
-
-    /**
-     * @return Collection|LinkResourceKeyword[]
-     */
-    public function getLinkResourceKeyword(): Collection
-    {
-        return $this->link_resource_keyword;
-    }
-
-    public function addLinkResourceKeyword(LinkResourceKeyword $linkResourceKeyword): self
-    {
-        if (!$this->link_resource_keyword->contains($linkResourceKeyword)) {
-            $this->link_resource_keyword[] = $linkResourceKeyword;
-            $linkResourceKeyword->setKeyword($this);
-        }
-
-        return $this;
-    }
-
-    public function removeLinkResourceKeyword(LinkResourceKeyword $linkResourceKeyword): self
-    {
-        if ($this->link_resource_keyword->removeElement($linkResourceKeyword)) {
-            // set the owning side to null (unless already changed)
-            if ($linkResourceKeyword->getKeyword() === $this) {
-                $linkResourceKeyword->setKeyword(null);
-            }
-        }
+        $this->slug = $slug;
 
         return $this;
     }
 
     /**
-     * @return Collection|LinkEventKeyword[]
+     * @return Collection|LinkContributorGradePage[]
      */
-    public function getLinkEventKeyword(): Collection
+    public function getLinkContributorGradePage(): Collection
     {
-        return $this->link_event_keyword;
+        return $this->link_contributor_grade_page;
     }
 
-    public function addLinkEventKeyword(LinkEventKeyword $linkEventKeyword): self
+    public function addLinkContributorGradePage(LinkContributorGradePage $linkContributorGradePage): self
     {
-        if (!$this->link_event_keyword->contains($linkEventKeyword)) {
-            $this->link_event_keyword[] = $linkEventKeyword;
-            $linkEventKeyword->setKeyword($this);
+        if (!$this->link_contributor_grade_page->contains($linkContributorGradePage)) {
+            $this->link_contributor_grade_page[] = $linkContributorGradePage;
+            $linkContributorGradePage->setContributorGrade($this);
         }
 
         return $this;
     }
 
-    public function removeLinkEventKeyword(LinkEventKeyword $linkEventKeyword): self
+    public function removeLinkContributorGradePage(LinkContributorGradePage $linkContributorGradePage): self
     {
-        if ($this->link_event_keyword->removeElement($linkEventKeyword)) {
+        if ($this->link_contributor_grade_page->removeElement($linkContributorGradePage)) {
             // set the owning side to null (unless already changed)
-            if ($linkEventKeyword->getKeyword() === $this) {
-                $linkEventKeyword->setKeyword(null);
+            if ($linkContributorGradePage->getContributorGrade() === $this) {
+                $linkContributorGradePage->setContributorGrade(null);
             }
         }
 

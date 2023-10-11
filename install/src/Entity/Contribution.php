@@ -149,8 +149,7 @@ class Contribution
      * @ORM\OneToMany(targetEntity="App\Entity\Selection", mappedBy="contribution")
      */
     private $selection;
-
-
+    
     public function __construct()
     {
         $this->link_contribution_keyword = new ArrayCollection();
@@ -488,7 +487,7 @@ class Contribution
 
         return $this;
     }
-
+    
     /**
      * @return Collection<int, Selection>
      */
@@ -518,5 +517,4 @@ class Contribution
 
         return $this;
     }
-
 }

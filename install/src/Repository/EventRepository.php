@@ -1,29 +1,27 @@
 <?php
 namespace App\Repository;
 
-use App\Entity\Resource;
+use App\Entity\Event;
 use Uicms\App\Repository\BaseRepository;
 
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Persistence\ManagerRegistry;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 
 /**
- * @method Resource|null find($id, $lockMode = null, $lockVersion = null)
- * @method Resource|null findOneBy(array $criteria, array $orderBy = null)
- * @method Resource[]    findAll()
- * @method Resource[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ * @method Event|null find($id, $lockMode = null, $lockVersion = null)
+ * @method Event|null findOneBy(array $criteria, array $orderBy = null)
+ * @method Event[]    findAll()
+ * @method Event[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class ResourceRepository extends BaseRepository
+class EventRepository extends BaseRepository
 {
-    public function __construct(Security $security, ManagerRegistry $registry, UserPasswordEncoderInterface $password_encoder, ParameterBagInterface $parameters, SessionInterface $session)
+    public function __construct(Security $security, ManagerRegistry $registry, UserPasswordEncoderInterface $password_encoder, ParameterBagInterface $parameters)
     {
-        $this->session = $session;
-        parent::__construct($security, $registry, $password_encoder, $parameters, 'App\Entity\Resource');
+        parent::__construct($security, $registry, $password_encoder, $parameters, 'App\Entity\Event');
     }
     
 	public function setRowData($row, $params=array())
@@ -31,25 +29,23 @@ class ResourceRepository extends BaseRepository
 		$row = parent::setRowData($row, $params);
         
         if($row) {
-            # Linked data
-            $row->topics = $this->model('Topic')->getAll(array('linked_to'=>'Resource', 'linked_to_id'=>$row->getId()));
-            $row->keywords = $this->model('Keyword')->getAll(array('linked_to'=>'Resource', 'linked_to_id'=>$row->getId()));
-            if($row->medias = $this->model('Media')->getAll(array('linked_to'=>'Resource', 'linked_to_id'=>$row->getId()))) {
+            if($row->medias = $this->model('Media')->getAll(array('linked_to'=>'Event', 'linked_to_id'=>$row->getId()))) {
             	$row->_thumbnail = $row->medias[0]->_thumbnail;
                 $row->_thumbnail_class = $row->medias[0]->getClass();
             }
+            $row->topics = $this->model('Topic')->getAll(array('linked_to'=>'Event', 'linked_to_id'=>$row->getId()));
+            $row->keywords = $this->model('Keyword')->getAll(array('linked_to'=>'Event', 'linked_to_id'=>$row->getId()));
+            $row->venues = $this->model('Venue')->getAll(array('linked_to'=>'Event', 'linked_to_id'=>$row->getId()));
         }
         
 		return $row;
 	}
-
+    
     function getQuery($params=array())
     {
         $query = parent::getQuery($params);
 
         if($this->mode == 'front') {
-            
-            $query->andWhere("t.status='validated' OR t.contributor=" . $this->session->get('contributor')->getId());
 
             /* Filters */
             if(isset($params['c']) && (array)$params['c']) {
@@ -60,17 +56,23 @@ class ResourceRepository extends BaseRepository
                 $query->andWhere(implode(' AND ', $condition));
             }
             
+            if (isset($params['d']) && $params['d']) {
+                $date = explode(' - ', $params['d']);
+                if(count($date) == 1) $date[1] = $date[0];
+                $query->andWhere("t.date_begin <= '" . $date[1] . "' AND t.date_end >= '" . $date[0] . "'");
+            }
+            
             if(isset($params['tp']) && (array)$params['tp']) {
-                $query->innerJoin('t.link_resource_topic', 'ltp', 'WITH', 'ltp.resource=t.id');
+                $query->innerJoin('t.link_event_topic', 'ltp', 'WITH', 'ltp.event=t.id');
                 $condition = [];
                 foreach($params['tp'] as $i=>$tp) {
                     $condition[] = 'ltp.topic=' . (int)$tp;
                 }
-                $query->andWhere(implode(' AND ', $condition));             
+                $query->andWhere(implode(' AND ', $condition));
             }
 
             if(isset($params['k']) && (array)$params['k']) {
-                $query->innerJoin('t.link_resource_keyword', 'lk', 'WITH', 'lk.resource=t.id');
+                $query->innerJoin('t.link_event_keyword', 'lk', 'WITH', 'lk.event=t.id');
                 $condition = [];
                 foreach($params['k'] as $i=>$k) {
                     $condition[] = 'lk.keyword=' . (int)$k;

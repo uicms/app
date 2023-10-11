@@ -37,9 +37,9 @@ class Page implements TranslatableInterface
     private $parent=NULL;
 
 	public function __call($method, $args)
-             	{
-             	    return $this->proxyCurrentLocaleTranslation($method, $args);
-             	}
+                         	{
+                         	    return $this->proxyCurrentLocaleTranslation($method, $args);
+                         	}
 
 	
     /**
@@ -127,6 +127,13 @@ class Page implements TranslatableInterface
 	 */
 	private $link_block_collection_page;
 
+/**
+	 * @ORM\OneToMany(targetEntity="App\Entity\LinkContributorGradePage", mappedBy="page")
+	 */
+	private $link_contributor_grade_page;
+
+
+
 
 
 
@@ -143,6 +150,7 @@ class Page implements TranslatableInterface
         $this->link_page_media = new ArrayCollection();
         $this->link_collection_page = new ArrayCollection();
         $this->link_block_collection_page = new ArrayCollection();
+        $this->link_contributor_grade_page = new ArrayCollection();
     }
 
 
@@ -428,6 +436,36 @@ class Page implements TranslatableInterface
             // set the owning side to null (unless already changed)
             if ($linkBlockCollectionPage->getPage() === $this) {
                 $linkBlockCollectionPage->setPage(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|LinkContributorGradePage[]
+     */
+    public function getLinkContributorGradePage(): Collection
+    {
+        return $this->link_contributor_grade_page;
+    }
+
+    public function addLinkContributorGradePage(LinkContributorGradePage $linkContributorGradePage): self
+    {
+        if (!$this->link_contributor_grade_page->contains($linkContributorGradePage)) {
+            $this->link_contributor_grade_page[] = $linkContributorGradePage;
+            $linkContributorGradePage->setPage($this);
+        }
+
+        return $this;
+    }
+
+    public function removeLinkContributorGradePage(LinkContributorGradePage $linkContributorGradePage): self
+    {
+        if ($this->link_contributor_grade_page->removeElement($linkContributorGradePage)) {
+            // set the owning side to null (unless already changed)
+            if ($linkContributorGradePage->getPage() === $this) {
+                $linkContributorGradePage->setPage(null);
             }
         }
 

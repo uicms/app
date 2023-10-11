@@ -8,16 +8,16 @@ use Knp\DoctrineBehaviors\Contract\Entity\TranslatableInterface;
 use Knp\DoctrineBehaviors\Model\Translatable\TranslatableTrait;
 
 /**
- * @ORM\Entity(repositoryClass="App\Repository\SelectionRepository")
+ * @ORM\Entity(repositoryClass="App\Repository\VenueRepository")
  */
-class Selection 
+class Venue implements TranslatableInterface
 {
-    
+    use TranslatableTrait;
     
 	public function __call($method, $args)
-                                                                               	{
-                                                                                    return $this->proxyCurrentLocaleTranslation($method, $args);
-                                                                               	}
+                                                                                              	{
+                                                                                                   return $this->proxyCurrentLocaleTranslation($method, $args);
+                                                                                              	}
     
     /**
      * @ORM\Id()
@@ -38,7 +38,7 @@ class Selection
     private $user=NULL;
 	
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Selection")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Venue")
      * @ORM\JoinColumn(name="parent_id", referencedColumnName="id")
      */
     private $parent=NULL;
@@ -78,28 +78,35 @@ class Selection
      */
     private $position=0;
 
+        /**
+                * @ORM\Column(type="float",nullable=true)
+                */
+                private $latitude;
+
     /**
-                * @ORM\Column(type="string",nullable=false)
+                * @ORM\Column(type="float",nullable=true)
                 */
-                private $type;
+                private $longitude;
 
 /**
-                * @ORM\ManyToOne(targetEntity="App\Entity\Contributor")
-                * @ORM\JoinColumn(name="contributor_id", referencedColumnName="id")
-                */
-                private $contributor;
+	 * @ORM\OneToMany(targetEntity="App\Entity\LinkEventVenue", mappedBy="venue")
+	 */
+	private $link_event_venue;
 
 /**
-                * @ORM\ManyToOne(targetEntity="App\Entity\Contribution")
-                * @ORM\JoinColumn(name="contribution_id", referencedColumnName="id")
-                */
-                private $contribution;
+	 * @ORM\OneToMany(targetEntity="App\Entity\LinkVenueMedia", mappedBy="venue")
+	 */
+	private $link_venue_media;
 
-/**
-                * @ORM\ManyToOne(targetEntity="App\Entity\Answer")
-                * @ORM\JoinColumn(name="answer_id", referencedColumnName="id")
-                */
-                private $answer;
+
+
+    public function __construct()
+    {
+        $this->link_event_venue = new ArrayCollection();
+        $this->link_venue_media = new ArrayCollection();
+    }
+
+
 
                 public function getCreated(): ?\DateTimeInterface
                 {
@@ -185,14 +192,26 @@ class Selection
                     return $this;
                 }
 
-                public function getType(): ?string
+                public function getLatitude(): ?string
                 {
-                    return $this->type;
+                    return $this->latitude;
                 }
 
-                public function setType(string $type): self
+                public function setLatitude(?string $latitude): self
                 {
-                    $this->type = $type;
+                    $this->latitude = $latitude;
+
+                    return $this;
+                }
+
+                public function getLongitude(): ?float
+                {
+                    return $this->longitude;
+                }
+
+                public function setLongitude(?float $longitude): self
+                {
+                    $this->longitude = $longitude;
 
                     return $this;
                 }
@@ -221,45 +240,65 @@ class Selection
                     return $this;
                 }
 
-                public function getContributor(): ?Contributor
+                /**
+                 * @return Collection|LinkEventVenue[]
+                 */
+                public function getLinkEventVenue(): Collection
                 {
-                    return $this->contributor;
+                    return $this->link_event_venue;
                 }
 
-                public function setContributor(?Contributor $contributor): self
+                public function addLinkEventVenue(LinkEventVenue $linkEventVenue): self
                 {
-                    $this->contributor = $contributor;
+                    if (!$this->link_event_venue->contains($linkEventVenue)) {
+                        $this->link_event_venue[] = $linkEventVenue;
+                        $linkEventVenue->setVenue($this);
+                    }
 
                     return $this;
                 }
 
-                public function getContribution(): ?Contribution
+                public function removeLinkEventVenue(LinkEventVenue $linkEventVenue): self
                 {
-                    return $this->contribution;
-                }
-
-                public function setContribution(?Contribution $contribution): self
-                {
-                    $this->contribution = $contribution;
+                    if ($this->link_event_venue->removeElement($linkEventVenue)) {
+                        // set the owning side to null (unless already changed)
+                        if ($linkEventVenue->getVenue() === $this) {
+                            $linkEventVenue->setVenue(null);
+                        }
+                    }
 
                     return $this;
                 }
 
-                public function getAnswer(): ?Answer
+                /**
+                 * @return Collection|LinkVenueMedia[]
+                 */
+                public function getLinkVenueMedia(): Collection
                 {
-                    return $this->answer;
+                    return $this->link_venue_media;
                 }
 
-                public function setAnswer(?Answer $answer): self
+                public function addLinkVenueMedium(LinkVenueMedia $linkVenueMedium): self
                 {
-                    $this->answer = $answer;
+                    if (!$this->link_venue_media->contains($linkVenueMedium)) {
+                        $this->link_venue_media[] = $linkVenueMedium;
+                        $linkVenueMedium->setVenue($this);
+                    }
 
                     return $this;
                 }
 
+                public function removeLinkVenueMedium(LinkVenueMedia $linkVenueMedium): self
+                {
+                    if ($this->link_venue_media->removeElement($linkVenueMedium)) {
+                        // set the owning side to null (unless already changed)
+                        if ($linkVenueMedium->getVenue() === $this) {
+                            $linkVenueMedium->setVenue(null);
+                        }
+                    }
 
-
-
+                    return $this;
+                }
 
 
 

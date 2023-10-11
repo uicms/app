@@ -19,9 +19,9 @@ class Contributor implements UserInterface, \Serializable
     
     
 	public function __call($method, $args)
- 	{
- 		return $this->proxyCurrentLocaleTranslation($method, $args);
- 	}
+                   	{
+                   		return $this->proxyCurrentLocaleTranslation($method, $args);
+                   	}
     
     /**
      * @ORM\Id()
@@ -128,10 +128,7 @@ class Contributor implements UserInterface, \Serializable
     */
     private $is_contactable;
 
-    /**
-    * @ORM\Column(type="array",nullable=true)
-    */
-    private $email_notification;
+    
     
     /*
     /* USER INTERFACE
@@ -178,6 +175,21 @@ class Contributor implements UserInterface, \Serializable
     */
     private $parent_contributor;
 
+/**
+	 * @ORM\OneToMany(targetEntity="App\Entity\LinkEventContributor", mappedBy="contributor")
+	 */
+	private $link_event_contributor;
+
+/**
+                * @ORM\ManyToOne(targetEntity="App\Entity\ContributorGrade")
+                * @ORM\JoinColumn(name="contributor_grade_id", referencedColumnName="id")
+                */
+                private $contributor_grade;
+
+
+
+
+
     /**
      * @Assert\Length(max=4096)
      */
@@ -188,43 +200,44 @@ class Contributor implements UserInterface, \Serializable
     public function __construct()
     {
         $this->link_contributor_topic = new ArrayCollection();
+        $this->link_event_contributor = new ArrayCollection();
     }
     
                 
 	public function getUsername()
-   	{
-   		return $this->email;
-   	}
+                     	{
+                     		return $this->email;
+                     	}
 
 	public function serialize()
-   	{
-   		return serialize(array(
-   		            $this->id,
-   		            $this->email,
-   		            $this->password,
-   		            $this->salt,
-   		        ));
-   	}
+                     	{
+                     		return serialize(array(
+                     		            $this->id,
+                     		            $this->email,
+                     		            $this->password,
+                     		            $this->salt,
+                     		        ));
+                     	}
 
 	public function unserialize($serialized)
-   	{
-   		list (
-   		            $this->id,
-   		            $this->email,
-   		            $this->password,
-   		            $this->salt
-   		        ) = unserialize($serialized, array('allowed_classes' => false));
-   	}
+                     	{
+                     		list (
+                     		            $this->id,
+                     		            $this->email,
+                     		            $this->password,
+                     		            $this->salt
+                     		        ) = unserialize($serialized, array('allowed_classes' => false));
+                     	}
 
 	public function eraseCredentials()
-   	{
-
-   	}
+                     	{
+                  
+                     	}
 
 	public function getRoles()
-   	{
-  	    return $this->roles;
-   	}
+                     	{
+                    	    return $this->roles;
+                     	}
 
     public function setRoles($roles): self
     {
@@ -246,9 +259,9 @@ class Contributor implements UserInterface, \Serializable
 
 
 	public function getPassword()
-   	{
-   		return $this->password;
-   	}
+                     	{
+                     		return $this->password;
+                     	}
 
     public function setPassword(string $password): self
     {
@@ -620,6 +633,48 @@ class Contributor implements UserInterface, \Serializable
     public function setParentContributor(?self $parent_contributor): self
     {
         $this->parent_contributor = $parent_contributor;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|LinkEventContributor[]
+     */
+    public function getLinkEventContributor(): Collection
+    {
+        return $this->link_event_contributor;
+    }
+
+    public function addLinkEventContributor(LinkEventContributor $linkEventContributor): self
+    {
+        if (!$this->link_event_contributor->contains($linkEventContributor)) {
+            $this->link_event_contributor[] = $linkEventContributor;
+            $linkEventContributor->setContributor($this);
+        }
+
+        return $this;
+    }
+
+    public function removeLinkEventContributor(LinkEventContributor $linkEventContributor): self
+    {
+        if ($this->link_event_contributor->removeElement($linkEventContributor)) {
+            // set the owning side to null (unless already changed)
+            if ($linkEventContributor->getContributor() === $this) {
+                $linkEventContributor->setContributor(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getContributorGrade(): ?ContributorGrade
+    {
+        return $this->contributor_grade;
+    }
+
+    public function setContributorGrade(?ContributorGrade $contributor_grade): self
+    {
+        $this->contributor_grade = $contributor_grade;
 
         return $this;
     }

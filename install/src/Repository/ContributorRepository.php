@@ -41,6 +41,16 @@ class ContributorRepository extends BaseRepository
 
         if($this->mode == 'front') {
             
+            /* Topics */
+            if(isset($params['tp']) && (array)$params['tp']) {
+                $query->innerJoin('t.link_contributor_topic', 'ltp', 'WITH', 'ltp.contributor=t.id');
+                $condition = [];
+                foreach($params['tp'] as $i=>$tp) {
+                    $condition[] = 'ltp.topic=' . (int)$tp;
+                }
+                $query->andWhere(implode(' AND ', $condition));
+            }
+            
             /* Search */
             if (isset($params['s']) && $params['s']) {
                 $search_string = trim(preg_replace("#[^\w0-9]+#u", " ", $params['s']));
