@@ -89,7 +89,7 @@ class Form
         $prototype_form = $this->get($entity, null, $prototype_config);
         $view = $prototype_form->createView();
         $view->offsetUnset('_token');
-        $prototype_html = $this->twig->render('app/tpl/components/prototype.html.twig', [
+        $prototype_html = $this->twig->render('admin/tpl/components/prototype.html.twig', [
             'form' => $view,
         ]);
 
