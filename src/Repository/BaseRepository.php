@@ -278,6 +278,8 @@ class BaseRepository extends ServiceEntityRepository
         
         # Search
         if(isset($params['search']) && $params['search']) {
+            
+            # Specify fields or not
             if(is_array($params['search'])) {
                 $string = array_key_first($params['search']);
                 $fields = is_array($params['search'][$string]) ? $params['search'][$string] : array($params['search'][$string]);
@@ -291,33 +293,58 @@ class BaseRepository extends ServiceEntityRepository
                     }
                 }
             }
-            
-            $search_query = [];
-            foreach($fields as $field_name) {
-                if($this->isFieldTranslatable($field_name)) {
-                    $search_query[] = 'i.' . $field_name . ' LIKE :search';
-                } else {
-                     $search_query[] = 't.' . $field_name . ' LIKE :search';
-                }
-            }
-            $query->andWhere(implode(' OR ', $search_query));
-            
-            $search_parameter = "%$string%";
-            
-            if(isset($params['truncation']) && $params['truncation']) {
-                switch ($params['truncation']) {
-                    case 'left':
-                        $search_parameter = "$string%";
-                    break;
-                    
-                    case 'right':
-                        $search_parameter = "%$string";
-                    break;
+
+
+            # Get search terms
+            preg_match_all("'([^ ]*?\".*?\"|[^ ]+) *'", addslashes($params['search']), $preg);
+            $search_terms = [];
+            foreach($preg[1] as $i=>$term) {
+                if(strlen($term)>2) {
+                    $search_terms[] = $term;
                 }
             }
             
-            $parameters['search'] = $search_parameter;
+
+            # Set query
+            $search_where = [];
+            
+            foreach ($search_terms as $i=>$search_term) {
+
+                $tmp = '(';
+                
+                foreach($fields as $k=>$field_name) {
+                    if($k) $tmp .= " OR ";
+
+                    if($this->isFieldTranslatable($field_name)) {
+                        $tmp .= 'i.' . $field_name . ' LIKE :search' . $i;
+                    } else {
+                        $tmp .= 't.' . $field_name . ' LIKE :search' . $i;
+                    }
+
+                    # Truncate
+                    $search_parameter = "%$search_term%";
+                    if(isset($params['truncation']) && $params['truncation']) {
+                        switch ($params['truncation']) {
+                            case 'left':
+                                $search_parameter = "$search_term%";
+                            break;
+                            
+                            case 'right':
+                                $search_parameter = "%$search_term";
+                            break;
+                        }
+                    }
+
+                    # Set parameter
+                    $parameters['search' . $i] = $search_parameter;
+                }
+
+                $search_where[] = $tmp . ')';
+            }
+
+            $query->andWhere(implode(' AND ', $search_where));
         }
+        
 
         # Linked to
         if(isset($params['linked_to']) && $params['linked_to']) {
