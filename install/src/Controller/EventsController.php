@@ -93,12 +93,12 @@ class EventsController extends AbstractController
         );
     }
     
-    public function autocomplete($term='', $entity, $page, Model $model)
+    public function autocomplete($term, $entity, $field_name, $page, Model $model)
     {
         $data = ['page'=>$page];
         $params = ['order_by'=>'name', 'order_dir'=>'asc'];
 
-        $data['results'] = $model->get($entity)->getAll(['search'=>$term, 'truncation'=>'left']);
+        $data['results'] = $model->get($entity)->getAll(['search'=>[$term=>[$field_name]], 'truncation'=>'left']);
         
         $response = new Response(
             $this->renderView('app/tpl/components/autocomplete.json.twig', $data),

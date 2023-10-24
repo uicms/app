@@ -54,16 +54,27 @@ function initForms() {
 function initAutocomplete() {
     $( ".autocomplete" ).each(function() {
         var element = $(this);
-        var field_name = $(this).attr('id');
-        var source = '/' + $('body').data('locale') + '/' + $('body').data('slug') + '/autocomplete?entity=' + $(this).data('source');
+        var source = '/' + $('body').data('locale') + '/' + $('body').data('slug') + '/autocomplete?entity=' + element.data('source') + '&field_name=' + element.data('field_name');
         
-        $(this).autocomplete({
+        element.autocomplete({
           url: source,
-          minLength: 2,
+          minLength: 3,
           delay: 100,
-          onSelect: function(text) {
+          onSelect: function(value) {
+
+            if (value.indexOf('<span') !== -1) {
+                console.log('ok');
+                var $temp = $('<div>').html(value);
+                $temp.find('span').each(function() {
+                    console.log('[data-field_name='+ $(this).attr('class') + ']');
+                    console.log(element.parentsUntil('.form_group').find('[data-field_name='+ $(this).attr('class') + ']'));
+                    element.parentsUntil('.form_group').find('[data-field_name='+ $(this).attr('class') + ']').val($(this).text());
+                });
+            } else {
+                element.val(value);
+            }
           },
-          onFocus: function(text) {
+          onFocus: function(value) {
           }
         });
     });
