@@ -1,6 +1,10 @@
 /* Layout */
 body {
 }
+html.scroll-disabled,
+body.scroll-disabled {
+  overflow: hidden;
+}
 div#container {
     padding: 0 var(--default-spacing) var(--default-spacing) var(--default-spacing);
 }
