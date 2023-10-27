@@ -417,7 +417,7 @@ class BaseRepository extends ServiceEntityRepository
             }
             
             # File
-            if($file_field = $this->getField(array('type'=>'UIFileType'))) {
+            if($file_field = $this->getField(array('form'=>['type'=>'UIFileType']))) {
                 $method = 'get'.$file_field['form']['name'];
                 if($row->_file = $row->$method()) {
                     $file_path = getcwd() . '/uploads/' . $row->_file;
@@ -439,7 +439,7 @@ class BaseRepository extends ServiceEntityRepository
             }
             
             # Text preview
-            if($textarea_field = $this->getField(array('type'=>'TextareaType'))) {
+            if($textarea_field = $this->getField(array('form'=>['type'=>'TextareaType']))) {
                 $method = 'get'.$textarea_field['form']['name'];
                 $row->_text = $row->$method();
             }
@@ -602,7 +602,12 @@ class BaseRepository extends ServiceEntityRepository
             foreach($all_fields as $i=>$field) {
                 $condition = true;
                 foreach($params as $param=>$value) {
-                    if(!isset($field['form'][$param]) || $field['form'][$param] != $value) {
+                    if(is_array($value)) {
+                        $key = array_keys($value)[0];
+                        if(!isset($field[$param][$key]) || $field[$param][$key] != $value[$key]) {
+                            $condition = false;
+                        }
+                    } else if(!isset($field[$param]) || $field[$param] != $value) {
                         $condition = false;
                     }
                 }
@@ -1171,8 +1176,8 @@ class BaseRepository extends ServiceEntityRepository
     
     public function link($selection, $linked_entity_name, $linked_selection)
     {
-        $model_link = $this->getLinkEntity(array($linked_entity_name, $this->name));
-        $model_linked = $this->getEntityManager()->getRepository($linked_entity_name)->locale($this->locale);
+        $model_link = $this->getLinkEntity(array($this->normalize($linked_entity_name), $this->name));
+        $model_linked = $this->getEntityManager()->getRepository($this->normalize($linked_entity_name))->locale($this->locale);
         $set_method = 'set' . preg_replace('/^.+\\\\/', '', $this->getName());
         $set_method_linked = 'set' . preg_replace('/^.+\\\\/', '', $model_linked->getName());
         
@@ -1196,8 +1201,8 @@ class BaseRepository extends ServiceEntityRepository
     
     public function unlink($selection, $linked_entity_name, $linked_selection=[])
     {
-        $model_link = $this->getLinkEntity(array($linked_entity_name, $this->name));
-        $model_linked = $this->getEntityManager()->getRepository($linked_entity_name)->locale($this->locale);
+        $model_link = $this->getLinkEntity(array($this->normalize($linked_entity_name), $this->name));
+        $model_linked = $this->getEntityManager()->getRepository($this->normalize($linked_entity_name))->locale($this->locale);
         $set_method = 'set' . preg_replace('/^.+\\\\/', '', $this->getName());
         $set_method_linked = 'set' . preg_replace('/^.+\\\\/', '', $model_linked->getName());
         $table_name = $this->config['table_name'];
@@ -1233,7 +1238,7 @@ class BaseRepository extends ServiceEntityRepository
     
     public function linkChildren($selection, $parent_entity_name, $field_name, $parent_selection)
     {
-        $model_parent = $this->getEntityManager()->getRepository($parent_entity_name)->mode('admin')->locale($this->locale);
+        $model_parent = $this->getEntityManager()->getRepository($this->normalize($parent_entity_name))->mode('admin')->locale($this->locale);
         $set_method = 'set' . preg_replace('/^.+\\\\/', '', $field_name);
 
         foreach($selection as $i=>$id) {
