@@ -55,7 +55,8 @@ class Import
                 $fields = $data;
             } else {
                 $new_row = $this->model->get($this->entity)->new();
-                
+                $is_empty_row = true;
+
                 foreach ($data as $j => $value) {
                     $key = $fields[$j];
                     $value = trim($value);
@@ -63,56 +64,59 @@ class Import
                     
                     if($value && ($field_config = $model->getField(['name'=>$key])) && ($value = $this->handleValue($field_config, $value))) {
                         $new_row->$set_method($value);
+                        $is_empty_row = false;
                     }
                 }
                 
                 # Persist
-                $id = $model->persist($new_row);
-                print "Inserted ID = " . $new_row->getId();
-                
-                # Links
-                $links = [];
-                foreach($data as $j => $value) {
-                    $key = $fields[$j];
+                if(!$is_empty_row) {
+                    $id = $model->persist($new_row);
+                    print "Inserted ID = " . $new_row->getId() . "\n";
+                    
+                    # Links
+                    $links = [];
+                    foreach($data as $j => $value) {
+                        $key = $fields[$j];
 
-                    if(preg_match("'^__link__([a-zA-Z0-9_-]+?)__([a-zA-Z0-9_-]+)'", $key, $preg)) {
-                        $entity_name = str_replace('_', '', ucwords($preg[1], '_'));
-                        $field_name = $preg[2];
-                        
-                        if(isset($this->params->get('ui_config')['entity']['App\Entity\\' . $entity_name])) {
-                            $links[$entity_name]['config'] = $this->model->get($entity_name)->getConfig();
-                            $links[$entity_name]['config_field'][$field_name] = $this->model->get($entity_name)->getField(['name'=>$field_name]);
-                            if(!isset($links[$entity_name]['data'])) {
-                                $links[$entity_name]['data'] = [];
-                            } 
-                            if(trim($value)) {
-                                $linked_values = explode(";", $value);
-                                foreach($linked_values as $k => $linked_value) {
-                                    $links[$entity_name]['data'][$k][$field_name] = $this->handleValue($links[$entity_name]['config_field'][$field_name], trim($linked_value));
+                        if(preg_match("'^__link__([a-zA-Z0-9_-]+?)__([a-zA-Z0-9_-]+)'", $key, $preg)) {
+                            $entity_name = str_replace('_', '', ucwords($preg[1], '_'));
+                            $field_name = $preg[2];
+                            
+                            if(isset($this->params->get('ui_config')['entity']['App\Entity\\' . $entity_name])) {
+                                $links[$entity_name]['config'] = $this->model->get($entity_name)->getConfig();
+                                $links[$entity_name]['config_field'][$field_name] = $this->model->get($entity_name)->getField(['name'=>$field_name]);
+                                if(!isset($links[$entity_name]['data'])) {
+                                    $links[$entity_name]['data'] = [];
+                                } 
+                                if(trim($value)) {
+                                    $linked_values = explode(";", $value);
+                                    foreach($linked_values as $k => $linked_value) {
+                                        $links[$entity_name]['data'][$k][$field_name] = $this->handleValue($links[$entity_name]['config_field'][$field_name], trim($linked_value));
+                                    }
                                 }
                             }
                         }
                     }
-                }
 
-                foreach($links as $link_entity_name => $link_config) {
-                    foreach ($link_config['data'] as $j => $row) {
-                        if(isset($row[$link_config['config']['name_field']])) {
-                            # Check if exists
-                            if(!$linked_row = $this->model->get($link_entity_name)->getRow(['findby'=>[$link_config['config']['name_field'] => $row[$link_config['config']['name_field']]]])) {
-                                $linked_row = $this->model->get($link_entity_name)->new();
+                    foreach($links as $link_entity_name => $link_config) {
+                        foreach ($link_config['data'] as $j => $row) {
+                            if(isset($row[$link_config['config']['name_field']])) {
+                                # Check if exists
+                                if(!$linked_row = $this->model->get($link_entity_name)->getRow(['findby'=>[$link_config['config']['name_field'] => $row[$link_config['config']['name_field']]]])) {
+                                    $linked_row = $this->model->get($link_entity_name)->new();
+                                }
+
+                                # Set each field value
+                                foreach($row as $linked_field_name => $linked_field_value) {
+                                    $linked_row_set_method = $this->model->get($link_entity_name)->method($linked_field_name, 'set');
+                                    $linked_row->$linked_row_set_method($linked_field_value);
+                                }
+
+                                $this->model->get($link_entity_name)->persist($linked_row);
+
+                                # Link to row
+                                $model->mode('admin')->link([$id], $link_entity_name, [$linked_row]);
                             }
-
-                            # Set each field value
-                            foreach($row as $linked_field_name => $linked_field_value) {
-                                $linked_row_set_method = $this->model->get($link_entity_name)->method($linked_field_name, 'set');
-                                $linked_row->$linked_row_set_method($linked_field_value);
-                            }
-
-                            $this->model->get($link_entity_name)->persist($linked_row);
-
-                            # Link to row
-                            $model->mode('admin')->link([$id], $link_entity_name, [$linked_row]);
                         }
                     }
                 }
