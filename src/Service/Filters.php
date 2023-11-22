@@ -92,7 +92,7 @@ class Filters
                             array_merge (
                                 $filter_config['params'], 
                                 [
-                                    'linked_to_'. strtolower($entity_name) => true, 
+                                    'linked_to_'. strtolower($entity_name) => (isset($filter_config['show_all']) && $filter_config['show_all']) ? false : true, 
                                     'disable_positions'=>true,
                                 ]
                             )

@@ -106,7 +106,7 @@ class BaseRepository extends ServiceEntityRepository
                 $query->leftJoin('t.parent', 'p');
                 if($this->isTranslatable()) {
                     $query->leftJoin('t.translations', 'i');
-                    #$query->andWhere("i.locale = '".$this->locale."' OR i.locale='" . $this->default_locale . "'");
+                    $query->andWhere("i.locale = '".$this->locale."' OR i.locale='" . $this->default_locale . "' OR i.locale IS NULL");
                 }
                 # Is concealed
                 if($this->mode == 'front') {
