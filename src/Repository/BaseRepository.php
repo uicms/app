@@ -104,19 +104,37 @@ class BaseRepository extends ServiceEntityRepository
                 $query->select('u, t');
                 $query->join('t.user', 'u');
                 $query->leftJoin('t.parent', 'p');
-                if($this->isTranslatable()) {
-                    $query->leftJoin('t.translations', 'i');
-                    $query->andWhere("i.locale = '".$this->locale."' OR i.locale='" . $this->default_locale . "' OR i.locale IS NULL");
+                
+                # Translations
+                if($this->isTranslatable()) {                    
+                    $query->leftJoin('t.translations', 'i', 'WITH', "i.locale = '" . $this->locale . "'");
+                    $query->leftJoin('t.translations', 'fallback', 'WITH', "fallback.locale = '" . $this->default_locale . "'");
+                    
+                    if($this->isFieldTranslatable($order_by)) {
+                        $query->addSelect("COALESCE(i.$order_by, fallback.$order_by) AS HIDDEN $order_by");
+                        $query->orderBy($order_by, $order_dir);
+                    } else {
+                        $query->addSelect("COALESCE(i, fallback) AS HIDDEN translation");
+                    }
                 }
+                
                 # Is concealed
                 if($this->mode == 'front') {
                     $query->andWhere('t.is_concealed=:concealed');
                     $parameters['concealed'] = 0;
                 }
+                
+                # Positions
                 if(!isset($params['disable_positions']) || !$params['disable_positions']) {
                     $query->orderBy("$position_table_alias.position", 'asc');
                 }
-                $query->addOrderBy($order_table_alias . '.' . $order_by, $order_dir);
+                
+                # Order
+                if($order_table_alias != 'i') {
+                    $query->addOrderBy($order_table_alias . '.' . $order_by, $order_dir);
+                }
+                
+                # Order by ID
                 if($order_by != 'id') $query->addOrderBy('t.id', 'asc');
             break;
         }
@@ -345,7 +363,6 @@ class BaseRepository extends ServiceEntityRepository
             $query->andWhere(implode(' AND ', $search_where));
         }
         
-
         # Linked to
         if(isset($params['linked_to']) && $params['linked_to']) {
             $linked_entity = $this->getEntityManager()->getRepository($this->normalize($params['linked_to']))->locale($this->locale);
@@ -364,7 +381,6 @@ class BaseRepository extends ServiceEntityRepository
         if(isset($params['offset'])) {
             $query->setFirstResult((int)$params['offset']);
         }
-        
         if(isset($params['limit'])) {
             $query->setMaxResults((int)$params['limit']);
         }
