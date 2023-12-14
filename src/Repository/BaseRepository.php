@@ -40,7 +40,7 @@ class BaseRepository extends ServiceEntityRepository
     protected $upload_path = 'public/uploads';
     protected $preview_prefix = '_';
     protected $config = null;
-    
+    protected $debug = false;
     
     public function __construct(Security $security, ManagerRegistry $registry, UserPasswordEncoderInterface $passwd_encoder, ParameterBagInterface $parameters, $entity_name)
     {
