@@ -386,7 +386,9 @@ class BaseRepository extends ServiceEntityRepository
         }
         $query->setParameters($parameters);
 
-        #dd($query->getDql());
+        if($this->debug) {
+            dd($query->getDql());
+        }
         return $query;
     }
     
@@ -465,6 +467,12 @@ class BaseRepository extends ServiceEntityRepository
     
     
     /* Special functions */
+    public function debug($value)
+    {
+        $this->debug = (boolean)$value;
+        return $this;
+    }
+    
     public function mode($mode)
     {
         $this->mode = $mode;
