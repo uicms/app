@@ -35,22 +35,25 @@ class Form
     }
 
     public function get($entity, $row=null, $form_config=[])
-   	{
+    {
         if(strpos($entity, 'App\Entity') === false) {
             $entity = 'App\Entity\\' . ucfirst($entity);
         }
         if(!$form_config) {
             $form_config = $this->ui_config['entity'][$entity]['form'];
         }
+        $excluded_fields = [];
 
-   		# Loop on fields
+        # Loop on fields
         $field_types = array('fields', 'translations');
         foreach($field_types as $field_type) {
             foreach($form_config[$field_type] as $field_name=>$field_config) {
+
                 if(!isset($field_config['public']) || !$field_config['public']) {
                     unset($form_config[$field_type][$field_name]);
+                    $excluded_fields[] = $field_name;
                 }
-                if(isset($field_config['public_required']) && $field_config['public_required']) {
+                if(isset($field_config['public']) && isset($field_config['public_required']) && $field_config['public'] && $field_config['public_required']) {
                     $form_config[$field_type][$field_name]['options']['required'] = true;
                 }
                 if(isset($field_config['type']) && $field_config['type'] == 'CollectionType' && isset($field_config['options']['entry_options']['form_config'])) {
@@ -73,12 +76,14 @@ class Form
         # Build form
         $form = $this->form_factory->create(UIFormType::class, $row, [
                                                             'ui_config'=>$this->ui_config,
-                                            				'form_config'=>$form_config,
-                                            				'translator'=>$this->translator,
-                                                            'data_class'=>$entity
+                                                            'form_config'=>$form_config,
+                                                            'translator'=>$this->translator,
+                                                            'data_class'=>$entity,
+                                                            'model'=>$this->model,
+                                                            'excluded_fields'=>$excluded_fields,
                                                         ]);
-       	return $form ;
-   	}
+        return $form ;
+    }
 
     public function getPrototype($collection_name, $entity)
     {
