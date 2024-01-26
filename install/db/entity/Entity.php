@@ -257,7 +257,7 @@ if($action == 'link') {
 	    'name'=> $full_linked_entity_name,
         'name_field'=>'id',
         'order_by'=>'id',
-        'order_dir'=>'id',
+        'order_dir'=>'desc',
         'link'=>array($full_entity_name, $full_linked_entity_name),
 	);
 	$ui_config['entity'][$full_link_entity_name] = $link_table_config;
