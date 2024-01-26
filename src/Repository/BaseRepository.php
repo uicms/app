@@ -1232,6 +1232,10 @@ class BaseRepository extends ServiceEntityRepository
                 
                 $link->$set_method($row);
                 $link->$set_method_linked($row_linked);
+                $link->setUser($this->security->getUser());
+                $link->setCreated(new \Datetime);
+                $link->setModified(new \Datetime);
+                $link->setPublished(new \Datetime);
                 
                 $em = $this->getEntityManager();
                 $em->persist($link);
