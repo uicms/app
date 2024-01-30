@@ -1218,17 +1218,22 @@ class BaseRepository extends ServiceEntityRepository
         $model_linked = $this->getEntityManager()->getRepository($this->normalize($linked_entity_name))->locale($this->locale);
         $set_method = 'set' . preg_replace('/^.+\\\\/', '', $this->getName());
         $set_method_linked = 'set' . preg_replace('/^.+\\\\/', '', $model_linked->getName());
-        
+        $table_name = $this->config['table_name'];
+        $linked_table_name = $model_linked->config['table_name'];
+
         foreach($selection as $i=>$id) {
             foreach($linked_selection as $j=>$id_linked) {
                 $row = $this->find($id);
                 $row_linked = $model_linked->find($id_linked);
-                eval("\$link = new \\" . $model_link->getName() . ';');
                 
-                $link->$set_method($row);
-                $link->$set_method_linked($row_linked);
-                $link->setUser($this->security->getUser());
-                $link->setCreated(new \Datetime);
+                if(!$link = $model_link->getRow(['findby'=>[$table_name=>$id, $linked_table_name=>$id_linked]])) {
+                    eval("\$link = new \\" . $model_link->getName() . ';');
+                    $link->setCreated(new \Datetime);
+                    $link->setUser($this->security->getUser());
+                    $link->$set_method($row);
+                    $link->$set_method_linked($row_linked);
+                }
+
                 $link->setModified(new \Datetime);
                 $link->setPublished(new \Datetime);
 
