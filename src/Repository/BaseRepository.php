@@ -81,13 +81,9 @@ class BaseRepository extends ServiceEntityRepository
         # Ordering
         $order_by = (isset($params['order_by']) && $params['order_by']) ? $params['order_by'] : $this->config['order_by'];
         $order_dir = (isset($params['order_dir']) && $params['order_dir']) ? $params['order_dir'] : $this->config['order_dir'];
-
-        if(is_array($order_by)) {
-            $order_by_method = 'get' . $order_by[0];
-        } else {
-            $order_by_method = 'get' . $order_by;
-        }
-
+        $order_table_alias = $this->isFieldTranslatable($order_by) && $order_by != 'id' ? 'i' : 't';
+        $order_by_method = 'get' . $order_by;
+        
         # Statement
         if(!isset($params['statement']) || !$params['statement']) {
             $params['statement'] = 'select';
@@ -122,9 +118,8 @@ class BaseRepository extends ServiceEntityRepository
                     }
                 }
                 
-                # Is concealed                
-                if($this->mode == 'front' && (!isset($params['preview_key']) || 
-                    !$params['preview_key'] || $params['preview_key'] != $this->global_config['preview_key'])) {
+                # Is concealed
+                if($this->mode == 'front') {
                     $query->andWhere('t.is_concealed=:concealed');
                     $parameters['concealed'] = 0;
                 }
@@ -135,22 +130,9 @@ class BaseRepository extends ServiceEntityRepository
                 }
                 
                 # Order
-                #if($order_table_alias != 'i') {
-                    if(is_array($order_by)) {
-                        foreach($order_by as $i=>$order_by_field) {
-                            if(is_array($order_dir)) {
-                                $order_dir_field = $order_dir[$i];
-                            } else {
-                                $order_dir_field = $order_dir;
-                            }
-                            $order_table_alias = $this->isFieldTranslatable($order_dir_field) && $order_dir_field != 'id' ? 'i' : 't';
-                            $query->addOrderBy($order_table_alias . '.' . $order_by_field, $order_dir_field);
-                        }
-                    } else {
-                        $order_table_alias = $this->isFieldTranslatable($order_by) && $order_by != 'id' ? 'i' : 't';
-                        $query->addOrderBy($order_table_alias . '.' . $order_by, $order_dir);
-                    }
-                #}
+                if($order_table_alias != 'i') {
+                    $query->addOrderBy($order_table_alias . '.' . $order_by, $order_dir);
+                }
                 
                 # Order by ID
                 if($order_by != 'id') $query->addOrderBy('t.id', 'asc');
@@ -192,7 +174,6 @@ class BaseRepository extends ServiceEntityRepository
         
         # Next
         if(isset($params['get_next']) && $params['get_next'] && isset($params['current_row']) && $params['current_row']) {
-
             if(isset($params['offset'])) unset($params['offset']);
             if(isset($params['limit'])) unset($params['limit']);
             $current_value = $params['current_row']->$order_by_method();
@@ -420,6 +401,7 @@ class BaseRepository extends ServiceEntityRepository
             $row->_thumbnail = null;
             $row->_text = null;
             $row->_links = array();
+            $row->_form = null;
             
             # Linked position
             if(isset($params['linked_to']) && $params['linked_to']) {
@@ -1236,7 +1218,7 @@ class BaseRepository extends ServiceEntityRepository
                 $link->setCreated(new \Datetime);
                 $link->setModified(new \Datetime);
                 $link->setPublished(new \Datetime);
-                
+
                 $em = $this->getEntityManager();
                 $em->persist($link);
                 if($this->flush_mode == 'auto') {
@@ -1279,6 +1261,7 @@ class BaseRepository extends ServiceEntityRepository
                     }
                 }
             }
+            
         }
     }
     
