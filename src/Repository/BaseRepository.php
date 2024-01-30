@@ -284,12 +284,22 @@ class BaseRepository extends ServiceEntityRepository
         if(isset($params['findby']) && $params['findby'] && is_array($params['findby'])) {
             $i = 0;
             foreach($params['findby'] as $field_name=>$value) {
-                if($this->isFieldTranslatable($field_name)) {
-                    $query->andWhere('i.' . $field_name . ' = :findby'.$i);
-                } else {
-                    $query->andWhere('t.' . $field_name . ' = :findby'.$i);
-                } 
-                $parameters['findby'.$i] = $value;
+                if($this->getField(['name'=>$field_name])) {
+                    if($this->isFieldTranslatable($field_name)) {
+                        $query->andWhere('i.' . $field_name . ' = :findby'.$i);
+                    } else {
+                        $query->andWhere('t.' . $field_name . ' = :findby'.$i);
+                    }
+                    $parameters['findby'.$i] = $value;
+                } else if (isset($params['linked_to']) && $params['linked_to']) {
+                    $linked_entity = $this->getEntityManager()->getRepository($this->normalize($params['linked_to']))->locale($this->locale);
+                    $link_entity = $this->getLinkEntity(array($this->normalize($params['linked_to']), $this->name));
+                    if($link_entity->getField(['name'=>$field_name])) {
+                        $query->andWhere('l.' . $field_name . ' = :findby'.$i);
+                        $parameters['findby'.$i] = $value;
+                    }
+                }
+                
                 $i++;
             }            
         }
