@@ -42,7 +42,6 @@ class Form
         if(!$form_config) {
             $form_config = $this->ui_config['entity'][$entity]['form'];
         }
-        $excluded_fields = [];
 
         # Loop on fields
         $field_types = array('fields', 'translations');
@@ -51,11 +50,27 @@ class Form
 
                 if(!isset($field_config['public']) || !$field_config['public']) {
                     unset($form_config[$field_type][$field_name]);
-                    $excluded_fields[] = $field_name;
                 }
-                if(isset($field_config['public']) && isset($field_config['public_required']) && $field_config['public'] && $field_config['public_required']) {
+                if(isset($field_config['public_required']) && $field_config['public_required']) {
                     $form_config[$field_type][$field_name]['options']['required'] = true;
                 }
+
+                # UIFile with already a value is not required
+                $get_value = 'get' . ucfirst(str_replace(' ', '', ucwords(str_replace('_', ' ', $field_name))));
+                if($row && $field_config['type'] == 'UIFileType' && $row->$get_value()) {
+                    $form_config[$field_type][$field_name]['options']['required'] = false;
+                }
+
+                # Repeated file with already a value is not required
+                if($row && $field_config['type'] == 'RepeatedType') {
+                    $get_value = 'get' . ucfirst(str_replace(' ', '', ucwords(str_replace('_', ' ', $field_config['dest']))));
+                    if($row->$get_value()) {
+                        $form_config[$field_type][$field_name]['options']['required'] = false;
+                    }
+                }
+
+
+                # Collection type
                 if(isset($field_config['type']) && $field_config['type'] == 'CollectionType' && isset($field_config['options']['entry_options']['form_config'])) {
                     
                     foreach($field_types as $entry_field_type) {
@@ -78,9 +93,7 @@ class Form
                                                             'ui_config'=>$this->ui_config,
                                                             'form_config'=>$form_config,
                                                             'translator'=>$this->translator,
-                                                            'data_class'=>$entity,
-                                                            'model'=>$this->model,
-                                                            'excluded_fields'=>$excluded_fields,
+                                                            'data_class'=>$entity
                                                         ]);
         return $form ;
     }
