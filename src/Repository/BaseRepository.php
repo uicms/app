@@ -1212,7 +1212,7 @@ class BaseRepository extends ServiceEntityRepository
         }
     }
     
-    public function link($selection, $linked_entity_name, $linked_selection)
+    public function link($selection, $linked_entity_name, $linked_selection, $link_data=[])
     {
         $model_link = $this->getLinkEntity(array($this->normalize($linked_entity_name), $this->name));
         $model_linked = $this->getEntityManager()->getRepository($this->normalize($linked_entity_name))->locale($this->locale);
@@ -1231,6 +1231,13 @@ class BaseRepository extends ServiceEntityRepository
                 $link->setCreated(new \Datetime);
                 $link->setModified(new \Datetime);
                 $link->setPublished(new \Datetime);
+
+                if($link_data) {
+                    foreach($link_data[$i] as $field_name=>$value) {
+                        $data_set_method = 'set' . ucfirst(str_replace(' ', '', ucwords(str_replace('_', ' ', $field_name))));
+                        $link->$data_set_method($value);
+                    }
+                }
 
                 $em = $this->getEntityManager();
                 $em->persist($link);
