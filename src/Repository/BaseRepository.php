@@ -580,8 +580,12 @@ class BaseRepository extends ServiceEntityRepository
     
     public function getFields($params=array())
     {
-        $all_fields = array();
-        
+        if(!isset($this->global_config['entity'][$this->name]['form']) || !$this->global_config['entity'][$this->name]['form']) {
+            return [];
+        }
+
+        $all_fields = array();        
+
         # Translatables
         if($this->isTranslatable()) {
             $translations = $this->getEntityManager()->getRepository($this->name . 'Translation');
@@ -1233,7 +1237,7 @@ class BaseRepository extends ServiceEntityRepository
                     $link->$set_method($row);
                     $link->$set_method_linked($row_linked);
                 }
-
+                
                 $link->setModified(new \Datetime);
                 $link->setPublished(new \Datetime);
 
