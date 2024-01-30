@@ -298,6 +298,9 @@ class BaseRepository extends ServiceEntityRepository
                         $query->andWhere('l.' . $field_name . ' = :findby'.$i);
                         $parameters['findby'.$i] = $value;
                     }
+                } else {
+                    $query->andWhere('t.' . $field_name . ' = :findby'.$i);
+                    $parameters['findby'.$i] = $value;
                 }
                 
                 $i++;
