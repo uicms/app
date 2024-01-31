@@ -42,6 +42,7 @@ class Form
         if(!$form_config) {
             $form_config = $this->ui_config['entity'][$entity]['form'];
         }
+        $excluded_fields = [];
 
         # Loop on fields
         $field_types = array('fields', 'translations');
@@ -50,6 +51,7 @@ class Form
 
                 if(!isset($field_config['public']) || !$field_config['public']) {
                     unset($form_config[$field_type][$field_name]);
+                    $excluded_fields[] = $field_name;
                 }
                 if(isset($field_config['public_required']) && $field_config['public_required']) {
                     $form_config[$field_type][$field_name]['options']['required'] = true;
@@ -93,7 +95,9 @@ class Form
                                                             'ui_config'=>$this->ui_config,
                                                             'form_config'=>$form_config,
                                                             'translator'=>$this->translator,
-                                                            'data_class'=>$entity
+                                                            'data_class'=>$entity,
+                                                            'model'=>$this->model,
+                                                            'excluded_fields'=>$excluded_fields,
                                                         ]);
         return $form ;
     }
