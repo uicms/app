@@ -59,12 +59,12 @@ class Form
 
                 # UIFile with already a value is not required
                 $get_value = 'get' . ucfirst(str_replace(' ', '', ucwords(str_replace('_', ' ', $field_name))));
-                if($row && $field_config['type'] == 'UIFileType' && $row->$get_value()) {
+                if($row && isset($form_config[$field_type][$field_name]) && $field_config['type'] == 'UIFileType' && $row->$get_value()) {
                     $form_config[$field_type][$field_name]['options']['required'] = false;
                 }
 
                 # Repeated file with already a value is not required
-                if($row && $field_config['type'] == 'RepeatedType') {
+                if($row && isset($form_config[$field_type][$field_name]) && $field_config['type'] == 'RepeatedType') {
                     $get_value = 'get' . ucfirst(str_replace(' ', '', ucwords(str_replace('_', ' ', $field_config['dest']))));
                     if($row->$get_value()) {
                         $form_config[$field_type][$field_name]['options']['required'] = false;
