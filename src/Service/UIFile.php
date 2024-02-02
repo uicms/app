@@ -5,6 +5,7 @@ use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\File\File;
 
 use Intervention\Image\ImageManagerStatic as Image;
+use Intervention\Image\ImageManager;
 
 class UIFile
 {
@@ -38,5 +39,15 @@ class UIFile
         }
 
         return true;
+    }
+
+    public function getProperties($file_name) {
+        $manager = new ImageManager(array('driver' => 'imagick'));
+        $img = $manager->make($this->upload_path . '/' . $file_name);
+        $properties = [];
+        $properties['exif'] = $img->exif();
+        $properties['iptc'] = $img->iptc();
+
+        return json_encode($properties);
     }
 }
