@@ -30,7 +30,7 @@ class EmailSender
     }
 
     public function send($params=[])
-   	{
+    {
         if(isset($params['slug']) && $params['slug'] && isset($params['to']) && $params['to']) {
             $site_params = $this->session->get('params');
             $email_content = $this->model->get('Email')->getRow(['findby'=>['slug'=>$params['slug']]]);
@@ -40,8 +40,8 @@ class EmailSender
                $message = vsprintf($message, $params['vars']); 
             }
 
-            if($email_content->getFrom() && $email_content->getFromLabel()) {
-                $from = $email_content->getFromLabel() .' <' . $email_content->getFrom() . '>';
+            if($email_content->getFromEmail() && $email_content->getFromLabel()) {
+                $from = $email_content->getFromLabel() .' <' . $email_content->getFromEmail() . '>';
             } else {
                 $from = $site_params['site_name'] .' <' . $site_params['sender_email_address'] . '>';
             }
@@ -59,9 +59,5 @@ class EmailSender
         } else {
             return false;
         }
-   		
-        
-
-        
-   	}
+    }
 }
