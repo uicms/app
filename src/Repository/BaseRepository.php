@@ -391,7 +391,9 @@ class BaseRepository extends ServiceEntityRepository
                 $search_where[] = $tmp . ')';
             }
 
-            $query->andWhere(implode(' AND ', $search_where));
+            if($search_where_string = implode(' AND ', $search_where)) {
+                $query->andWhere($search_where_string);
+            }
         }
         
         # Linked to
