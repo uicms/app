@@ -348,7 +348,7 @@ class BaseRepository extends ServiceEntityRepository
             preg_match_all("'([^ ]*?\".*?\"|[^ ]+) *'", addslashes($string), $preg);
             $search_terms = [];
             foreach($preg[1] as $i=>$term) {
-                if(strlen($term)>2) {
+                if(strlen($term)>1) {
                     $search_terms[] = $term;
                 }
             }
