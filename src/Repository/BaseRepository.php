@@ -1012,7 +1012,7 @@ class BaseRepository extends ServiceEntityRepository
                 $em->flush();
             }
             
-            return $data->getId();
+            return $data;
         } else {
             throw new AccessDeniedException('access_denied');
         }

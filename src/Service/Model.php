@@ -8,18 +8,18 @@ use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Doctrine\ORM\EntityManager;
 
 class Model
-{	
+{   
     protected $flush_mode = 'auto';
     
-	public function __construct(EntityManager $em, RequestStack $requestStack, ParameterBagInterface $parameters)
+    public function __construct(EntityManager $em, RequestStack $requestStack, ParameterBagInterface $parameters)
     {
-		$request = $requestStack->getCurrentRequest();
+        $request = $requestStack->getCurrentRequest();
         if($request !== null) {
             $this->session = $request->getSession();
         }
-		$this->em = $em;
+        $this->em = $em;
     }
-	
+    
     public function get($entity_name)
     {
         if(strpos($entity_name, 'App\\') === false) {
@@ -31,11 +31,16 @@ class Model
         }
         $repository->setFlushMode($this->flush_mode);
         
-		return $repository;
+        return $repository;
     }
     
     public function setFlushMode($mode)
     {
         $this->flush_mode = $mode;
+    }
+
+    public function flush()
+    {
+        return $this->em->flush();
     }
 }
