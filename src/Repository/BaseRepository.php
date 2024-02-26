@@ -348,7 +348,7 @@ class BaseRepository extends ServiceEntityRepository
             preg_match_all("'([^ ]*?\".*?\"|[^ ]+) *'", addslashes($string), $preg);
             $search_terms = [];
             foreach($preg[1] as $i=>$term) {
-                if(strlen($term)>1) {
+                if(strlen($term)>2) {
                     $search_terms[] = $term;
                 }
             }
@@ -517,6 +517,12 @@ class BaseRepository extends ServiceEntityRepository
     {
         $this->flush_mode = $mode;
         return $this;
+    }
+
+    public function flush()
+    {
+        $em = $this->getEntityManager();
+        $em->flush();
     }
     
     public function locale($locale)
@@ -958,6 +964,7 @@ class BaseRepository extends ServiceEntityRepository
                             
                             # Get current value in DB
                             if($data->getId()) {
+
                                 $connection = $this->getEntityManager()->getConnection();
                                 $stmt = $connection->prepare("SELECT " . $field['name'] . " FROM " . $this->getConfig('table_name') . " WHERE id=" . $data->getId());
                                 $stmt->execute();
@@ -986,7 +993,6 @@ class BaseRepository extends ServiceEntityRepository
                         }
                     }
                 }
-
             
             if($this->isTranslatable()) {
                 $data->mergeNewTranslations();
