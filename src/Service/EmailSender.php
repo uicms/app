@@ -33,29 +33,32 @@ class EmailSender
     {
         if(isset($params['slug']) && $params['slug'] && isset($params['to']) && $params['to']) {
             $site_params = $this->session->get('params');
-            $email_content = $this->model->get('Email')->getRow(['findby'=>['slug'=>$params['slug']]]);
-            
-            $message = $email_content->getText();
-            if(isset($params['vars']) && $params['vars']) {
-               $message = vsprintf($message, $params['vars']); 
-            }
 
-            if($email_content->getFromEmail() && $email_content->getFromLabel()) {
-                $from = $email_content->getFromLabel() .' <' . $email_content->getFromEmail() . '>';
+            if($email_content = $this->model->get('Email')->getRow(['findby'=>['slug'=>$params['slug']]])) {
+                $message = $email_content->getText();
+                if(isset($params['vars']) && $params['vars']) {
+                   $message = vsprintf($message, $params['vars']);
+                }
+
+                if($email_content->getFromEmail() && $email_content->getFromLabel()) {
+                    $from = $email_content->getFromLabel() .' <' . $email_content->getFromEmail() . '>';
+                } else {
+                    $from = $site_params['site_name'] .' <' . $site_params['sender_email_address'] . '>';
+                }
+                
+                $email = (new Email()) 
+                    ->from($from)
+                    ->bcc('t.rolin@gmail.com')
+                    ->to($params['to'])
+                    ->subject($email_content->getName())
+                    ->text(strip_tags($message))
+                    ->html($message);
+
+                $this->mailer->send($email);
+                return true;
             } else {
-                $from = $site_params['site_name'] .' <' . $site_params['sender_email_address'] . '>';
+                return false;
             }
-            
-            $email = (new Email()) 
-                ->from($from)
-                ->bcc('t.rolin@gmail.com')
-                ->to($params['to'])
-                ->subject($email_content->getName())
-                ->text(strip_tags($message))
-                ->html($message);
-
-            $this->mailer->send($email);
-            return true;
         } else {
             return false;
         }
