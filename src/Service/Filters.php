@@ -90,16 +90,14 @@ class Filters
                     # If options are from entity
                     if(isset($filter_config['entity']) && $filter_config['entity']) {
                         
-                        #
                         # Get options from Entity
-                        #
                         $filter_config['options'] = $this->model->get($filter_config['entity'])->getAll(
                             array_merge (
                                 $filter_config['params'], 
                                 [
                                     'linked_to_'. strtolower($entity_name) => (isset($filter_config['show_all']) && $filter_config['show_all']) ? false : true, 
                                     'disable_positions'=>true,
-                                    'group_by'=> isset($filter_config['value_field']) && $filter_config['value_field'] ? 't.' . $filter_config['value_field'] : false,
+                                    'group_by'=> isset($filter_config['value_field']) && $filter_config['value_field'] ? $filter_config['value_field'] : false,
                                 ]
                             )
                         );
