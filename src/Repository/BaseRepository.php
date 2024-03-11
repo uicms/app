@@ -176,6 +176,15 @@ class BaseRepository extends ServiceEntityRepository
                 $query->set($set_table_alias . '.' . $set_field, $set_value);
             }
         }
+
+        # Group
+        if(isset($params['group_by']) && $params['group_by']) {
+            if($this->isFieldTranslatable($params['group_by'])) {
+                $query->groupBy('i.' . $params['group_by']);
+            } else {
+                $query->groupBy('t.' . $params['group_by']);
+            }
+        }
         
         # Dir
         if((!isset($params['linked_to']) || !$params['linked_to']) && (!isset($params['search']) || !$params['search'])) {
@@ -348,7 +357,7 @@ class BaseRepository extends ServiceEntityRepository
             preg_match_all("'([^ ]*?\".*?\"|[^ ]+) *'", addslashes($string), $preg);
             $search_terms = [];
             foreach($preg[1] as $i=>$term) {
-                if(strlen($term)>2) {
+                if(strlen($term)>1) {
                     $search_terms[] = $term;
                 }
             }
@@ -517,12 +526,6 @@ class BaseRepository extends ServiceEntityRepository
     {
         $this->flush_mode = $mode;
         return $this;
-    }
-
-    public function flush()
-    {
-        $em = $this->getEntityManager();
-        $em->flush();
     }
     
     public function locale($locale)
@@ -964,7 +967,6 @@ class BaseRepository extends ServiceEntityRepository
                             
                             # Get current value in DB
                             if($data->getId()) {
-
                                 $connection = $this->getEntityManager()->getConnection();
                                 $stmt = $connection->prepare("SELECT " . $field['name'] . " FROM " . $this->getConfig('table_name') . " WHERE id=" . $data->getId());
                                 $stmt->execute();
@@ -993,6 +995,7 @@ class BaseRepository extends ServiceEntityRepository
                         }
                     }
                 }
+
             
             if($this->isTranslatable()) {
                 $data->mergeNewTranslations();
@@ -1012,7 +1015,7 @@ class BaseRepository extends ServiceEntityRepository
                 $em->flush();
             }
             
-            return $data;
+            return $data->getId();
         } else {
             throw new AccessDeniedException('access_denied');
         }
