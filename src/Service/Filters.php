@@ -49,9 +49,6 @@ class Filters
         $this->result['mode'] = $this->mode;
         $this->result['count_displayed'] = 0;
         
-        #
-        # Foreach filters
-        #
         foreach($config['settings'] as $filter_name => $filter_config) {
             
             if(in_array($entity_name, $filter_config['data'])) {
@@ -97,7 +94,7 @@ class Filters
                                 [
                                     'linked_to_'. strtolower($entity_name) => (isset($filter_config['show_all']) && $filter_config['show_all']) ? false : true, 
                                     'disable_positions'=>true,
-                                    'group_by'=> isset($filter_config['value_field']) && $filter_config['value_field'] ? $filter_config['value_field'] : false,
+                                    'group_by'=>isset($filter_config['value_field']) ? $filter_config['value_field'] : false,
                                 ]
                             )
                         );
@@ -126,9 +123,10 @@ class Filters
                 # Add to result
                 $this->result['filters'][$filter_config['param_name']] = $filter_config;
             }
+            
         }
 
-        # Set meta properties
+        # Loop again on filters
         foreach($config['settings'] as $filter_name => $filter_config) {
             
             if(in_array($entity_name, $filter_config['data'])) {
@@ -141,30 +139,29 @@ class Filters
                 # [TYPE] Choice
                 if($filter_config['type'] == 'choice') {
 
-                    # Options 
+                    # Filtering options : from entity
                     if(isset($filter_config['entity']) && $filter_config['entity']) {
                         foreach($this->result['filters'][$filter_config['param_name']]['options'] as $i=>$option) {
                             
                             $keep_options = isset($filter_config['keep_options']) && $filter_config['keep_options'] ? true : false;
                             $option->_active = false;
                             $option->_has_link = true;
-                            
-                            # If is active
-                            if(isset($this->result['params'][$filter_config['param_name']]) && in_array($option->getId(), $this->result['params'][$filter_config['param_name']])) {
+
+
+                            if(isset($this->result['params'][$filter_config['param_name']]) && 
+                               in_array($option->getId(), $this->result['params'][$filter_config['param_name']])
+                            ) {
                                 $option->_active = true;
                                 $option->_has_link = false;
-                            } 
-                            # If is not active
-                            else {
+                            } else {
                                 $params_tmp = $this->result['params'];
-                                if(isset($filter_config['value_field']) && $filter_config['value_field']) {
-                                    $method = $this->model->get($filter_config['entity'])->method($filter_config['value_field']);
+                                if(isset($filter_config['value_field'])) {
+                                    $method = $this->model->get($entity_name)->method($filter_config['value_field']);
                                     $params_tmp[$filter_config['param_name']][] = $option->$method();
                                 } else {
                                     $params_tmp[$filter_config['param_name']][] = $option->getId();
                                 }
-                                
-
+                               
                                 # Remove option if has no results
                                 if((!$has_results = $this->model->get($entity_name)->count($params_tmp)) && !$keep_options) {
                                     unset($this->result['filters'][$filter_config['param_name']]['options'][$i]);
@@ -179,6 +176,9 @@ class Filters
                         }
                     }
 
+
+
+                    # Filtering options : manual
                 }
             }
 
@@ -201,13 +201,7 @@ class Filters
                     # [TYPE] Choice
                     if($active->config['type'] == 'choice' && is_array($param_values)) {
                         foreach($param_values as $i=>$value) {
-
-                            if(isset($active->config['value_field']) && $active->config['value_field']) {
-                                $method = $this->model->get($active->config['entity'])->method($active->config['value_field']);
-                                if($value == $active->$method()) {
-                                    unset($params_tmp[$param_name][$i]);
-                                }
-                            } else if(isset($active->config['entity']) && $active->config['entity'] && $value == $active->getId()) {
+                            if(isset($active->config['entity']) && $active->config['entity'] && $value == $active->getId()) {
                                 unset($params_tmp[$param_name][$i]);
                             }
                         }
