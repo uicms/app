@@ -1384,7 +1384,7 @@ parameters:
         name: App\Entity\Venue
         name_field: id
         order_by: id
-        order_dir: id
+        order_dir: desc
         link:
         - App\Entity\Event
         - App\Entity\Venue
@@ -1393,7 +1393,7 @@ parameters:
         name: App\Entity\Contributor
         name_field: id
         order_by: id
-        order_dir: id
+        order_dir: desc
         link:
         - App\Entity\Event
         - App\Entity\Contributor
@@ -1402,7 +1402,7 @@ parameters:
         name: App\Entity\Media
         name_field: id
         order_by: id
-        order_dir: id
+        order_dir: desc
         link:
         - App\Entity\Event
         - App\Entity\Media
@@ -1411,7 +1411,7 @@ parameters:
         name: App\Entity\Topic
         name_field: id
         order_by: id
-        order_dir: id
+        order_dir: desc
         link:
         - App\Entity\Event
         - App\Entity\Topic
@@ -1420,7 +1420,7 @@ parameters:
         name: App\Entity\Keyword
         name_field: id
         order_by: id
-        order_dir: id
+        order_dir: desc
         link:
         - App\Entity\Event
         - App\Entity\Keyword
@@ -1429,7 +1429,7 @@ parameters:
         name: App\Entity\Media
         name_field: id
         order_by: id
-        order_dir: id
+        order_dir: desc
         link:
         - App\Entity\Venue
         - App\Entity\Media
@@ -1438,7 +1438,7 @@ parameters:
         name: App\Entity\Resource
         name_field: id
         order_by: id
-        order_dir: id
+        order_dir: desc
         link:
         - App\Entity\Contribution
         - App\Entity\Resource
@@ -1447,7 +1447,7 @@ parameters:
         name: App\Entity\Keyword
         name_field: id
         order_by: id
-        order_dir: id
+        order_dir: desc
         link:
         - App\Entity\Contribution
         - App\Entity\Keyword
@@ -1456,7 +1456,7 @@ parameters:
         name: App\Entity\Topic
         name_field: id
         order_by: id
-        order_dir: id
+        order_dir: desc
         link:
         - App\Entity\Contribution
         - App\Entity\Topic
@@ -1465,7 +1465,7 @@ parameters:
         name: App\Entity\Page
         name_field: id
         order_by: id
-        order_dir: id
+        order_dir: desc
         link:
         - App\Entity\BlockCollection
         - App\Entity\Page
@@ -1474,7 +1474,7 @@ parameters:
         name: App\Entity\Media
         name_field: id
         order_by: id
-        order_dir: id
+        order_dir: desc
         link:
         - App\Entity\Resource
         - App\Entity\Media
@@ -1483,7 +1483,7 @@ parameters:
         name: App\Entity\Block
         name_field: id
         order_by: id
-        order_dir: id
+        order_dir: desc
         link:
         - App\Entity\Page
         - App\Entity\Block
@@ -1492,7 +1492,7 @@ parameters:
         name: App\Entity\Media
         name_field: id
         order_by: id
-        order_dir: id
+        order_dir: desc
         link:
         - App\Entity\Block
         - App\Entity\Media
@@ -1501,7 +1501,7 @@ parameters:
         name: App\Entity\Media
         name_field: id
         order_by: id
-        order_dir: id
+        order_dir: desc
         link:
         - App\Entity\Page
         - App\Entity\Media
@@ -1510,7 +1510,7 @@ parameters:
         name: App\Entity\Topic
         name_field: id
         order_by: id
-        order_dir: id
+        order_dir: desc
         link:
         - App\Entity\Resource
         - App\Entity\Topic
@@ -1519,7 +1519,7 @@ parameters:
         name: App\Entity\Keyword
         name_field: id
         order_by: id
-        order_dir: id
+        order_dir: desc
         link:
         - App\Entity\Resource
         - App\Entity\Keyword
@@ -1528,7 +1528,7 @@ parameters:
         name: App\Entity\Topic
         name_field: id
         order_by: id
-        order_dir: id
+        order_dir: desc
         link:
         - App\Entity\Contributor
         - App\Entity\Topic
@@ -1601,7 +1601,7 @@ parameters:
         name: App\Entity\Page
         name_field: id
         order_by: id
-        order_dir: id
+        order_dir: desc
         link:
         - App\Entity\ContributorGrade
         - App\Entity\Page
