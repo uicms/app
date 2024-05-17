@@ -22,7 +22,7 @@ class Import
         $this->params = $parameters;
     }
 
-    public function import($entity, $directory)
+    public function import($entity, $directory, $files_directory='')
     {
         $project_dir = $this->params->get('kernel.project_dir');
         $path = '/' . trim($project_dir, '/') . '/' . trim($directory, '/');
@@ -36,17 +36,24 @@ class Import
             $file_extension = pathinfo($file_path, PATHINFO_EXTENSION);
             switch($file_extension) {
                 case 'csv':
-                    $this->importCsv($file_path);
+                    $this->importCsv($file_path, ';', $files_directory);
                 break;
             }
         }
     }
     
-    protected function importCsv($file_path, $separator=';')
+    protected function importCsv($file_path, $separator=';', $files_directory='')
     {
         $model = $this->model->get($this->entity);
         $dir = dirname($file_path);
-        $this->dir_files = $dir . "/files";
+
+        # Files directory
+        if($files_directory) {
+            $this->dir_files = $this->params->get('kernel.project_dir') . '/' . $files_directory;
+        } else {
+            $this->dir_files = $dir . "/files";
+        }
+        
         $fp = fopen($file_path, 'r');
         $i = 0;
         while ($data = fgetcsv($fp, 4096, $separator)) {

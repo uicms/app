@@ -28,6 +28,7 @@ class ImportCommand extends Command
         $this->setDescription('Import data from files located in a specified directory');
         $this->addArgument('entity', InputArgument::REQUIRED, 'The name of the entity.');
         $this->addArgument('directory', InputArgument::REQUIRED, 'The path to the data directory.');
+        $this->addArgument('files_directory', InputArgument::OPTIONAL, 'The path to the directory files.');
     }
     
     protected function execute(InputInterface $input, OutputInterface $output)
@@ -51,7 +52,7 @@ class ImportCommand extends Command
                 '',
             ]);
             
-        $this->import->import($input->getArgument('entity'), $input->getArgument('directory'));
+        $this->import->import($input->getArgument('entity'), $input->getArgument('directory'), $input->getArgument('files_directory'));
         
         #$output->writeln('Import data from ' . $input->getArgument('csvfile') . ' to ' . $input->getArgument('entityname'));
     }
