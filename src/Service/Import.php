@@ -69,7 +69,8 @@ class Import
                     $value = trim($value);
                     $set_method = $model->method($key, 'set');
                     
-                    if($value && ($field_config = $model->getField(['name'=>$key])) && ($value = $this->handleValue($field_config, $value))) {
+                    if($field_config = $model->getField(['name'=>$key])) {
+                        $value = $value ? $this->handleValue($field_config, $value) : null;
                         $new_row->$set_method($value);
                         $is_empty_row = false;
                     }
@@ -136,37 +137,53 @@ class Import
 
     protected function handleValue($field_config, $value) {
         # Set value depending on its type
-        switch($field_config['form']['type']) {
-            case "EntityType":
-                $entity_model = $this->model->get($field_config['form']['options']['class']);
-                $entity_config = $entity_model->getConfig();
-                if(!$entity_row = $entity_model->getRow(['findby'=>[$entity_config['name_field'] => $value]])) {
-                    $entity_row = $entity_model->new();
-                    $entity_set_method = $entity_model->method($entity_config['name_field'], 'set');
-                    $entity_row->$entity_set_method($value);
-                    $entity_model->persist($entity_row);
-                }
-                return $entity_row;
-            break;
-            
-            case "UIFileType":
-                if(file_exists($this->dir_files . '/' . $value)) {
-                    $transformer = new FileTransformer($field_config, $this->params->get('ui_config'));
-                    $file = new File($this->dir_files . '/' . $value);
-                    $value = $transformer->reverseTransform($file);
+        if(isset($field_config['form']) && $field_config['form']) {
+            switch($field_config['form']['type']) {
+                case "EntityType":
+                    $entity_model = $this->model->get($field_config['form']['options']['class']);
+                    $entity_config = $entity_model->getConfig();
+                    if(!$entity_row = $entity_model->getRow(['findby'=>[$entity_config['name_field'] => $value]])) {
+                        $entity_row = $entity_model->new();
+                        $entity_set_method = $entity_model->method($entity_config['name_field'], 'set');
+                        $entity_row->$entity_set_method($value);
+                        $entity_model->persist($entity_row);
+                    }
+                    return $entity_row;
+                break;
+                
+                case "UIFileType":
+                    if(file_exists($this->dir_files . '/' . $value)) {
+                        $transformer = new FileTransformer($field_config, $this->params->get('ui_config'));
+                        $file = new File($this->dir_files . '/' . $value);
+                        $value = $transformer->reverseTransform($file);
+                        return $value;
+                    } else {
+                        return false;
+                    }
+                break;
+                
+                case "DateType":
+                    $value = new \Date($value);
                     return $value;
-                } else {
-                    return false;
-                }
-            break;
-            
-            case "DateType":
-                return $value;
-            break;
-            
-            default:
-                return $value;
-            break;
+                break;
+
+                case "DatetimeType":
+                    $value = new \Datetime($value);
+                    return $value;
+                break;
+                
+                default:
+                    return $value;
+                break;
+            }
+        } else if(!isset($field_config['form']) || !$field_config['form']){
+            switch($field_config['type']) {
+                case "datetime":
+                    $value = new \Datetime($value);
+                    return $value;
+                break;
+            }
         }
+        
     }
 }

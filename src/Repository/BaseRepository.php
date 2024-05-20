@@ -624,36 +624,38 @@ class BaseRepository extends ServiceEntityRepository
         # Translatables
         if($this->isTranslatable()) {
             $translations = $this->getEntityManager()->getRepository($this->name . 'Translation');
-            $result = $this->meta($this->name . 'Translation')->getFieldNames();
-            if($result[0] == 'id') unset($result[0]);
+            $translatable_fields = $this->meta($this->name . 'Translation')->getFieldNames();
+            if($translatable_fields[0] == 'id') unset($translatable_fields[0]);
 
-            foreach($result as $i=>$field_name) {
-                $data = array('name'=>$field_name);
-                $data['is_meta'] = in_array($field_name, $this->meta_fields) ? true : false;
-                $data['is_db'] = true;
+            foreach($translatable_fields as $i=>$field_name) {
+                $field_attr = $this->meta($this->name . 'Translation')->getFieldMapping($field_name);
+                $field_attr['name'] = $field_name;
+                $field_attr['is_meta'] = in_array($field_name, $this->meta_fields) ? true : false;
+                $field_attr['is_db'] = true;
                 
                 foreach($this->global_config['entity'][$this->name]['form']['translations'] as $form_field_name=>$form_field) {
                     if($field_name == $form_field_name) {
-                        $data['form'] = $form_field;
+                        $field_attr['form'] = $form_field;
                     }
                 }
-                $all_fields[] = $data;
+                $all_fields[] = $field_attr;
             }
         }
         
-        # Regular
-        $result = $this->meta()->getFieldNames();
-        foreach($result as $i=>$field_name) {
-            $data = array('name'=>$field_name);
-            $data['is_meta'] = in_array($field_name, $this->meta_fields) ? true : false;
-            $data['is_db'] = true;
+        # Not translatables
+        $regular_fields = $this->meta()->getFieldNames();
+        foreach($regular_fields as $i=>$field_name) {
+            $field_attr = $this->meta()->getFieldMapping($field_name);
+            $field_attr['name'] = $field_name;
+            $field_attr['is_meta'] = in_array($field_name, $this->meta_fields) ? true : false;
+            $field_attr['is_db'] = true;
             
             foreach($this->global_config['entity'][$this->name]['form']['fields'] as $form_field_name=>$form_field) {
                 if($field_name == $form_field_name) {
-                    $data['form'] = $form_field;
+                    $field_attr['form'] = $form_field;
                 }
             }
-            $all_fields[] = $data;
+            $all_fields[] = $field_attr;
         }
         
         # Complete with form fields
