@@ -14,7 +14,7 @@ use App\Service\FormContribution;
 
 class ContributionsController extends AbstractController
 {
-    public function index($page, $search='', Model $model, Request $request, Filters $filters)
+    public function index($page, Model $model, Request $request, Filters $filters, $search='')
     {
         $params = ['limit' => $this->get('session')->get('params')['results_limit']];
     	$filters = $filters->getFilters('Contribution', $this->getParameter('ui_config')['filters'], $params);
@@ -34,7 +34,7 @@ class ContributionsController extends AbstractController
 		        );
     }
     
-    public function results($page, $of=0, Model $model, Request $request, Filters $filters)
+    public function results($page, Model $model, Request $request, Filters $filters, $of=0)
     {
         $params = ['limit' => $this->get('session')->get('params')['results_limit'], 'offset' => $of];
         $filters = $filters->getFilters('Contribution', $this->getParameter('ui_config')['filters'], $params);
@@ -53,7 +53,7 @@ class ContributionsController extends AbstractController
         );
     }
 
-    public function view($page, $id=0, Model $model, Request $request, FormAnswer $answer_form, Filters $filters, Viewnav $viewnav)
+    public function view($page, Model $model, Request $request, FormAnswer $answer_form, Filters $filters, Viewnav $viewnav, $id=0)
     {
         $data = ['page'=>$page];
 
@@ -88,7 +88,7 @@ class ContributionsController extends AbstractController
         );
     }
 
-    public function form($page, $id=0, Model $model, Request $request, FormContribution $contribution_form): Response
+    public function form($page, Model $model, Request $request, FormContribution $contribution_form, $id=0): Response
     {
     	# Form
         $form = $contribution_form->get($id);
@@ -105,7 +105,7 @@ class ContributionsController extends AbstractController
         );
     }
 
-    public function like($page, $id=0, Model $model, Request $request)
+    public function like($page, Model $model, Request $request, $id=0)
     {
         $data = ['page'=>$page];
         
@@ -131,7 +131,7 @@ class ContributionsController extends AbstractController
         return $this->redirect($_SERVER['HTTP_REFERER']);
     }
     
-    public function unlike($page, $id=0, Model $model, Request $request)
+    public function unlike($page, Model $model, Request $request, $id=0)
     {
         if((int)$id) {
             if($is_liked = $model->get('Selection')->getRow(['findby'=>['type'=>'like', 'contribution'=>$id, 'contributor'=>$this->get('session')->get('contributor')]]))
@@ -148,7 +148,7 @@ class ContributionsController extends AbstractController
         return $this->redirect($_SERVER['HTTP_REFERER']);
     }
     
-    public function addtoselection($id=0, Model $model, Request $request)
+    public function addtoselection(Model $model, Request $request, $id=0)
     {
         if((int)$id) {
             $selection = $model->get('Selection')->mode('admin')->new();
@@ -163,7 +163,7 @@ class ContributionsController extends AbstractController
         return $this->redirect($_SERVER['HTTP_REFERER']);
     }
 
-    public function removefromselection($id=0, Model $model, Request $request)
+    public function removefromselection(Model $model, Request $request, $id=0)
     {
         if((int)$id) {
             if($selection = $model->get('Selection')->getRow(['findby'=>['type'=>'selection', 'contribution'=>$id, 'contributor'=>$this->get('session')->get('contributor')]])) {
@@ -179,7 +179,7 @@ class ContributionsController extends AbstractController
         return $this->redirect($_SERVER['HTTP_REFERER']);
     }
 
-    public function likeanswer($page, $id=0, Model $model, Request $request)
+    public function likeanswer($page, Model $model, Request $request, $id=0)
     {
         if((int)$id) {
             if(!$is_liked = $model->get('Selection')->getRow(['findby'=>['type'=>'like', 'answer'=>$id, 'contributor'=>$this->get('session')->get('contributor')]]))
@@ -200,7 +200,7 @@ class ContributionsController extends AbstractController
         return $this->redirect($_SERVER['HTTP_REFERER']);
     }
     
-    public function unlikeanswer($page, $id=0, Model $model, Request $request)
+    public function unlikeanswer($page, Model $model, Request $request, $id=0)
     {
         if((int)$id) {
             if($is_liked = $model->get('Selection')->getRow(['findby'=>['type'=>'like', 'answer'=>$id, 'contributor'=>$this->get('session')->get('contributor')]]))
@@ -217,7 +217,7 @@ class ContributionsController extends AbstractController
         return $this->redirect($_SERVER['HTTP_REFERER']);
     }
     
-    public function selectanswer($id=0, Model $model, Request $request)
+    public function selectanswer(Model $model, Request $request, $id=0)
     {
         if((int)$id) {
             $current_answer = $model->get('Answer')->getRowById((int)$id);

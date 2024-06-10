@@ -45,7 +45,7 @@ class AuthenticationController extends AbstractController
 		        );
     }
 
-    public function login($email='', $password='', $page, Model $model, UserPasswordEncoderInterface $passwd_encoder)
+    public function login($page, Model $model, UserPasswordEncoderInterface $passwd_encoder, $email='', $password='')
     {
         if($email && $password) {
             if($contributor = $model->get('Contributor')->mode('admin')->getRow(['findby'=>['email'=>$email]])) {
@@ -93,7 +93,7 @@ class AuthenticationController extends AbstractController
         );
     }
 
-    public function agree($agreement=0, $page, Model $model, Request $request)
+    public function agree($page, Model $model, Request $request, $agreement=0)
     {
         if(!$this->get('session')->get('contributor')) {
             return $this->redirectToRoute('app_page_action', array('slug'=>$page->getSlug(), 'action'=>'index', 'locale'=>$this->get('session')->get('locale')));
@@ -124,7 +124,7 @@ class AuthenticationController extends AbstractController
         );
     }
     
-    public function retrievepassword($email='', $page, Model $model, UserPasswordEncoderInterface $passwd_encoder, EmailSender $email_sender)
+    public function retrievepassword($page, Model $model, UserPasswordEncoderInterface $passwd_encoder, EmailSender $email_sender, $email='')
     {
     	$params = $this->get('session')->get('params');
 

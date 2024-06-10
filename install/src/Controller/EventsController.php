@@ -36,7 +36,7 @@ class EventsController extends AbstractController
         );
     }
 
-    public function results($page, $of=0, Model $model, Request $request, Filters $filters)
+    public function results($page, Model $model, Request $request, Filters $filters, $of=0)
     {
         # Init
         $limit = $this->get('session')->get('params')['results_limit'];
@@ -53,7 +53,7 @@ class EventsController extends AbstractController
         return $this->render('app/tpl/events/results.html.twig', $data);
     }
     
-    public function view($page, $search='', $id=0, Model $model, Request $request, Filters $filters, Viewnav $viewnav)
+    public function view($page, Model $model, Request $request, Filters $filters, Viewnav $viewnav, $search='', $id=0)
     {
         $data = ['page'=>$page];
         $ui_config = $this->getParameter('ui_config');
@@ -76,7 +76,7 @@ class EventsController extends AbstractController
         );
     }
 
-    public function form($page, $id=0, Model $model, Request $request, FormEvent $event_form): Response
+    public function form($page, Model $model, Request $request, FormEvent $event_form, $id=0): Response
     {
         # Form
         $form = $event_form->get($id);

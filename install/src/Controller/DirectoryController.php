@@ -13,7 +13,7 @@ use App\Service\FormContributor;
 
 class DirectoryController extends AbstractController
 {
-    public function index($page, $search='', Model $model, Request $request, Filters $filters)
+    public function index($page, Model $model, Request $request, Filters $filters, $search='')
     {
         $params = ['limit' => $this->get('session')->get('params')['results_limit']];
     	$filters = $filters->getFilters('Contributor', $this->getParameter('ui_config')['filters'], $params);
@@ -33,7 +33,7 @@ class DirectoryController extends AbstractController
 		        );
     }
     
-    public function results($page, $of=0, Model $model, Request $request, Filters $filters)
+    public function results($page, Model $model, Request $request, Filters $filters, $of=0)
     {
         $params = ['limit' => $this->get('session')->get('params')['results_limit'], 'offset' => $of];
         $filters = $filters->getFilters('Contributor', $this->getParameter('ui_config')['filters'], $params);
@@ -52,7 +52,7 @@ class DirectoryController extends AbstractController
         );
     }
     
-    public function view($page, $id=0, Model $model, Request $request)
+    public function view($page, Model $model, Request $request, $id=0)
     {
 		return $this->render(
             'app/tpl/directory/view.html.twig',
@@ -63,7 +63,7 @@ class DirectoryController extends AbstractController
         );
     }
     
-    public function form($id=0, $page, Model $model, Request $request, FormContributor $contributor_form)
+    public function form($page, Model $model, Request $request, FormContributor $contributor_form, $id=0)
     {
     	# Form
         $form = $contributor_form->get($id);
