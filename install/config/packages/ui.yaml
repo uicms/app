@@ -1621,50 +1621,27 @@ parameters:
         select_field: ~
         search: ~
       pages:
-        contributors:
+        pages:
           controller: Uicms\Admin\Controller\Editor
           action: index
-          slug: contributors
+          slug: pages
           arguments:
-            entity_name: App\Entity\Contributor
+            entity_name: App\Entity\Page
+          params: ~
+        blocks:
+          controller: Uicms\Admin\Controller\Editor
+          action: index
+          slug: blocks
+          arguments:
+            entity_name: App\Entity\Block
           params: []
-          displayed_fields:
-          - status
-        contributions:
+        block_collections:
+          display: false
           controller: Uicms\Admin\Controller\Editor
           action: index
-          slug: contributions
+          slug: block_collections
           arguments:
-            entity_name: App\Entity\Contribution
-          params: []
-        answers:
-          controller: Uicms\Admin\Controller\Editor
-          action: index
-          slug: answers
-          arguments:
-            entity_name: App\Entity\Answer
-          params: []
-        resources:
-          controller: Uicms\Admin\Controller\Editor
-          action: index
-          slug: resources
-          arguments:
-            entity_name: App\Entity\Resource
-          params:
-            display: thumbnails
-        events:
-          controller: Uicms\Admin\Controller\Editor
-          action: index
-          slug: events
-          arguments:
-            entity_name: App\Entity\Event
-          params: []
-        venues:
-          controller: Uicms\Admin\Controller\Editor
-          action: index
-          slug: venues
-          arguments:
-            entity_name: App\Entity\Venue
+            entity_name: App\Entity\BlockCollection
           params: []
         medias:
           controller: Uicms\Admin\Controller\Editor
@@ -1674,41 +1651,6 @@ parameters:
             entity_name: App\Entity\Media
           params:
             display: thumbnails
-        blocks:
-          controller: Uicms\Admin\Controller\Editor
-          action: index
-          slug: blocks
-          arguments:
-            entity_name: App\Entity\Block
-          params: []
-        block_collections:
-          controller: Uicms\Admin\Controller\Editor
-          action: index
-          slug: block_collections
-          arguments:
-            entity_name: App\Entity\BlockCollection
-          params: []
-        keywords:
-          controller: Uicms\Admin\Controller\Editor
-          action: index
-          slug: keywords
-          arguments:
-            entity_name: App\Entity\Keyword
-          params: []
-        topics:
-          controller: Uicms\Admin\Controller\Editor
-          action: index
-          slug: topics
-          arguments:
-            entity_name: App\Entity\Topic
-          params: []
-        pages:
-          controller: Uicms\Admin\Controller\Editor
-          action: index
-          slug: pages
-          arguments:
-            entity_name: App\Entity\Page
-          params: ~
         params:
           controller: Uicms\Admin\Controller\Editor
           action: index
@@ -1718,7 +1660,75 @@ parameters:
           displayed_fields:
           - value
           params: []
+        contributors:
+          display: false
+          controller: Uicms\Admin\Controller\Editor
+          action: index
+          slug: contributors
+          arguments:
+            entity_name: App\Entity\Contributor
+          params: []
+          displayed_fields:
+          - status
+        contributions:
+          display: false
+          controller: Uicms\Admin\Controller\Editor
+          action: index
+          slug: contributions
+          arguments:
+            entity_name: App\Entity\Contribution
+          params: []
+        answers:
+          display: false
+          controller: Uicms\Admin\Controller\Editor
+          action: index
+          slug: answers
+          arguments:
+            entity_name: App\Entity\Answer
+          params: []
+        resources:
+          display: false
+          controller: Uicms\Admin\Controller\Editor
+          action: index
+          slug: resources
+          arguments:
+            entity_name: App\Entity\Resource
+          params:
+            display: thumbnails
+        events:
+          display: false
+          controller: Uicms\Admin\Controller\Editor
+          action: index
+          slug: events
+          arguments:
+            entity_name: App\Entity\Event
+          params: []
+        venues:
+          display: false
+          controller: Uicms\Admin\Controller\Editor
+          action: index
+          slug: venues
+          arguments:
+            entity_name: App\Entity\Venue
+          params: []
+        keywords:
+          display: false
+          controller: Uicms\Admin\Controller\Editor
+          action: index
+          slug: keywords
+          arguments:
+            entity_name: App\Entity\Keyword
+          params: []
+        topics:
+          display: false
+          controller: Uicms\Admin\Controller\Editor
+          action: index
+          slug: topics
+          arguments:
+            entity_name: App\Entity\Topic
+          params: []
         emails:
+          display: false
           controller: Uicms\Admin\Controller\Editor
           action: index
           slug: emails
@@ -1727,15 +1737,8 @@ parameters:
           params: []
           displayed_fields:
           - slug
-        users:
-          controller: Uicms\Admin\Controller\Editor
-          action: index
-          slug: users
-          is_tree: false
-          arguments:
-            entity_name: App\Entity\User
-          params: ~
         contributor_grades:
+          display: false
           controller: Uicms\Admin\Controller\Editor
           action: index
           slug: contributor_grades
@@ -1743,6 +1746,7 @@ parameters:
             entity_name: App\Entity\ContributorGrade
           params: []
         contributor_types:
+          display: false
           controller: Uicms\Admin\Controller\Editor
           action: index
           slug: contributor_types
@@ -1750,6 +1754,7 @@ parameters:
             entity_name: App\Entity\ContributorType
           params: []
         contribution_types:
+          display: false
           controller: Uicms\Admin\Controller\Editor
           action: index
           slug: contribution_types
@@ -1757,6 +1762,7 @@ parameters:
             entity_name: App\Entity\ContributionType
           params: []
         contribution_status:
+          display: false
           controller: Uicms\Admin\Controller\Editor
           action: index
           slug: contribution_status
@@ -1764,19 +1770,15 @@ parameters:
             entity_name: App\Entity\ContributionStatus
           params: []
         contribution_objects:
+          display: false
           controller: Uicms\Admin\Controller\Editor
           action: index
           slug: contribution_objects
           arguments:
             entity_name: App\Entity\ContributionObject
           params: []
-        action:
-          controller: Uicms\Admin\Controller\Action
-          action: index
-          slug: action
-          display: false
-          params: ~
         selections:
+          display: false
           controller: Uicms\Admin\Controller\Editor
           action: index
           slug: selections
@@ -1785,4 +1787,19 @@ parameters:
           params: []
           displayed_fields:
           - contributor
+        action:
+          controller: Uicms\Admin\Controller\Action
+          action: index
+          slug: action
+          display: false
+          params: ~
+        users:
+          controller: Uicms\Admin\Controller\Editor
+          action: index
+          slug: users
+          is_tree: false
+          arguments:
+            entity_name: App\Entity\User
+          params: ~
+        
 ...
