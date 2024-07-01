@@ -1,0 +1,18 @@
+{% if paginator.total_pages > 1 %}
+<div class="cpnt cpnt_paginator">
+    <ul>
+        {% if paginator.prev %}
+        <li class="page-item"><a class="page-link" href="{{ path('app_page_action', {slug: page.slug, action: 'index', locale: app.session.get('locale'), offset: paginator.prev_offset}) }}&amp;{{ filters.url }}">Previous</a></li>
+        {% endif %}
+        
+        {% for nav in paginator.nav %}
+        <li class="page-item{% if paginator.current_page == nav.page %} active{% endif %}">
+            <a class="page-link" href="{{ path('app_page_action', {slug: page.slug, action: 'index', locale: app.session.get('locale'), offset: nav.offset}) }}&amp;{{ filters.url }}">{{ nav.page }}</a>
+        </li>
+        {% endfor %}
+
+        {% if paginator.next %}
+        <li class="page-item"><a class="page-link" href="{{ path('app_page_action', {slug: page.slug, locale: app.session.get('locale'), action: 'index', offset: paginator.next_offset}) }}&amp;{{ filters.url }}">Next</a></li>{% endif %}
+    </ul>
+</div>
+{% endif %}
