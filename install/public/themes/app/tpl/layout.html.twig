@@ -82,6 +82,20 @@
                     </li>
 					{% endfor %}
                     
+                    {% if app.session.get('locale') == 'fr' %}
+                        <li>
+                            <a href="{{ path('app_page', {'slug': page.slug, 'locale': 'en' }) }}">
+                                English
+                            </a>
+                        </li>
+                    {% else %}
+                        <li>
+                            <a href="{{ path('app_page', {'slug': page.slug, 'locale': 'fr' }) }}">
+                                Français
+                            </a>
+                        </li>
+                    {% endif %}
+                    
                     {% if app.session.get('contributor') %}
                         <li>
                             <span id="authenticated">{{ app.session.get('contributor').email }}</span><br/>

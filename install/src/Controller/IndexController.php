@@ -45,6 +45,11 @@ class IndexController extends AbstractController
 		if(!$page) {
 			throw $this->createNotFoundException('No data found for page '.$slug);
 		}
+        
+        # URL redirect
+        if(method_exists($page, 'getUrl') && $page->getUrl()) {
+            return $this->redirect($page->getUrl());
+        }
 		
 		# Current action
 		if(!$action) {
