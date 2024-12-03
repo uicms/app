@@ -13,7 +13,7 @@ use App\Service\FormEvent;
 
 class EventsController extends AbstractController
 {
-    public function index($page, $search='', Model $model, Request $request, Filters $filters)
+    public function index($page, Model $model, Request $request, Filters $filters, $search='')
     {
         # Init
         $limit = $this->get('session')->get('params')['results_limit'];
