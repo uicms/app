@@ -1,9 +1,0 @@
-{% trans_default_domain 'app' %}
-<div class="resource_infos infos">
-    Le {{ resource.created|date("m/d/Y") }}
-    {% if resource.contributor %} | <span class="resource_contributor">Par {{ resource.contributor.firstname }} {{ resource.contributor.lastname }}</span>{% endif %}
-    
-    {% if resource.topics %}<span class="resource_topics"> | {% for topic in resource.topics %}<a href="{{ path('app_page', {'locale': app.session.get('locale'), 'slug': app.session.get('resources_page_slug') })}}?tp[]={{ topic.id }}" class="resource_topic button">#{{ topic.name }}</a> {% endfor %}</span>{% endif %}
-    
-    {% if resource.keywords %}<span class="resource_topics"> | {% for keyword in resource.keywords %}<a href="{{ path('app_page', {'locale': app.session.get('locale'), 'slug': app.session.get('resources_page_slug') })}}?k[]={{ keyword.id }}" class="resource_keyword button">#{{ keyword.name }}</a> {% endfor %}</span>{% endif %}
-</div>

@@ -65,26 +65,6 @@ class IndexController extends AbstractController
         }
 	    $session->set('menu', $menu);
         
-        # Pages slugs
-        if($authentication_page = $model->get('Page')->getRow(['findby'=>['controller'=>'authentication']])) {
-            $this->get('session')->set('authentication_page_slug', $authentication_page->getSlug());
-        }
-        if($resources_page = $model->get('Page')->getRow(['findby'=>['controller'=>'resources']])) {
-            $this->get('session')->set('resources_page_slug', $resources_page->getSlug());
-        }
-        if($events_page = $model->get('Page')->getRow(['findby'=>['controller'=>'events']])) {
-            $this->get('session')->set('events_page_slug', $events_page->getSlug());
-        }
-        if($contributions_page = $model->get('Page')->getRow(['findby'=>['controller'=>'contributions']])) {
-            $this->get('session')->set('contributions_page_slug', $contributions_page->getSlug());
-        }
-        if($directory_page = $model->get('Page')->getRow(['findby'=>['controller'=>'directory']])) {
-            $this->get('session')->set('directory_page_slug', $directory_page->getSlug());
-        }
-        if($home_page = $model->get('Page')->getRow(['findby'=>['class'=>'home']])) {
-            $this->get('session')->set('home_page_slug', $home_page->getSlug());
-        }
-
         # Attributes
         $attributes = array_merge($request->query->all(), $request->request->all(), $request->attributes->all(), ['page' => $page]);
         
@@ -95,18 +75,6 @@ class IndexController extends AbstractController
             $params[$param->getName()] = $param->getValue();
         }
         $session->set('params', $params);
-
-        # Authentication
-        $authenticated_controllers = [
-            'contributions',
-            'resources',
-        ];
-        
-        if($authentication_page && in_array($page->getController(), $authenticated_controllers) && !$this->get('session')->get('contributor')) {
-                return $this->redirectToRoute('app_page_action', array('slug'=>$this->get('session')->get('authentication_page_slug'), 'action'=>'index', 'locale'=>$this->get('session')->get('locale')));
-        } else if($this->get('session')->get('contributor')) {
-            $this->get('session')->set('contributor', $model->get('contributor')->getRowById($this->get('session')->get('contributor')->getId()));
-        }
         
         return $this->forward("App\\Controller\\" . ucfirst($page->getController()) . "Controller::" . $action, $attributes);
 	}

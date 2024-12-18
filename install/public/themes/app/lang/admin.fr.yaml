@@ -1,76 +1,7 @@
-fld_contributor_lastname: Nom
-fld_contributor_firstname: Prénom
-fld_contributor_phone: Téléphone
-fld_contributor_has_agreed: J'accepte les CGU de la plateforme
-fld_contributor_status: Statut
-fld_contributor_short_description: Présentation courte
-fld_contributor_description: Biographie
-fld_contributor_is_contactable: Souhaitez-vous être contacté(e) par les autres contributeurs
-opt_contributor_is_contactable_email: par email
-opt_contributor_is_contactable_phone: par téléphone
-fld_contributor_password: Mot de passe
-fld_contributor_new_password: Saisir un mot de passe
-fld_contributor_repeat_password: Répéter le mot de passe
-fld_contributor_thumbnail: Image de profil
-fld_contributor_email_notification: Souhaitez-vous recevoir
-opt_contributor_email_notification_answer: une alerte lorsqu’un utilisateur répond à l’une de vos contributions
-opt_contributor_email_notification_weekly: une alerte hebdomadaire qui récapitule les contribution dans vos thématiques favorites
-
-fld_contributor_keywords: Mots-clés
-fld_contributor_topics: Thématiques
-fld_contact_topics: Ses thématiques
-fld_contributor_skills: Quelles sont vos compétences ?
-fld_contact_skills: Ses compétences
-
-fld_contribution_name: Titre
-fld_contribution_type: Type
-fld_contribution_description: Description
-fld_contribution_date_begin: Date de début
-fld_contribution_date_end: Date de fin
-fld_contribution_object: Objet de cette contribution
-
-fld_keyword_name: Nom
-
-fld_event_name: Nom de l'événement
-fld_event_description: Description
-fld_event_date_begin: Date de début
-fld_event_date_end: Date de fin (si différente de date début)
-fld_event_time_begin: Heure de début
-fld_event_time_end: Heure de fin
-
 fld_media_name: Nom
 fld_media_description: Description
 fld_media_file: Fichier
 
-fld_venue_name: Nom
-fld_venue_description: Description
-fld_venue_latitude: Latitude
-fld_venue_longitude: Longitude
-
-fld_answer_description: Répondre
-
 fld_user_password: Mot de passe
 fld_user_new_password: Saisir un mot de passe
 fld_user_repeat_password: Répéter le mot de passe
-
-fld_resource_name: Nom
-fld_resource_description: Description
-
-fld_medias: Médias
-fld_medias_media: Média
-fld_topics: Thématiques
-fld_topics_topic: Thématique
-fld_venues: Lieux
-fld_venues_venue: Lieu
-fld_keywords: Mots-clés
-fld_keywords_keyword: Mot-clé
-
-fld_media_add: Ajouter un média
-fld_media_delete: Supprimer
-
-thumbnails: Vignettes
-list: Liste
-details: Détails
-asc: Croissant
-desc: Décroissant
-select_message_link: Sélectionner les éléments à lier à

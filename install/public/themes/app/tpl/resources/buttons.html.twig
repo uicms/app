@@ -1,8 +1,0 @@
-{% trans_default_domain 'app' %}
-{% set resource_status = 'resource_' ~ resource.status %}
-
-{% if resource.contributor.id == app.session.get('contributor').id and resource.status == 'pending' %}
-<div class="resource_buttons infos">
-    {{ resource_status|trans }} | <a href="{{ path('app_page_action', {'locale': app.session.get('locale'), 'slug': app.session.get('resources_page_slug'), 'action': 'form'}) }}?id={{ resource.id }}" class="button">Modifier</a>
-</div>
-{% endif %}

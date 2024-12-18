@@ -98,23 +98,6 @@ class Media implements TranslatableInterface
                 */
                 private $class;
 
-/**
-	 * @ORM\OneToMany(targetEntity="App\Entity\LinkResourceMedia", mappedBy="media")
-	 */
-	private $link_resource_media;
-
-/**
-	 * @ORM\OneToMany(targetEntity="App\Entity\LinkEventMedia", mappedBy="media")
-	 */
-	private $link_event_media;
-
-/**
-	 * @ORM\OneToMany(targetEntity="App\Entity\LinkVenueMedia", mappedBy="media")
-	 */
-	private $link_venue_media;
-
-
-
 
 
 
@@ -127,9 +110,6 @@ class Media implements TranslatableInterface
     {
         $this->link_block_media = new ArrayCollection();
         $this->link_page_media = new ArrayCollection();
-        $this->link_resource_media = new ArrayCollection();
-        $this->link_event_media = new ArrayCollection();
-        $this->link_venue_media = new ArrayCollection();
     }
 
 
@@ -325,96 +305,5 @@ class Media implements TranslatableInterface
 
                     return $this;
                 }
-
-                /**
-                 * @return Collection|LinkResourceMedia[]
-                 */
-                public function getLinkResourceMedia(): Collection
-                {
-                    return $this->link_resource_media;
-                }
-
-                public function addLinkResourceMedium(LinkResourceMedia $linkResourceMedium): self
-                {
-                    if (!$this->link_resource_media->contains($linkResourceMedium)) {
-                        $this->link_resource_media[] = $linkResourceMedium;
-                        $linkResourceMedium->setMedia($this);
-                    }
-
-                    return $this;
-                }
-
-                public function removeLinkResourceMedium(LinkResourceMedia $linkResourceMedium): self
-                {
-                    if ($this->link_resource_media->removeElement($linkResourceMedium)) {
-                        // set the owning side to null (unless already changed)
-                        if ($linkResourceMedium->getMedia() === $this) {
-                            $linkResourceMedium->setMedia(null);
-                        }
-                    }
-
-                    return $this;
-                }
-
-                /**
-                 * @return Collection|LinkEventMedia[]
-                 */
-                public function getLinkEventMedia(): Collection
-                {
-                    return $this->link_event_media;
-                }
-
-                public function addLinkEventMedium(LinkEventMedia $linkEventMedium): self
-                {
-                    if (!$this->link_event_media->contains($linkEventMedium)) {
-                        $this->link_event_media[] = $linkEventMedium;
-                        $linkEventMedium->setMedia($this);
-                    }
-
-                    return $this;
-                }
-
-                public function removeLinkEventMedium(LinkEventMedia $linkEventMedium): self
-                {
-                    if ($this->link_event_media->removeElement($linkEventMedium)) {
-                        // set the owning side to null (unless already changed)
-                        if ($linkEventMedium->getMedia() === $this) {
-                            $linkEventMedium->setMedia(null);
-                        }
-                    }
-
-                    return $this;
-                }
-
-                /**
-                 * @return Collection|LinkVenueMedia[]
-                 */
-                public function getLinkVenueMedia(): Collection
-                {
-                    return $this->link_venue_media;
-                }
-
-                public function addLinkVenueMedium(LinkVenueMedia $linkVenueMedium): self
-                {
-                    if (!$this->link_venue_media->contains($linkVenueMedium)) {
-                        $this->link_venue_media[] = $linkVenueMedium;
-                        $linkVenueMedium->setMedia($this);
-                    }
-
-                    return $this;
-                }
-
-                public function removeLinkVenueMedium(LinkVenueMedia $linkVenueMedium): self
-                {
-                    if ($this->link_venue_media->removeElement($linkVenueMedium)) {
-                        // set the owning side to null (unless already changed)
-                        if ($linkVenueMedium->getMedia() === $this) {
-                            $linkVenueMedium->setMedia(null);
-                        }
-                    }
-
-                    return $this;
-                }
-
 
 }

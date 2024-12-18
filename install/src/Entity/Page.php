@@ -127,11 +127,6 @@ class Page implements TranslatableInterface
 	 */
 	private $link_block_collection_page;
 
-/**
-	 * @ORM\OneToMany(targetEntity="App\Entity\LinkContributorGradePage", mappedBy="page")
-	 */
-	private $link_contributor_grade_page;
-
 
 
 
@@ -150,7 +145,6 @@ class Page implements TranslatableInterface
         $this->link_page_media = new ArrayCollection();
         $this->link_collection_page = new ArrayCollection();
         $this->link_block_collection_page = new ArrayCollection();
-        $this->link_contributor_grade_page = new ArrayCollection();
     }
 
 

@@ -15,9 +15,9 @@ class Email implements TranslatableInterface
     use TranslatableTrait;
     
 	public function __call($method, $args)
-                                                                               	{
-                                                                                    return $this->proxyCurrentLocaleTranslation($method, $args);
-                                                                               	}
+                                                                                     	{
+                                                                                          return $this->proxyCurrentLocaleTranslation($method, $args);
+                                                                                     	}
     
     /**
      * @ORM\Id()
@@ -83,15 +83,19 @@ class Email implements TranslatableInterface
                 */
                 private $slug;
 
-    /**
-                * @ORM\Column(type="string",nullable=true)
-                */
-                private $from;
+    
 
     /**
                 * @ORM\Column(type="string",nullable=true)
                 */
                 private $from_label;
+
+    /**
+                * @ORM\Column(type="string",nullable=true)
+                */
+                private $from_email;
+
+
 
 
 
@@ -253,6 +257,18 @@ class Email implements TranslatableInterface
                 public function setFromLabel(?string $from_label): self
                 {
                     $this->from_label = $from_label;
+
+                    return $this;
+                }
+
+                public function getFromEmail(): ?string
+                {
+                    return $this->from_email;
+                }
+
+                public function setFromEmail(?string $from_email): self
+                {
+                    $this->from_email = $from_email;
 
                     return $this;
                 }

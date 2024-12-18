@@ -1,3 +1,0 @@
-<div class="infos">
-    {% if contributor.topics %}{% for topic in contributor.topics %}<a href="{{ path('app_page', {'locale': app.session.get('locale'), 'slug': app.session.get('directory_page_slug') })}}?tp[]={{ topic.id }}" class="contributor_topic button">#{{ topic.name }}</a> {% endfor %}{% endif %}
-</div>

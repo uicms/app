@@ -1,6 +1,0 @@
-{% trans_default_domain 'app' %}
-{% if event.contributor and event.contributor.id == app.session.get('contributor').id %}
-<div class="event_buttons infos">
-    <a href="{{ path('app_page_action', {'locale': app.session.get('locale'), 'slug': app.session.get('events_page_slug'), 'action': 'form'}) }}?id={{ event.id }}" class="button">Modifier</a>
-</div>
-{% endif %}
