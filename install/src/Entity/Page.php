@@ -435,34 +435,4 @@ class Page implements TranslatableInterface
 
         return $this;
     }
-
-    /**
-     * @return Collection|LinkContributorGradePage[]
-     */
-    public function getLinkContributorGradePage(): Collection
-    {
-        return $this->link_contributor_grade_page;
-    }
-
-    public function addLinkContributorGradePage(LinkContributorGradePage $linkContributorGradePage): self
-    {
-        if (!$this->link_contributor_grade_page->contains($linkContributorGradePage)) {
-            $this->link_contributor_grade_page[] = $linkContributorGradePage;
-            $linkContributorGradePage->setPage($this);
-        }
-
-        return $this;
-    }
-
-    public function removeLinkContributorGradePage(LinkContributorGradePage $linkContributorGradePage): self
-    {
-        if ($this->link_contributor_grade_page->removeElement($linkContributorGradePage)) {
-            // set the owning side to null (unless already changed)
-            if ($linkContributorGradePage->getPage() === $this) {
-                $linkContributorGradePage->setPage(null);
-            }
-        }
-
-        return $this;
-    }
 }

@@ -590,7 +590,7 @@ class BaseRepository extends ServiceEntityRepository
         } else if(isset($this->config[$param])) {
             return $this->config[$param];
         } else {
-            throw new \Exception('Param ' . $param . ' doesnt exist!');
+            return null;
         }
         return null;
     }
