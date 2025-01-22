@@ -1017,10 +1017,6 @@ class BaseRepository extends ServiceEntityRepository
             }
             $data->setModified(new \Datetime);
 
-            if(method_exists(static::class, 'onPersist')) {
-                $data = $this->onPersist($data);
-            }
-            
             $em->persist($data);
             
             if($this->flush_mode == 'auto') {
