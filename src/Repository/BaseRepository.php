@@ -1094,7 +1094,9 @@ class BaseRepository extends ServiceEntityRepository
                             $old_value = $value;
                             $value =  $original_file_name . '-' . uniqid() . '.' . $info['extension'];
                             copy($this->upload_path . '/' . $old_value, $this->upload_path . '/' . $value);
-                            copy($this->upload_path . '/' . $this->preview_prefix . $old_value, $this->upload_path . '/' . $this->preview_prefix . $value);
+                            if(file_exists($this->upload_path . '/' . $this->preview_prefix . $old_value)) {
+                                copy($this->upload_path . '/' . $this->preview_prefix . $old_value, $this->upload_path . '/' . $this->preview_prefix . $value);
+                            }
                         }
                         
                         # Set value in copy
