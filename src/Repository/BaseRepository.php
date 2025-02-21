@@ -1087,7 +1087,7 @@ class BaseRepository extends ServiceEntityRepository
                         }
                         
                         # Duplicate file
-                        if($field['form']['type'] == 'UIFileType' && $value) {
+                        if(isset($field['form']) && $field['form']['type'] == 'UIFileType' && $value) {
                             $info = pathinfo($value);
                             $length = strlen($info['filename']) - 14;
                             $original_file_name = substr($info['filename'], 0, $length);
