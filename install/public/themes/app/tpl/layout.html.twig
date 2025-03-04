@@ -30,17 +30,10 @@
         <link rel="stylesheet" type="text/css" media="screen" href="{{ theme_path.getUrl('css/cpnt.popup.css') }}" />
         <link rel="stylesheet" type="text/css" media="screen" href="{{ theme_path.getUrl('css/cpnt.filters.css') }}" />
         <link rel="stylesheet" type="text/css" media="screen" href="{{ theme_path.getUrl('css/cpnt.networks.css') }}" />
-        <link rel="stylesheet" type="text/css" media="screen" href="{{ theme_path.getUrl('css/cpnt.answers.css') }}" />
         
         <link rel="stylesheet" type="text/css" media="screen" href="{{ theme_path.getUrl('css/common.blocks.css') }}" />
         <link rel="stylesheet" type="text/css" media="screen" href="{{ theme_path.getUrl('css/common.view.css') }}" />
         <link rel="stylesheet" type="text/css" media="screen" href="{{ theme_path.getUrl('css/common.items.css') }}" />
-        <link rel="stylesheet" type="text/css" media="screen" href="{{ theme_path.getUrl('css/common.form.css') }}" />
-
-        <link rel="stylesheet" type="text/css" media="screen" href="{{ theme_path.getUrl('css/section.resources.css') }}" />
-        <link rel="stylesheet" type="text/css" media="screen" href="{{ theme_path.getUrl('css/section.contributions.css') }}" />
-        <link rel="stylesheet" type="text/css" media="screen" href="{{ theme_path.getUrl('css/section.events.css') }}" />
-        <link rel="stylesheet" type="text/css" media="screen" href="{{ theme_path.getUrl('css/section.directory.css') }}" />
         {% endblock %}
         
     	<meta name="viewport" content="user-scalable=yes, initial-scale=1.0, minimum-scale=1.0, maximum-scale=3.0, width=device-width" />
@@ -61,9 +54,6 @@
     		</header>
 		    
 			<nav id="menu">
-                <div id="header_mask" class="header">
-                    <h1 id="logo_mask" class="logo">{{ app.session.get('params').site_name }}</h1>
-                </div>
 				<ul>
 					{% for menu_page in app.session.get('menu') %}
 					<li>
@@ -120,10 +110,8 @@
         <script type="text/javascript" src="{{ js_path.getUrl('jquery/dist/jquery.min.js') }}"></script>
         <script type="text/javascript" src="{{ js_path.getUrl('slick-carousel/slick/slick.min.js') }}"></script>
         <script type="text/javascript" src="{{ js_path.getUrl('malihu-custom-scrollbar-plugin/jquery.mCustomScrollbar.concat.min.js') }}"></script>
-        <script type="text/javascript" src="{{ js_path.getUrl('daterangepicker/moment.min.js') }}"></script>
-        <script type="text/javascript" src="{{ js_path.getUrl('daterangepicker/daterangepicker.js') }}"></script>
         <script type="text/javascript" src="{{ js_path.getUrl('@fancyapps/fancybox/dist/jquery.fancybox.min.js') }}"></script>
-
+        
         <script type="text/javascript" src="{{ theme_path.getUrl('js/jquery.cookies.js') }}"></script>
         <script type="text/javascript" src="{{ theme_path.getUrl('js/jquery.salvatore.js') }}"></script>
         <script type="text/javascript" src="{{ theme_path.getUrl('js/infinite_scroll.js') }}"></script>

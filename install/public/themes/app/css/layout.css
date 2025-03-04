@@ -50,6 +50,7 @@ footer#footer {
     transition: 0.5s;
     background: #fff;
     padding: var(--default-spacing);
+    padding-top: var(--header-height);
     text-align: right;
 }
 body.menu_expanded #menu {

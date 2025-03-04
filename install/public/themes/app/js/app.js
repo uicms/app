@@ -93,62 +93,6 @@ function initFilters() {
     $('body').click(function() {
         $('.filter').removeClass('expanded');
     });
-    
-    // Date picker
-    var date_element = 'input[name="d"]';
-    var date_format = 'YYYY-MM-DD';
-    $(date_element).daterangepicker({
-        autoUpdateInput: false,
-        ranges: {
-            'Aujourd\'hui': [moment(), moment()],
-            'Demain': [moment().add(1, 'days'), moment().add(1, 'days')],
-            'Les 7 prochains jours': [ moment(), moment().add(6, 'days')],
-            'Ce mois-ci': [moment().startOf('month'), moment().endOf('month')],
-            'Le mois prochain': [moment().add(1, 'month').startOf('month'), moment().add(1, 'month').endOf('month')]
-        },
-        locale: {
-            format: date_format,
-            "separator": " - ",
-            "applyLabel": "Valider",
-            "cancelLabel": "Annuler",
-            "fromLabel": "De",
-            "toLabel": "à",
-            "customRangeLabel": "Personnaliser",
-            "daysOfWeek": [
-                "Dim",
-                "Lun",
-                "Mar",
-                "Mer",
-                "Jeu",
-                "Ven",
-                "Sam"
-            ],
-            "monthNames": [
-                "Janvier",
-                "Février",
-                "Mars",
-                "Avril",
-                "Mai",
-                "Juin",
-                "Juillet",
-                "Août",
-                "Septembre",
-                "Octobre",
-                "Novembre",
-                "Décembre"
-            ],
-            "firstDay": 1
-        }
-    });
-    
-    $(date_element).on('apply.daterangepicker', function(ev, picker) {
-        $(this).val(picker.startDate.format(date_format) + ' - ' + picker.endDate.format(date_format));
-        $('#filter_form_date').submit();
-    });
-
-    $(date_element).on('cancel.daterangepicker', function(ev, picker) {
-        $(this).val('');
-    });
 }
 
 function initInfiniteScroll() {
