@@ -83,9 +83,9 @@ class BaseRepository extends ServiceEntityRepository
         $order_dir = (isset($params['order_dir']) && $params['order_dir']) ? $params['order_dir'] : $this->config['order_dir'];
 
         if(is_array($order_by)) {
-            $order_by_method = 'get' . $order_by[0];
+            $order_by_method = 'get' . lcfirst(str_replace(' ', '', ucwords(str_replace('_', ' ', $order_by[0]))));
         } else {
-            $order_by_method = 'get' . $order_by;
+            $order_by_method = 'get' . lcfirst(str_replace(' ', '', ucwords(str_replace('_', ' ', $order_by))));
         }
         
         # Statement
