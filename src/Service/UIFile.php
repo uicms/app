@@ -40,6 +40,17 @@ class UIFile
 
         return true;
     }
+    
+    public function delete($file_name)
+    {
+        $path = $this->upload_path . '/' . $file_name;
+        if(file_exists($path)) {
+            unlink($path);
+        } else {
+            return false;
+        }
+        return true;
+    }
 
     public function getProperties($file_name) {
         $manager = new ImageManager(array('driver' => 'imagick'));
