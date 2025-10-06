@@ -169,7 +169,11 @@ class Filters
                                 if((!$has_results = $this->model->get($entity_name)->count($params_tmp)) && !$keep_options) {
                                     unset($this->result['filters'][$filter_config['param_name']]['options'][$i]);
                                 } else if((!$has_results && $keep_options) || isset($this->result['params'][$filter_config['param_name']])){
-                                    $option->_has_link = false;
+                                    if($this->mode == 'multiple') {
+                                        $option->_has_link = false;
+                                    } else {
+                                        $option->_has_link = true;
+                                    }
                                 }
                             }
                         }
