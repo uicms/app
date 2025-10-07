@@ -83,9 +83,9 @@ class BaseRepository extends ServiceEntityRepository
         $order_dir = (isset($params['order_dir']) && $params['order_dir']) ? $params['order_dir'] : $this->config['order_dir'];
 
         if(is_array($order_by)) {
-            $order_by_method = 'get' . lcfirst(str_replace(' ', '', ucwords(str_replace('_', ' ', $order_by[0]))));
+            $order_by_method = 'get' . $order_by[0];
         } else {
-            $order_by_method = 'get' . lcfirst(str_replace(' ', '', ucwords(str_replace('_', ' ', $order_by))));
+            $order_by_method = 'get' . $order_by;
         }
         
         # Statement
@@ -137,14 +137,14 @@ class BaseRepository extends ServiceEntityRepository
                 # Order
                 #if($order_table_alias != 'i') {
                     if(is_array($order_by)) {
-                        foreach($order_by as $i=>$order_by_field) {
+                        foreach($order_by as $i=>$one_order_by) {
                             if(is_array($order_dir)) {
-                                $order_dir_field = $order_dir[$i];
+                                $one_order_dir = $order_dir[$i];
                             } else {
-                                $order_dir_field = $order_dir;
+                                $one_order_dir = $order_dir;
                             }
-                            $order_table_alias = $this->isFieldTranslatable($order_dir_field) && $order_dir_field != 'id' ? 'i' : 't';
-                            $query->addOrderBy($order_table_alias . '.' . $order_by_field, $order_dir_field);
+                            $order_table_alias = $this->isFieldTranslatable($one_order_by) && $one_order_dir != 'id' ? 'i' : 't';
+                            $query->addOrderBy($order_table_alias . '.' . $one_order_by, $one_order_dir);
                         }
                     } else {
                         $order_table_alias = $this->isFieldTranslatable($order_by) && $order_by != 'id' ? 'i' : 't';
@@ -642,6 +642,22 @@ class BaseRepository extends ServiceEntityRepository
             }
         }
         
+        # Not translatables
+        $regular_fields = $this->meta()->getFieldNames();
+        foreach($regular_fields as $i=>$field_name) {
+            $field_attr = $this->meta()->getFieldMapping($field_name);
+            $field_attr['name'] = $field_name;
+            $field_attr['is_meta'] = in_array($field_name, $this->meta_fields) ? true : false;
+            $field_attr['is_db'] = true;
+            
+            foreach($this->global_config['entity'][$this->name]['form']['fields'] as $form_field_name=>$form_field) {
+                if($field_name == $form_field_name) {
+                    $field_attr['form'] = $form_field;
+                }
+            }
+            $all_fields[] = $field_attr;
+        }
+        
         # Complete with form fields
         foreach($this->global_config['entity'][$this->name]['form']['fields'] as $form_field_name=>$form_field) {
             $exists = false;
@@ -659,22 +675,6 @@ class BaseRepository extends ServiceEntityRepository
                 $all_fields[] = $data;
             }
         }
-        
-        $regular_fields = $this->meta()->getFieldNames();
-        foreach($regular_fields as $i=>$field_name) {
-            $field_attr = $this->meta()->getFieldMapping($field_name);
-            $field_attr['name'] = $field_name;
-            $field_attr['is_meta'] = in_array($field_name, $this->meta_fields) ? true : false;
-            $field_attr['is_db'] = true;
-            
-            foreach($this->global_config['entity'][$this->name]['form']['fields'] as $form_field_name=>$form_field) {
-                if($field_name == $form_field_name) {
-                    $field_attr['form'] = $form_field;
-                }
-            }
-            $all_fields[] = $field_attr;
-        }
-        
         
         if($params) {
             $fields = array();
