@@ -49,8 +49,9 @@ class Filters
         $this->result['mode'] = $this->mode;
         $this->result['count_displayed'] = 0;
         
+
         #
-        # Foreach filters
+        # Get options of each filters
         #
         foreach($config['settings'] as $filter_name => $filter_config) {
             
@@ -118,7 +119,9 @@ class Filters
                                 $this->result['actives'][] = $active;
                                 $this->result['params'][$filter_config['param_name']][] = $active_filter_value;
                             }
-                        } 
+                        }
+
+
                     }
                 }
                 
@@ -128,7 +131,8 @@ class Filters
             }
         }
 
-        # Set meta properties
+
+        # Remove options with no results
         foreach($config['settings'] as $filter_name => $filter_config) {
             
             if(in_array($entity_name, $filter_config['data'])) {
@@ -156,10 +160,22 @@ class Filters
                             } 
                             # If is not active
                             else {
+                                
+                                # Set params
                                 $params_tmp = $this->result['params'];
+
                                 if(isset($filter_config['value_field']) && $filter_config['value_field']) {
+                                    # Check if object or date field
                                     $method = $this->model->get($filter_config['entity'])->method($filter_config['value_field']);
-                                    $params_tmp[$filter_config['param_name']][] = $option->$method();
+                                    $value = $option->$method();
+
+                                    if ($value instanceof \DateTime) {
+                                        $params_tmp[$filter_config['param_name']][] = $value->format('Y-m-d H:i:s');
+                                    } else if(is_object($value)) {
+                                        $params_tmp[$filter_config['param_name']][] = $value->getId();
+                                    } else {
+                                        $params_tmp[$filter_config['param_name']][] = $value;
+                                    }
                                 } else {
                                     $params_tmp[$filter_config['param_name']][] = $option->getId();
                                 }
@@ -168,13 +184,16 @@ class Filters
                                 # Remove option if has no results
                                 if((!$has_results = $this->model->get($entity_name)->count($params_tmp)) && !$keep_options) {
                                     unset($this->result['filters'][$filter_config['param_name']]['options'][$i]);
-                                } else if((!$has_results && $keep_options) || isset($this->result['params'][$filter_config['param_name']])){
+                                }
+
+
+                                /* else if((!$has_results && $keep_options) || isset($this->result['params'][$filter_config['param_name']])){
                                     if($this->mode == 'multiple') {
                                         $option->_has_link = false;
                                     } else {
                                         $option->_has_link = true;
                                     }
-                                }
+                                }*/
                             }
                         }
 
@@ -188,13 +207,14 @@ class Filters
 
         }
 
+
         /* Urls */
         foreach($this->result['actives'] as $active) {
 
             $params_tmp = $this->result['params'];
-            
-            foreach($params_tmp as $param_name=>$param_values) {
 
+            foreach($params_tmp as $param_name=>$param_values) {
+                
                 if($this->isFilterParam($param_name)) {
 
                     # [TYPE] Input
@@ -205,10 +225,20 @@ class Filters
                     # [TYPE] Choice
                     if($active->config['type'] == 'choice' && is_array($param_values)) {
                         foreach($param_values as $i=>$value) {
+                            
 
-                            if(isset($active->config['value_field']) && $active->config['value_field']) {
+                            if(isset($active->config['value_field']) && $active->config['value_field'] && $param_name == $active->config['param_name']) {
+                                $field_name = $active->config['value_field'];
+
                                 $method = $this->model->get($active->config['entity'])->method($active->config['value_field']);
-                                if($value == $active->$method()) {
+                                $field_config = $this->model->get($active->config['entity'])->getField(['name'=>$active->config['value_field']]);
+
+                                if($field_config['type'] == 'date' or $field_config['type'] == 'datetime') {
+                                    $datetime = new \DateTime($value);
+                                    if($datetime == $active->$method()) {
+                                        unset($params_tmp[$param_name][$i]);
+                                    }
+                                } else if($value == $active->$method()) {
                                     unset($params_tmp[$param_name][$i]);
                                 }
                             } else if(isset($active->config['entity']) && $active->config['entity'] && $value == $active->getId()) {
