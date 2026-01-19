@@ -90,16 +90,22 @@ class Filters
                     
                     # If options are from entity
                     if(isset($filter_config['entity']) && $filter_config['entity']) {
-                        
+                        # $params
+                        $params_tmp = [
+                            'linked_to_'. strtolower($entity_name) => (isset($filter_config['show_all']) && $filter_config['show_all']) ? false : true, 
+                            'disable_positions'=> isset($filter_config['enable_positions']) && $filter_config['enable_positions'] ? false : true,
+                            'group_by'=> isset($filter_config['value_field']) && $filter_config['value_field'] ? $filter_config['value_field'] : false,
+                        ];
+                        if(isset($filter_config['value_field']) && $filter_config['value_field']) {
+                            $params_tmp['order_by'] = $filter_config['value_field'];
+                            $params_tmp['order_dir'] = 'asc';
+                        }
+
                         # Get options from Entity
                         $filter_config['options'] = $this->model->get($filter_config['entity'])->getAll(
                             array_merge (
                                 $filter_config['params'], 
-                                [
-                                    'linked_to_'. strtolower($entity_name) => (isset($filter_config['show_all']) && $filter_config['show_all']) ? false : true, 
-                                    'disable_positions'=>true,
-                                    'group_by'=> isset($filter_config['value_field']) && $filter_config['value_field'] ? $filter_config['value_field'] : false,
-                                ]
+                                $params_tmp,
                             )
                         );
 
@@ -173,6 +179,13 @@ class Filters
                                         $params_tmp[$filter_config['param_name']][] = $value->format('Y-m-d H:i:s');
                                     } else if(is_object($value)) {
                                         $params_tmp[$filter_config['param_name']][] = $value->getId();
+                                        $class_name =  get_class($value);
+                                        $pos = strpos($class_name, 'App\\');
+
+                                        $class_name = $pos !== false ? substr($class_name, $pos) : $class_name;
+                                        $name_field = $this->ui_config['entity'][$class_name]['name_field'];
+                                        $method = 'get' . str_replace('_', '', ucwords($name_field, '_'));
+                                        $value->_name = $value->$method();
                                     } else {
                                         $params_tmp[$filter_config['param_name']][] = $value;
                                     }
@@ -209,6 +222,7 @@ class Filters
 
 
         /* Urls */
+
         foreach($this->result['actives'] as $active) {
 
             $params_tmp = $this->result['params'];
@@ -225,15 +239,18 @@ class Filters
                     # [TYPE] Choice
                     if($active->config['type'] == 'choice' && is_array($param_values)) {
                         foreach($param_values as $i=>$value) {
-                            
 
                             if(isset($active->config['value_field']) && $active->config['value_field'] && $param_name == $active->config['param_name']) {
                                 $field_name = $active->config['value_field'];
 
                                 $method = $this->model->get($active->config['entity'])->method($active->config['value_field']);
                                 $field_config = $this->model->get($active->config['entity'])->getField(['name'=>$active->config['value_field']]);
-
-                                if($field_config['type'] == 'date' or $field_config['type'] == 'datetime') {
+                                
+                                if($field_config['form']['type'] == 'EntityType') {
+                                    if($value == $active->$method()->getId()) {
+                                        unset($params_tmp[$param_name][$i]);
+                                    }
+                                } else if($field_config['form']['type'] == 'DateType' or $field_config['form']['type'] == 'DatetimeType') {
                                     $datetime = new \DateTime($value);
                                     if($datetime == $active->$method()) {
                                         unset($params_tmp[$param_name][$i]);

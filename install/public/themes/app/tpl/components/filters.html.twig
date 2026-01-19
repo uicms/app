@@ -6,7 +6,7 @@
         {% if filters.filters %}
         <div class="filters_container">
         {% for filter in filters.filters %}
-        {% if (filter.is_hidden is not defined or filter.is_hidden == false) and (filter.options|length > 1 or filter.type != 'choice') %}
+        {% if (filter.is_hidden is not defined or filter.is_hidden == false) and ((filter.options is defined and filter.options|length > 1) or filter.type != 'choice') %}
 
 
             <div class="filter {{ filter.type }}" id="filter_{{ filter.slug }}">
@@ -44,6 +44,11 @@
 
                                 {% set value = attribute(option, filter.value_field) %}
                                 {% set value_param = value %}
+                                
+                                {% if value|is_object %}
+                                    {% set value_param = value.id %}
+                                    {% set value = value._name %}
+                                {% endif %}
                                 
                                 {% if filter.translate is defined and filter.translate %}
                                     {% set value = value|trans %}
@@ -98,6 +103,11 @@
                 
                 {% if active_filter.config.value_field is defined and active_filter.config.value_field %}
                     {% set value = attribute(active_filter, active_filter.config.value_field) %}
+
+                    {% if value|is_object %}
+                        {% set value_param = value.id %}
+                        {% set value = value._name %}
+                    {% endif %}
 
                     {% if active_filter.config.translate is defined and active_filter.config.translate %}
                         {% set value = value|trans %}

@@ -75,18 +75,33 @@ class BaseRepository extends ServiceEntityRepository
         $statement_argument = isset($params['statement_argument']) ? $statement_argument = $params['statement_argument'] : '';
         $parameters = array();
         
-        # Table for positions
-        isset($params['linked_to']) && $params['linked_to'] ? $position_table_alias = 'l' : $position_table_alias = 't';
         
         # Ordering
         $order_by = (isset($params['order_by']) && $params['order_by']) ? $params['order_by'] : $this->config['order_by'];
         $order_dir = (isset($params['order_dir']) && $params['order_dir']) ? $params['order_dir'] : $this->config['order_dir'];
-
-        if(is_array($order_by)) {
-            $order_by_method = 'get' . $order_by[0];
-        } else {
-            $order_by_method = 'get' . $order_by;
+        if(!is_array($order_by)) {
+            $order_by = [$order_by];
         }
+        if(!is_array($order_dir)) {
+            $order_dir = [$order_dir];
+        }
+        $order_by_method = 'get' . $order_by[0];
+        if(count($order_dir) && count($order_dir) < count($order_by)) {
+            $order_dir = array_fill(0, count($order_by) - 1, $order_dir[0]);
+        }
+        
+        
+        # Table for positions
+        isset($params['linked_to']) && $params['linked_to'] ? $position_table_alias = 'l' : $position_table_alias = 't';
+        foreach($order_by as $i=>$one_order_by) {
+            if(isset($this->global_config['entity'][$this->getName()]['form']['fields'][$one_order_by]['type']) &&
+            $this->global_config['entity'][$this->getName()]['form']['fields'][$one_order_by]['type'] == 'EntityType'
+            ) {
+                $position_table_alias = '_o' . $i;
+                break;
+            }
+        }
+        
         
         # Statement
         if(!isset($params['statement']) || !$params['statement']) {
@@ -130,27 +145,23 @@ class BaseRepository extends ServiceEntityRepository
                 }
                 
                 # Positions
-                if(!isset($params['disable_positions']) || !$params['disable_positions']) {
+                if(!isset($params['disable_positions']) || !$params['disable_positions']) {        
                     $query->orderBy("$position_table_alias.position", 'asc');
                 }
                 
                 # Order
-                #if($order_table_alias != 'i') {
-                    if(is_array($order_by)) {
-                        foreach($order_by as $i=>$one_order_by) {
-                            if(is_array($order_dir)) {
-                                $one_order_dir = $order_dir[$i];
-                            } else {
-                                $one_order_dir = $order_dir;
-                            }
-                            $order_table_alias = $this->isFieldTranslatable($one_order_by) && $one_order_dir != 'id' ? 'i' : 't';
-                            $query->addOrderBy($order_table_alias . '.' . $one_order_by, $one_order_dir);
-                        }
+                foreach($order_by as $i=>$one_order_by) {
+                    if(isset($this->global_config['entity'][$this->getName()]['form']['fields'][$one_order_by]['type']) &&
+                    $this->global_config['entity'][$this->getName()]['form']['fields'][$one_order_by]['type'] == 'EntityType'
+                    ) {
+                        $query->leftJoin('t.' . $one_order_by, '_o'.$i, 'WITH', "_o". $i .".id = t." . $one_order_by);
+                        $name_field = $this->global_config['entity'][$this->getName()]['name_field'];
+                        $query->addOrderBy('_o'.$i.'.' . $name_field , $order_dir[$i]);
                     } else {
-                        $order_table_alias = $this->isFieldTranslatable($order_by) && $order_by != 'id' ? 'i' : 't';
-                        $query->addOrderBy($order_table_alias . '.' . $order_by, $order_dir);
+                        $order_table_alias = $this->isFieldTranslatable($one_order_by) && $one_order_by != 'id' ? 'i' : 't';
+                        $query->addOrderBy($order_table_alias . '.' . $one_order_by, $order_dir[$i]);
                     }
-                #}
+                }
                 
                 # Order by ID
                 if($order_by != 'id') $query->addOrderBy('t.id', 'asc');
