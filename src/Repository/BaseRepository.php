@@ -223,19 +223,19 @@ class BaseRepository extends ServiceEntityRepository
             } else {
                 $current_position = $params['current_row']->getPosition();
             }
-            $comparator = $order_dir == 'asc' ? '>' : '<';
+            $comparator = $order_dir[0] == 'asc' ? '>' : '<';
             
             # Conditions
             $equal_condition = $current_value === null ? 'IS NULL' : '= :current_value';
             
             if($current_value === null && $comparator == '>') {
-                $not_equal_condition = "$order_table_alias.$order_by IS NOT NULL";
+                $not_equal_condition = "$order_table_alias.$order_by[0] IS NOT NULL";
             } else if($current_value !== null && $comparator == '<') {
                 $parameters['current_value'] = $current_value;
-                $not_equal_condition = "($order_table_alias.$order_by $comparator :current_value OR $order_table_alias.$order_by IS NULL)";
+                $not_equal_condition = "($order_table_alias.$order_by[0] $comparator :current_value OR $order_table_alias.$order_by[0] IS NULL)";
             } else {
                 $parameters['current_value'] = $current_value;
-                $not_equal_condition = "$order_table_alias.$order_by $comparator :current_value";
+                $not_equal_condition = "$order_table_alias.$order_by[0] $comparator :current_value";
             }
             
             # Position order is prioritary
@@ -243,16 +243,16 @@ class BaseRepository extends ServiceEntityRepository
             $next_where = "$position_table_alias.position > :current_position";
             
             # OR
-            if($order_by != 'position') {
+            if($order_by[0] != 'position') {
                 $query_string = "$position_table_alias.position = :current_position and $not_equal_condition";
                 if(isset($parent_query_string) && $parent_query_string) $query_string .= ' AND ' . $parent_query_string;
                 $next_where .= ' OR (' . $query_string . ')';
             }
  
             # OR
-            if($order_by != 'id' && $order_by != 'position') {
+            if($order_by[0] != 'id' && $order_by[0] != 'position') {
                 $parameters['current_id'] = $current_id;
-                $query_string = "$position_table_alias.position = :current_position and $order_table_alias.$order_by $equal_condition and t.id > :current_id";
+                $query_string = "$position_table_alias.position = :current_position and $order_table_alias.$order_by[0] $equal_condition and t.id > :current_id";
                 if(isset($parent_query_string) && $parent_query_string) $query_string .= ' AND ' . $parent_query_string;
                 $next_where .= ' OR (' . $query_string . ')';
             }
@@ -273,8 +273,8 @@ class BaseRepository extends ServiceEntityRepository
             } else {
                 $current_position = $params['current_row']->getPosition();
             }
-            $comparator = strtolower($order_dir) == 'asc' ? '<' : '>';
-            $reverse_dir = strtolower($order_dir) == 'asc' ? 'desc' : 'asc';
+            $comparator = strtolower($order_dir[0]) == 'asc' ? '<' : '>';
+            $reverse_dir = strtolower($order_dir[0]) == 'asc' ? 'desc' : 'asc';
 
             # Conditions
             if($current_value === null) {
@@ -285,13 +285,13 @@ class BaseRepository extends ServiceEntityRepository
             }
             
             if($current_value === null && $comparator == '>') {
-                $not_equal_condition = "$order_table_alias.$order_by IS NOT NULL";
+                $not_equal_condition = "$order_table_alias.$order_by[0] IS NOT NULL";
             } else if($current_value !== null && $comparator == '>') {
                 $parameters['current_value'] = $current_value;
-                $not_equal_condition = "($order_table_alias.$order_by $comparator :current_value)";
+                $not_equal_condition = "($order_table_alias.$order_by[0] $comparator :current_value)";
             } else if($current_value !== null && $comparator == '<') {
                 $parameters['current_value'] = $current_value;
-                $not_equal_condition = "($order_table_alias.$order_by $comparator :current_value OR $order_table_alias.$order_by IS NULL)";
+                $not_equal_condition = "($order_table_alias.$order_by[0] $comparator :current_value OR $order_table_alias.$order_by[0] IS NULL)";
             }
             
             # Position order is prioritary
@@ -300,17 +300,17 @@ class BaseRepository extends ServiceEntityRepository
             $prev_where = "$position_table_alias.position < :current_position";
             
             # OR
-            if($order_by != 'position' && isset($not_equal_condition)) {
-                $query->addOrderBy("$order_table_alias.$order_by", $reverse_dir);
+            if($order_by[0] != 'position' && isset($not_equal_condition)) {
+                $query->addOrderBy("$order_table_alias.$order_by[0]", $reverse_dir);
                 $query_string = "$position_table_alias.position = :current_position AND $not_equal_condition";
                 if(isset($parent_query_string) && $parent_query_string) $query_string .= ' AND ' . $parent_query_string;
                 $prev_where .= ' OR (' . $query_string . ')';
             }
             # OR
-            if($order_by != 'id' && $order_by != 'position') {
+            if($order_by[0] != 'id' && $order_by[0] != 'position') {
                 $parameters['current_id'] = $current_id;
                 $query->addOrderBy('t.id', 'desc');
-                $query_string = "$position_table_alias.position = :current_position and $order_table_alias.$order_by $equal_condition and t.id < :current_id";
+                $query_string = "$position_table_alias.position = :current_position and $order_table_alias.$order_by[0] $equal_condition and t.id < :current_id";
                 if(isset($parent_query_string) && $parent_query_string) $query_string .= ' AND ' . $parent_query_string;
                 $prev_where .= ' OR (' . $query_string. ')';
             }

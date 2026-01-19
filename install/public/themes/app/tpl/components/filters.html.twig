@@ -45,16 +45,16 @@
                                 {% set value = attribute(option, filter.value_field) %}
                                 {% set value_param = value %}
                                 
-                                {% if value|is_object %}
-                                    {% set value_param = value.id %}
-                                    {% set value = value._name %}
-                                {% endif %}
+                                
                                 
                                 {% if filter.translate is defined and filter.translate %}
                                     {% set value = value|trans %}
                                 {% elseif value|is_date_time %}
                                     {% set value_param = value|format_date('%Y-%m-%d', app.session.get('locale')) %}
                                     {% set value = value|format_date('%A %d %b', app.session.get('locale')) %}
+                                {% elseif value|is_object %}
+                                    {% set value_param = value.id %}
+                                    {% set value = value._name %}
                                 {% endif %}
                             {% else %}
                                 {% set value = option._name %}
@@ -104,15 +104,13 @@
                 {% if active_filter.config.value_field is defined and active_filter.config.value_field %}
                     {% set value = attribute(active_filter, active_filter.config.value_field) %}
 
-                    {% if value|is_object %}
-                        {% set value_param = value.id %}
-                        {% set value = value._name %}
-                    {% endif %}
-
                     {% if active_filter.config.translate is defined and active_filter.config.translate %}
                         {% set value = value|trans %}
                     {% elseif value|is_date_time %}
                         {% set value = value|format_date('%A %d %b', app.session.get('locale')) %}
+                    {% elseif value|is_object %}
+                        {% set value_param = value.id %}
+                        {% set value = value._name %}
                     {% endif %}
                 {% elseif active_filter.config.type == 'boolean' %}
                     {% set value = active_filter.config.i18n|trans %}
