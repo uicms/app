@@ -129,9 +129,9 @@ class BaseRepository extends ServiceEntityRepository
                     $query->leftJoin('t.translations', 'i', 'WITH', "i.locale = '" . $this->locale . "'");
                     $query->leftJoin('t.translations', 'fallback', 'WITH', "fallback.locale = '" . $this->default_locale . "'");
                     
-                    if($this->isFieldTranslatable($order_by)) {
-                        $query->addSelect("COALESCE(i.$order_by, fallback.$order_by) AS HIDDEN $order_by");
-                        $query->orderBy($order_by, $order_dir);
+                    if($this->isFieldTranslatable($order_by[0])) {
+                        $query->addSelect("COALESCE(i.$order_by[0], fallback.$order_by[0]) AS HIDDEN $order_by[0]");
+                        $query->orderBy($order_by[0], $order_dir[0]);
                     } else {
                         $query->addSelect("COALESCE(i, fallback) AS HIDDEN translation");
                     }
@@ -154,17 +154,25 @@ class BaseRepository extends ServiceEntityRepository
                     if(isset($this->global_config['entity'][$this->getName()]['form']['fields'][$one_order_by]['type']) &&
                     $this->global_config['entity'][$this->getName()]['form']['fields'][$one_order_by]['type'] == 'EntityType'
                     ) {
-                        $query->leftJoin('t.' . $one_order_by, '_o'.$i, 'WITH', "_o". $i .".id = t." . $one_order_by);
                         $name_field = $this->global_config['entity'][$this->getName()]['name_field'];
-                        $query->addOrderBy('_o'.$i.'.' . $name_field , $order_dir[$i]);
+                        $query->leftJoin('t.' . $one_order_by, '_o'.$i, 'WITH', "_o". $i .".id = t." . $one_order_by);
+                        $class = $this->global_config['entity'][$this->getName()]['form']['fields'][$one_order_by]['options']['class'];
+                        isset($this->global_config['entity'][$class]['form']['translations'][$name_field]) ? $is_translatable = true : $is_translatable = false;
+                        if($is_translatable) {
+                            $query->leftJoin("_o" . $i . '.translations', "_oi" . $i, 'WITH', "_oi" . $i . ".locale = '" . $this->locale . "'");
+                            $query->addOrderBy('_oi'.$i.'.' . $name_field , $order_dir[$i]);
+                        } else {
+                            $query->addOrderBy('_o'.$i.'.' . $name_field , $order_dir[$i]);
+                        }
+
                     } else {
                         $order_table_alias = $this->isFieldTranslatable($one_order_by) && $one_order_by != 'id' ? 'i' : 't';
                         $query->addOrderBy($order_table_alias . '.' . $one_order_by, $order_dir[$i]);
                     }
                 }
-                
+
                 # Order by ID
-                if($order_by != 'id') $query->addOrderBy('t.id', 'asc');
+                if($order_by[0] != 'id') $query->addOrderBy('t.id', 'asc');
             break;
         }
         
