@@ -50,7 +50,7 @@ class BaseRepository extends ServiceEntityRepository
         $this->security = $security;
         $this->passwd_encoder = $passwd_encoder;
         $this->parameters = $parameters;
-        $this->global_config = $ui_config = $parameters->get('ui_config');
+        $this->global_config = $ui_config = $this->ui_config = $parameters->get('ui_config');
         $this->locale = $parameters->get('locale');
         $this->default_locale = $parameters->get('locale');
         foreach($this->global_config['entity'] as $entity_name=>$entity) {
@@ -1168,14 +1168,21 @@ class BaseRepository extends ServiceEntityRepository
                     if(!isset($field['is_meta']) || !$field['is_meta']) {
                         $get_method = $this->method($field['name']);
                         if(isset($field['form']['type']) && $field['form']['type'] == 'UIFileType') {
-                            $path = $this->upload_path . '/' . $row->$get_method();
+                            $file = new UIFile($this->ui_config);
+                            $file->delete($row->$get_method());
+                            
+                            /*$path = $this->upload_path . '/' . $row->$get_method();
                             $path_thumbnail = $this->upload_path . '/' . $this->preview_prefix . $row->$get_method();
+                            $path_src = $this->upload_path . '/_src_' . $row->$get_method();
                             if(file_exists($path) && !is_dir($path)) {
                                 unlink($path);
                             }
                             if(file_exists($path_thumbnail) && !is_dir($path_thumbnail)) {
                                 unlink($path_thumbnail);
                             }
+                            if(file_exists($path_src) && !is_dir($path_src)) {
+                                unlink($path_src);
+                            }*/
                         }
                     }
                 }

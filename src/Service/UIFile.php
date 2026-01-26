@@ -43,13 +43,27 @@ class UIFile
     
     public function delete($file_name)
     {
+        $return = true;
         $path = $this->upload_path . '/' . $file_name;
+        $src = $this->upload_path . '/_src_' . $file_name;
+        $thumbnail = $this->upload_path . '/_' . $file_name;
+        
         if(file_exists($path)) {
             unlink($path);
         } else {
-            return false;
+            $return = false;
         }
-        return true;
+        if(file_exists($src)) {
+            unlink($src);
+        } else {
+            $return = false;
+        }
+        if(file_exists($thumbnail)) {
+            unlink($thumbnail);
+        } else {
+            $return = false;
+        }
+        return $return;
     }
 
     public function getProperties($file_name) {
