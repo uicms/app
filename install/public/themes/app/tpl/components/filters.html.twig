@@ -23,7 +23,7 @@
 
                 {% if filter.type == 'input' %}
                 <form method="get" name="filter_form_{{ filter.slug }}" id="filter_form_{{ filter.slug }}">
-                    <input type="text" placeholder="{{ filter.i18n|trans }}" name="{{ filter.param_name }}" value="" />
+                    <input type="text" placeholder="{{ filter.i18n|trans }}" name="{{ filter.param_name }}" value="" class="{% if filter.class is defined %}{{ filter.class }}{% endif %}" {% if filter.attr is defined %}{% for attr_name, attr_value in filter.attr %}{{ attr_name }}="{{ attr_value }}" {% endfor %}{% endif %} />
                     <!-- {% if filter.param_value is defined %}{{ filter.param_value }}{% endif %} -->
                     <button type="submit">Ok</button>
                 </form>
