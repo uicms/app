@@ -46,6 +46,7 @@
         "symfony/web-profiler-bundle": "5.4.*",
         "symfony/yaml": "5.4.*",
         "twig/twig": "^2.0",
+        "twig/extra-bundle": "^3.0",
         "uicms/admin": "*",
         "uicms/app": "*"
     },
