@@ -995,10 +995,16 @@ class BaseRepository extends ServiceEntityRepository
                             # Get current value in DB
                             if($data->getId()) {
                                 $connection = $this->getEntityManager()->getConnection();
-                                $stmt = $connection->prepare("SELECT " . $field['name'] . " FROM " . $this->getConfig('table_name') . " WHERE id=" . $data->getId());
-                                $stmt->execute();
-                                $result = $stmt->fetch();
-                                $current_value = $result[$field['name']];
+                                $sql = sprintf(
+                                    'SELECT %s FROM %s WHERE id = :id',
+                                    $field['name'],
+                                    $this->getConfig('table_name')
+                                );
+                                $stmt = $connection->prepare($sql);
+                                $result = $stmt
+                                    ->executeQuery(['id' => $data->getId()])
+                                    ->fetchAssociative();
+                                $current_value = $result[$field['name']] ?? null;
                             } else {
                                 $current_value = '';
                             }
