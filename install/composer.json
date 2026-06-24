@@ -101,7 +101,8 @@
         }
     },
     "require-dev": {
-        "symfony/maker-bundle": "^1.18"
+        "symfony/maker-bundle": "^1.18",
+        "symfony/debug-bundle": "^5.4"
     },
     "repositories": [
         {
