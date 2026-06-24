@@ -2,7 +2,7 @@
 namespace App\EventListener;
 
 use Symfony\Component\HttpFoundation\Response; 
-use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
+use Symfony\Component\HttpKernel\Event\ControllerEvent;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Asset\PathPackage;
 use Symfony\Component\Asset\VersionStrategy\StaticVersionStrategy;
@@ -17,7 +17,7 @@ class ControllerListener
 		$this->session = $this->request->getSession();
     }
 	
-	public function onKernelController(FilterControllerEvent $event)
+	public function onKernelController(ControllerEvent $event)
 	{
         # Path package
 		$path_package = new PathPackage('themes/app', new StaticVersionStrategy('v1'));
