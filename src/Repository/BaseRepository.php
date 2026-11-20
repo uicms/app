@@ -12,6 +12,8 @@ use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\Mime\MimeTypes;
 
+use Uicms\App\Service\UIFile;
+
 class BaseRepository extends ServiceEntityRepository
 {
     protected $name = '';
@@ -1173,22 +1175,9 @@ class BaseRepository extends ServiceEntityRepository
                 foreach($fields as $i=>$field) {
                     if(!isset($field['is_meta']) || !$field['is_meta']) {
                         $get_method = $this->method($field['name']);
-                        if(isset($field['form']['type']) && $field['form']['type'] == 'UIFileType') {
+                        if($row->$get_method() && isset($field['form']['type']) && $field['form']['type'] == 'UIFileType') {
                             $file = new UIFile($this->ui_config);
                             $file->delete($row->$get_method());
-                            
-                            /*$path = $this->upload_path . '/' . $row->$get_method();
-                            $path_thumbnail = $this->upload_path . '/' . $this->preview_prefix . $row->$get_method();
-                            $path_src = $this->upload_path . '/_src_' . $row->$get_method();
-                            if(file_exists($path) && !is_dir($path)) {
-                                unlink($path);
-                            }
-                            if(file_exists($path_thumbnail) && !is_dir($path_thumbnail)) {
-                                unlink($path_thumbnail);
-                            }
-                            if(file_exists($path_src) && !is_dir($path_src)) {
-                                unlink($path_src);
-                            }*/
                         }
                     }
                 }
